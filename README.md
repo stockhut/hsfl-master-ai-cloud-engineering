@@ -1,13 +1,18 @@
-# \<Enter your project name here\>
+# Taste Bud Tribe
 \<Add a simple description of your project here\>
+A Food-focused social media platform for like-minded people, centered around tags and communities (tribes). Share your favorite recipies, follow your favorite Foodies on the platform and create meal plans to get you through the week.
 
 ## Authors
-Erika Musterfrau\
-erika.musterfrau@stud.hs-flensburg.de\
+Fabian Wesemann\
+fabian.wesemann@stud.hs-flensburg.de\
 Hochschule Flensburg
 
-Max Mustermann\
-max.mustermann@stud.hs-flensburg.de\
+Nele Kirchner\
+nele.kirchner@stud.hs-flensburg.de\
+Hochschule Flensburg
+
+Alexander Brandt\
+alexander.brandt@stud.hs-flensburg.de\
 Hochschule Flensburg
 
 ## \<Add more sections here\>
