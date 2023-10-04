@@ -1,5 +1,4 @@
 # Taste Bud Tribe
-\<Add a simple description of your project here\>
 A Food-focused social media platform for like-minded people, centered around tags and communities (tribes). Share your favorite recipies, follow your favorite Foodies on the platform and create meal plans to get you through the week.
 
 ## Authors
@@ -14,5 +13,3 @@ Hochschule Flensburg
 Alexander Brandt\
 alexander.brandt@stud.hs-flensburg.de\
 Hochschule Flensburg
-
-## \<Add more sections here\>
