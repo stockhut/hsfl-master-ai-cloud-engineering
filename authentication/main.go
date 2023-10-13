@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"strings"
 
 	"github.com/stockhut/hsfl-master-ai-cloud-engineering/common/router"
-	"golang.org/x/exp/slices"
 )
 
 type account struct {
@@ -22,12 +22,73 @@ type requestBodyCreateAccount struct {
 	Password string
 }
 
-var accounts []account = make([]account, 0) //temporary database
+var repo inMemoryAccountRepository = inMemoryAccountRepository{
+	accounts: make([]account, 0),
+}
+
+type AccountInfoDuplicate = int
+
+const (
+	UNDEFINED AccountInfoDuplicate = iota
+	DUPLICATE_EMAIL
+	DUPLICATE_NAME
+	NO_DUPLICATES
+)
+
+type accountRepository interface {
+	createAccount(acc account) error
+	checkDuplicate(acc account) (AccountInfoDuplicate, error)
+	findAccount(name string)
+}
+
+type inMemoryAccountRepository struct {
+	accounts []account
+}
+
+func (repo *inMemoryAccountRepository) createAccount(acc account) error {
+	repo.accounts = append(repo.accounts, acc)
+
+	fmt.Println(repo.accounts)
+	return nil
+}
+
+func (repo *inMemoryAccountRepository) findAccount(name string) (*account, error) {
+
+	for _, acc := range repo.accounts {
+		if acc.name == name {
+
+			// return a pointer to a deep copy of acc, to avoid memory aliasing
+			// and giving the caller write access to the repo memory
+			return &account{
+				name:     strings.Clone(acc.name),
+				password: strings.Clone(acc.password),
+				email:    strings.Clone(acc.email),
+			}, nil
+		}
+	}
+	return nil, nil
+}
+
+func (repo *inMemoryAccountRepository) checkDuplicate(acc account) (AccountInfoDuplicate, error) {
+
+	for _, a := range repo.accounts {
+		if a.name == acc.name {
+			return DUPLICATE_NAME, nil
+		}
+		if a.email == acc.email {
+			return DUPLICATE_EMAIL, nil
+		}
+	}
+
+	return NO_DUPLICATES, nil
+
+}
 
 func main() {
-	accounts = append(accounts, account{name: "Nele", email: "nele@nele.de", password: "xyz123"})
-	accounts = append(accounts, account{name: "Alex", email: "alex@nele.de", password: "abc123"})
-	accounts = append(accounts, account{name: "Fabi", email: "fabi@nele.de", password: "def123"})
+
+	repo.accounts = append(repo.accounts, account{name: "Nele", email: "nele@nele.de", password: "xyz123"})
+	repo.accounts = append(repo.accounts, account{name: "Alex", email: "alex@nele.de", password: "abc123"})
+	repo.accounts = append(repo.accounts, account{name: "Fabi", email: "fabi@nele.de", password: "def123"})
 
 	fmt.Println("Hello from Auth!")
 
@@ -56,28 +117,59 @@ func handleCreateAccount(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	index := slices.IndexFunc(accounts, func(acc account) bool {
-		return (acc.email == requestBody.Email || acc.name == requestBody.Name)
-	})
+	newAcc := account{name: requestBody.Name, email: requestBody.Email, password: requestBody.Password}
 
-	if index < 0 {
-		accounts = append(accounts, account{name: requestBody.Name, email: requestBody.Email, password: requestBody.Password})
-		w.WriteHeader(http.StatusCreated)
-	} else {
-		w.WriteHeader(http.StatusBadRequest)
+	duplicate, err := repo.checkDuplicate(newAcc)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
 	}
+
+	switch duplicate {
+	case DUPLICATE_NAME:
+		w.WriteHeader(http.StatusBadRequest)
+	case DUPLICATE_EMAIL:
+		w.WriteHeader(http.StatusBadRequest)
+	case NO_DUPLICATES:
+		err := repo.createAccount(newAcc)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+		} else {
+			w.WriteHeader(http.StatusCreated)
+		}
+	default:
+		panic("unexpected value")
+	}
+
 }
 
 func handleLogin(w http.ResponseWriter, r *http.Request) {
-	for _, acc := range accounts {
-		if r.Context().Value("name") == acc.name {
-			if r.Context().Value("password") == acc.password {
-				fmt.Fprintln(w, "Login")
-			} else {
-				fmt.Fprintln(w, "Falsches Passwort!")
-			}
-			return
-		}
+
+	username := r.Context().Value("name").(string)
+	password := r.Context().Value("password")
+
+	fmt.Printf("username: %s, password: %s\n", username, password)
+	acc, err := repo.findAccount(username)
+
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
 	}
-	w.WriteHeader(http.StatusNotFound)
+
+	if acc == nil {
+		// username not found
+		w.WriteHeader(http.StatusNotFound)
+		return
+	}
+
+	fmt.Println(acc)
+
+	if acc.password == password {
+		w.WriteHeader(http.StatusOK)
+		fmt.Fprintln(w, "Login")
+	} else {
+		w.WriteHeader(http.StatusNotFound)
+		fmt.Fprintln(w, "Falsches Passwort!")
+	}
+
 }
