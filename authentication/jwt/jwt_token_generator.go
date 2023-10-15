@@ -10,6 +10,10 @@ type JwtTokenGenerator struct {
 	privateKey *ecdsa.PrivateKey
 }
 
+func NewJwtTokenGeneratorWithKey(privateKey *ecdsa.PrivateKey) *JwtTokenGenerator {
+	return &JwtTokenGenerator{privateKey}
+}
+
 func NewJwtTokenGenerator(config Config) (*JwtTokenGenerator, error) {
 	key, err := config.ReadPrivateKey()
 	if err != nil {

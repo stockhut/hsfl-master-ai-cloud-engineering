@@ -23,6 +23,11 @@ type requestBodyCreateAccount struct {
 	Password string
 }
 
+type requestBodyLoginAccount struct {
+	Name     string
+	Password string
+}
+
 type AccountController struct {
 	accountRepo    accountRepository
 	tokenGenerator jwt.JwtTokenGenerator
@@ -112,7 +117,7 @@ func main() {
 	r := router.New()
 
 	r.POST("/account", c.handleCreateAccount)
-	r.GET("/login/:name/:password", c.handleLogin)
+	r.POST("/login", c.handleLogin)
 
 	err = http.ListenAndServe("localhost:8080", r)
 	panic(err)
@@ -161,11 +166,22 @@ func (ctrl *AccountController) handleCreateAccount(w http.ResponseWriter, r *htt
 }
 
 func (ctrl *AccountController) handleLogin(w http.ResponseWriter, r *http.Request) {
+	body, err := io.ReadAll(r.Body)
 
-	username := r.Context().Value("name").(string)
-	password := r.Context().Value("password")
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
 
-	fmt.Printf("username: %s, password: %s\n", username, password)
+	var requestBody requestBodyLoginAccount
+	if err := json.Unmarshal(body, &requestBody); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	username := requestBody.Name
+	password := requestBody.Password
+
 	acc, err := ctrl.accountRepo.findAccount(username)
 
 	if err != nil {
@@ -185,7 +201,6 @@ func (ctrl *AccountController) handleLogin(w http.ResponseWriter, r *http.Reques
 		w.WriteHeader(http.StatusNotFound)
 		fmt.Fprintln(w, "Falsches Passwort!")
 		return
-
 	}
 
 	jwtToken, err := ctrl.tokenGenerator.CreateToken(map[string]interface{}{ //todo: Struct serializen statt map
