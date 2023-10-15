@@ -22,8 +22,8 @@ type requestBodyCreateAccount struct {
 	Password string
 }
 
-var repo inMemoryAccountRepository = inMemoryAccountRepository{
-	accounts: make([]account, 0),
+type AccountController struct {
+	accountRepo accountRepository
 }
 
 type AccountInfoDuplicate = int
@@ -38,7 +38,7 @@ const (
 type accountRepository interface {
 	createAccount(acc account) error
 	checkDuplicate(acc account) (AccountInfoDuplicate, error)
-	findAccount(name string)
+	findAccount(name string) (*account, error)
 }
 
 type inMemoryAccountRepository struct {
@@ -85,23 +85,27 @@ func (repo *inMemoryAccountRepository) checkDuplicate(acc account) (AccountInfoD
 }
 
 func main() {
-
+	var repo inMemoryAccountRepository = inMemoryAccountRepository{
+		accounts: make([]account, 0),
+	}
 	repo.accounts = append(repo.accounts, account{name: "Nele", email: "nele@nele.de", password: "xyz123"})
 	repo.accounts = append(repo.accounts, account{name: "Alex", email: "alex@nele.de", password: "abc123"})
 	repo.accounts = append(repo.accounts, account{name: "Fabi", email: "fabi@nele.de", password: "def123"})
+
+	c := AccountController{accountRepo: &repo}
 
 	fmt.Println("Hello from Auth!")
 
 	r := router.New()
 
-	r.POST("/account", handleCreateAccount)
-	r.GET("/login/:name/:password", handleLogin)
+	r.POST("/account", c.handleCreateAccount)
+	r.GET("/login/:name/:password", c.handleLogin)
 
 	err := http.ListenAndServe("localhost:8080", r)
 	panic(err)
 }
 
-func handleCreateAccount(w http.ResponseWriter, r *http.Request) {
+func (ctrl *AccountController) handleCreateAccount(w http.ResponseWriter, r *http.Request) {
 	body, err := io.ReadAll(r.Body)
 
 	if err != nil {
@@ -119,7 +123,7 @@ func handleCreateAccount(w http.ResponseWriter, r *http.Request) {
 	}
 	newAcc := account{name: requestBody.Name, email: requestBody.Email, password: requestBody.Password}
 
-	duplicate, err := repo.checkDuplicate(newAcc)
+	duplicate, err := ctrl.accountRepo.checkDuplicate(newAcc)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
@@ -131,7 +135,7 @@ func handleCreateAccount(w http.ResponseWriter, r *http.Request) {
 	case DUPLICATE_EMAIL:
 		w.WriteHeader(http.StatusBadRequest)
 	case NO_DUPLICATES:
-		err := repo.createAccount(newAcc)
+		err := ctrl.accountRepo.createAccount(newAcc)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 		} else {
@@ -143,13 +147,13 @@ func handleCreateAccount(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func handleLogin(w http.ResponseWriter, r *http.Request) {
+func (ctrl *AccountController) handleLogin(w http.ResponseWriter, r *http.Request) {
 
 	username := r.Context().Value("name").(string)
 	password := r.Context().Value("password")
 
 	fmt.Printf("username: %s, password: %s\n", username, password)
-	acc, err := repo.findAccount(username)
+	acc, err := ctrl.accountRepo.findAccount(username)
 
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
