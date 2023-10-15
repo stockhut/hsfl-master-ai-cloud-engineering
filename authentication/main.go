@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/stockhut/hsfl-master-ai-cloud-engineering/authentication/jwt"
 	"github.com/stockhut/hsfl-master-ai-cloud-engineering/common/router"
 )
 
@@ -23,7 +24,8 @@ type requestBodyCreateAccount struct {
 }
 
 type AccountController struct {
-	accountRepo accountRepository
+	accountRepo    accountRepository
+	tokenGenerator jwt.JwtTokenGenerator
 }
 
 type AccountInfoDuplicate = int
@@ -92,7 +94,18 @@ func main() {
 	repo.accounts = append(repo.accounts, account{name: "Alex", email: "alex@nele.de", password: "abc123"})
 	repo.accounts = append(repo.accounts, account{name: "Fabi", email: "fabi@nele.de", password: "def123"})
 
-	c := AccountController{accountRepo: &repo}
+	tokenGeneratorConfig := jwt.JwtConfig{
+		SignKey: "jwt_private_key.key",
+	}
+	tokenGenerator, err := jwt.NewJwtTokenGenerator(tokenGeneratorConfig)
+	if err != nil {
+		panic(err)
+	}
+
+	c := AccountController{
+		accountRepo:    &repo,
+		tokenGenerator: *tokenGenerator,
+	}
 
 	fmt.Println("Hello from Auth!")
 
@@ -101,7 +114,7 @@ func main() {
 	r.POST("/account", c.handleCreateAccount)
 	r.GET("/login/:name/:password", c.handleLogin)
 
-	err := http.ListenAndServe("localhost:8080", r)
+	err = http.ListenAndServe("localhost:8080", r)
 	panic(err)
 }
 
@@ -168,12 +181,29 @@ func (ctrl *AccountController) handleLogin(w http.ResponseWriter, r *http.Reques
 
 	fmt.Println(acc)
 
-	if acc.password == password {
-		w.WriteHeader(http.StatusOK)
-		fmt.Fprintln(w, "Login")
-	} else {
+	if acc.password != password {
 		w.WriteHeader(http.StatusNotFound)
 		fmt.Fprintln(w, "Falsches Passwort!")
+		return
+
 	}
+
+	jwtToken, err := ctrl.tokenGenerator.CreateToken(map[string]interface{}{ //todo: Struct serializen statt map
+		"name": acc.name,
+	})
+
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+	fmt.Println(jwtToken)
+
+	cookie := http.Cookie{
+		Name:  "jwt",
+		Value: jwtToken,
+	}
+	http.SetCookie(w, &cookie)
+	w.WriteHeader(http.StatusOK)
+	fmt.Fprintln(w, "Login")
 
 }
