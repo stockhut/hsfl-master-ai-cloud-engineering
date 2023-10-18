@@ -1,0 +1,37 @@
+package main
+
+import (
+	"context"
+	"fmt"
+	"net/http"
+
+	"github.com/golang-jwt/jwt"
+)
+
+func ValidateJwtMiddleware(publicKey any, next http.HandlerFunc) http.HandlerFunc {
+
+	return func(w http.ResponseWriter, r *http.Request) {
+		cookie, err := r.Cookie("jwt")
+		if err != nil {
+			fmt.Println("no jwt cookie")
+			w.WriteHeader(http.StatusBadRequest)
+			return
+		}
+
+		token, err := jwt.Parse(cookie.Value, func(t *jwt.Token) (interface{}, error) {
+			fmt.Println(t)
+			return publicKey, nil
+		})
+
+		if err != nil {
+			fmt.Println(err)
+			w.WriteHeader(http.StatusUnauthorized)
+
+			return
+		}
+
+		ctx := context.WithValue(r.Context(), "jwt", token)
+
+		next(w, r.WithContext(ctx))
+	}
+}

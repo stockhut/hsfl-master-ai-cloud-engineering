@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/stockhut/hsfl-master-ai-cloud-engineering/authentication/jwt"
+	"github.com/stockhut/hsfl-master-ai-cloud-engineering/authentication/jwt_util"
 	"github.com/stockhut/hsfl-master-ai-cloud-engineering/common/router"
 )
 
@@ -30,7 +30,7 @@ type requestBodyLoginAccount struct {
 
 type AccountController struct {
 	accountRepo    accountRepository
-	tokenGenerator jwt.JwtTokenGenerator
+	tokenGenerator jwt_util.JwtTokenGenerator
 }
 
 type AccountInfoDuplicate = int
@@ -99,10 +99,10 @@ func main() {
 	repo.accounts = append(repo.accounts, account{name: "Alex", email: "alex@nele.de", password: "abc123"})
 	repo.accounts = append(repo.accounts, account{name: "Fabi", email: "fabi@nele.de", password: "def123"})
 
-	tokenGeneratorConfig := jwt.JwtConfig{
+	tokenGeneratorConfig := jwt_util.JwtConfig{
 		SignKey: "jwt_private_key.key",
 	}
-	tokenGenerator, err := jwt.NewJwtTokenGenerator(tokenGeneratorConfig)
+	tokenGenerator, err := jwt_util.NewJwtTokenGenerator(tokenGeneratorConfig)
 	if err != nil {
 		panic(err)
 	}

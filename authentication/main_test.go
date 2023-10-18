@@ -9,14 +9,14 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/stockhut/hsfl-master-ai-cloud-engineering/authentication/jwt"
+	"github.com/stockhut/hsfl-master-ai-cloud-engineering/authentication/jwt_util"
 	"github.com/stockhut/hsfl-master-ai-cloud-engineering/common/router"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestPostAccount(t *testing.T) {
 	privateKey, _ := ecdsa.GenerateKey(elliptic.P256(), rand.Reader)
-	tokenGenerator := jwt.NewJwtTokenGeneratorWithKey(privateKey)
+	tokenGenerator := jwt_util.NewJwtTokenGeneratorWithKey(privateKey)
 
 	var repo inMemoryAccountRepository = inMemoryAccountRepository{
 		accounts: make([]account, 0),
