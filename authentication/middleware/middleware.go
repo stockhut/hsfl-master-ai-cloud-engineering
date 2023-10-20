@@ -8,6 +8,10 @@ import (
 	"github.com/golang-jwt/jwt"
 )
 
+type JwtContextKeyType string
+const JwtContextKey JwtContextKeyType = "jwt"
+
+
 func ValidateJwtMiddleware(publicKey any) func(http.HandlerFunc) http.HandlerFunc {
 
 	return func(next http.HandlerFunc) http.HandlerFunc {
@@ -32,7 +36,7 @@ func ValidateJwtMiddleware(publicKey any) func(http.HandlerFunc) http.HandlerFun
 				return
 			}
 	
-			ctx := context.WithValue(r.Context(), "jwt", token)
+			ctx := context.WithValue(r.Context(), JwtContextKey, token)
 	
 			next(w, r.WithContext(ctx))
 		}
