@@ -5,6 +5,9 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+
+	"github.com/stockhut/hsfl-master-ai-cloud-engineering/authentication/middleware"
+	"github.com/golang-jwt/jwt"
 )
 
 type Controller struct {
@@ -92,8 +95,17 @@ func (ctrl *Controller) CreateRecipe(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	token := r.Context().Value(middleware.JwtContextKey).(*jwt.Token)
+	claims := token.Claims.(jwt.MapClaims)
+	username, ok := claims["name"]
+	if !ok {
+		fmt.Println("failed to read name from jwt")
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
 	recipe := Recipe{
-		author:       "TODO",
+		author:       username.(string),
 		name:         requestBody.Name,
 		ingredients:  mapx(requestBody.Ingredients, ingredientRequestToModel),
 		directions:   requestBody.Directions,
