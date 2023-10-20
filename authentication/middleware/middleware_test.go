@@ -37,7 +37,7 @@ func TestJwtMiddleware(t *testing.T) {
 		}
 
 	}
-	jwtMiddleware := ValidateJwtMiddleware(publicKey, testHandler)
+	jwtMiddleware := ValidateJwtMiddleware(publicKey)(testHandler)
 
 	router := router.New()
 	router.GET("/test", jwtMiddleware)
