@@ -140,6 +140,7 @@ func (ctrl *Controller) CreateRecipe(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	w.WriteHeader(http.StatusCreated)
 	_, err = w.Write(responseBytes)
 	if err != nil {
 		fmt.Printf("failed to write response: %s\n", err)
