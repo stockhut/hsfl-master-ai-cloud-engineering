@@ -1,4 +1,10 @@
+
+
 # Taste Bud Tribe
+
+[![Test recipe service](https://github.com/stockhut/hsfl-master-ai-cloud-engineering/actions/workflows/test-recipe.yml/badge.svg)](https://github.com/stockhut/hsfl-master-ai-cloud-engineering/actions/workflows/test-recipe.yml)
+[![Test auth service](https://github.com/stockhut/hsfl-master-ai-cloud-engineering/actions/workflows/test-auth.yml/badge.svg)](https://github.com/stockhut/hsfl-master-ai-cloud-engineering/actions/workflows/test-auth.yml)
+
 A Food-focused social media platform for like-minded people, centered around tags and communities (tribes). Share your favorite recipies, follow your favorite Foodies on the platform and create meal plans to get you through the week.
 
 ## Authors
