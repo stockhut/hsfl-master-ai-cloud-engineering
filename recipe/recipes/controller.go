@@ -3,11 +3,11 @@ package recipes
 import (
 	"encoding/json"
 	"fmt"
-	"io"
+	request_body_middleware "github.com/stockhut/hsfl-master-ai-cloud-engineering/common/middleware/request_body"
 	"net/http"
 
-	"github.com/stockhut/hsfl-master-ai-cloud-engineering/authentication/middleware"
 	"github.com/golang-jwt/jwt"
+	"github.com/stockhut/hsfl-master-ai-cloud-engineering/authentication/middleware"
 )
 
 type Controller struct {
@@ -20,7 +20,7 @@ func NewController(repo RecipeRepository) *Controller {
 	}
 }
 
-type createRecipeRequestBody struct {
+type CreateRecipeRequestBody struct {
 	Name         string
 	Ingredients  []ingredientRequestBody
 	Directions   []string
@@ -80,20 +80,7 @@ func ingredientModelToResponse(i Ingredient) ingredientResponseBody {
 
 func (ctrl *Controller) CreateRecipe(w http.ResponseWriter, r *http.Request) {
 
-	body, err := io.ReadAll(r.Body)
-
-	if err != nil {
-		fmt.Println(err)
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
-
-	var requestBody createRecipeRequestBody
-	if err := json.Unmarshal(body, &requestBody); err != nil {
-		fmt.Println(err)
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
+	requestBody := request_body_middleware.GetBody[CreateRecipeRequestBody](r.Context())
 
 	token := r.Context().Value(middleware.JwtContextKey).(*jwt.Token)
 	claims := token.Claims.(jwt.MapClaims)

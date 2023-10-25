@@ -1,6 +1,7 @@
 package router
 
 import (
+	"github.com/stockhut/hsfl-master-ai-cloud-engineering/common/middleware/request_body"
 	"net/http"
 
 	"github.com/stockhut/hsfl-master-ai-cloud-engineering/common/router"
@@ -17,7 +18,7 @@ func New(
 ) *Router {
 	router := router.New()
 
-	router.POST("/api/v1/recipe", authMiddleware(recipeController.CreateRecipe))
+	router.POST("/api/v1/recipe", authMiddleware(request_body_middleware.Body[recipes.CreateRecipeRequestBody](recipeController.CreateRecipe)))
 
 	return &Router{router}
 }
