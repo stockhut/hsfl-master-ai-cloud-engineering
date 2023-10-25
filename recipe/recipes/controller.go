@@ -3,11 +3,12 @@ package recipes
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/stockhut/hsfl-master-ai-cloud-engineering/recipe/recipes/model"
 	"io"
 	"net/http"
 
-	"github.com/stockhut/hsfl-master-ai-cloud-engineering/authentication/middleware"
 	"github.com/golang-jwt/jwt"
+	"github.com/stockhut/hsfl-master-ai-cloud-engineering/authentication/middleware"
 )
 
 type Controller struct {
@@ -21,35 +22,35 @@ func NewController(repo RecipeRepository) *Controller {
 }
 
 type createRecipeRequestBody struct {
-	Name         string
-	Ingredients  []ingredientRequestBody
-	Directions   []string
-	TimeEstimate int
-	Difficulty   string
-	FeedsPeople  int
+	Name         string                  `json:"name"`
+	Ingredients  []ingredientRequestBody `json:"ingredients"`
+	Directions   []string                `json:"directions"`
+	TimeEstimate int                     `json:"time_estimate"`
+	Difficulty   string                  `json:"difficulty"`
+	FeedsPeople  int                     `json:"feeds_people"`
 }
 
 type recipeResponseModel struct {
-	Author       string
-	Id           RecipeId
-	Name         string
-	Ingredients  []ingredientResponseBody
-	Directions   []string
-	TimeEstimate int
-	Difficulty   string
-	FeedsPeople  int
+	Author       string                   `json:"author"`
+	Id           model.RecipeId           `json:"id"`
+	Name         string                   `json:"name"`
+	Ingredients  []ingredientResponseBody `json:"ingredients"`
+	Directions   []string                 `json:"directions"`
+	TimeEstimate int                      `json:"time_estimate"`
+	Difficulty   string                   `json:"difficulty"`
+	FeedsPeople  int                      `json:"feeds_people"`
 }
 
 type ingredientRequestBody struct {
-	Name   string
-	Unit   string
-	Amount int
+	Name   string `json:"name"`
+	Unit   string `json:"unit"`
+	Amount int    `json:"amount"`
 }
 
 type ingredientResponseBody struct {
-	Name   string
-	Unit   string
-	Amount int
+	Name   string `json:"name"`
+	Unit   string `json:"unit"`
+	Amount int    `json:"amount"`
 }
 
 func mapx[T any, U any](ts []T, f func(T) U) []U {
@@ -62,19 +63,19 @@ func mapx[T any, U any](ts []T, f func(T) U) []U {
 	return us
 }
 
-func ingredientRequestToModel(i ingredientRequestBody) Ingredient {
-	return Ingredient{
-		name:   i.Name,
-		unit:   i.Unit,
-		amount: i.Amount,
+func ingredientRequestToModel(i ingredientRequestBody) model.Ingredient {
+	return model.Ingredient{
+		Name:   i.Name,
+		Unit:   i.Unit,
+		Amount: i.Amount,
 	}
 }
 
-func ingredientModelToResponse(i Ingredient) ingredientResponseBody {
+func ingredientModelToResponse(i model.Ingredient) ingredientResponseBody {
 	return ingredientResponseBody{
-		Name:   i.name,
-		Unit:   i.unit,
-		Amount: i.amount,
+		Name:   i.Name,
+		Unit:   i.Unit,
+		Amount: i.Amount,
 	}
 }
 
@@ -104,14 +105,14 @@ func (ctrl *Controller) CreateRecipe(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	recipe := Recipe{
-		author:       username.(string),
-		name:         requestBody.Name,
-		ingredients:  mapx(requestBody.Ingredients, ingredientRequestToModel),
-		directions:   requestBody.Directions,
-		timeEstimate: requestBody.TimeEstimate,
-		difficulty:   requestBody.Difficulty,
-		feedsPeople:  requestBody.FeedsPeople,
+	recipe := model.Recipe{
+		Author:       username.(string),
+		Name:         requestBody.Name,
+		Ingredients:  mapx(requestBody.Ingredients, ingredientRequestToModel),
+		Directions:   requestBody.Directions,
+		TimeEstimate: requestBody.TimeEstimate,
+		Difficulty:   requestBody.Difficulty,
+		FeedsPeople:  requestBody.FeedsPeople,
 	}
 
 	newRecipe, err := ctrl.repo.CreateRecipe(recipe)
@@ -122,14 +123,14 @@ func (ctrl *Controller) CreateRecipe(w http.ResponseWriter, r *http.Request) {
 	}
 
 	response := recipeResponseModel{
-		Id:           newRecipe.id,
-		Author:       newRecipe.author,
-		Name:         newRecipe.name,
-		Ingredients:  mapx(newRecipe.ingredients, ingredientModelToResponse),
-		Directions:   newRecipe.directions,
-		TimeEstimate: newRecipe.timeEstimate,
-		Difficulty:   newRecipe.difficulty,
-		FeedsPeople:  newRecipe.feedsPeople,
+		Id:           newRecipe.Id,
+		Author:       newRecipe.Author,
+		Name:         newRecipe.Name,
+		Ingredients:  mapx(newRecipe.Ingredients, ingredientModelToResponse),
+		Directions:   newRecipe.Directions,
+		TimeEstimate: newRecipe.TimeEstimate,
+		Difficulty:   newRecipe.Difficulty,
+		FeedsPeople:  newRecipe.FeedsPeople,
 	}
 
 	responseBytes, err := json.Marshal(response)
