@@ -27,8 +27,7 @@ func TestJwtMiddleware(t *testing.T) {
 	testHandler := func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
 
-		token := r.Context().Value(JwtContextKey).(*jwt.Token)
-		claims := token.Claims.(jwt.MapClaims)
+		claims := r.Context().Value(JwtContextKey).(jwt.MapClaims)
 
 		name, ok := claims["name"]
 

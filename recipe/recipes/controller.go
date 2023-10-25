@@ -95,8 +95,8 @@ func (ctrl *Controller) CreateRecipe(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	token := r.Context().Value(middleware.JwtContextKey).(*jwt.Token)
-	claims := token.Claims.(jwt.MapClaims)
+	claims := r.Context().Value(middleware.JwtContextKey).(jwt.MapClaims)
+
 	username, ok := claims["name"]
 	if !ok {
 		fmt.Println("failed to read name from jwt")
