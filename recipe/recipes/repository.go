@@ -3,7 +3,7 @@ package recipes
 import "github.com/stockhut/hsfl-master-ai-cloud-engineering/recipe/recipes/model"
 
 type RecipeRepository interface {
-	//GetFromAuthor(author string) (Recipe, error)
+	GetAllByAuthor(author string) ([]model.Recipe, error)
 	CreateRecipe(model.Recipe) (model.Recipe, error)
 	//   DeleteRecipe(RecipeId) error
 }
@@ -18,4 +18,8 @@ func (repo *InMemoryRecipeRepository) CreateRecipe(recipe model.Recipe) (model.R
 	repo.Recipes = append(repo.Recipes, recipe)
 
 	return recipe, nil
+}
+
+func (repo *InMemoryRecipeRepository) GetAllByAuthor(_ string) ([]model.Recipe, error) {
+	panic("not implemented")
 }

@@ -18,6 +18,7 @@ func New(
 	router := router.New()
 
 	router.POST("/api/v1/recipe", authMiddleware(recipeController.CreateRecipe))
+	router.GET("/api/v1/recipe/by/:author", authMiddleware(recipeController.CreateRecipe))
 
 	return &Router{router}
 }

@@ -79,6 +79,19 @@ func ingredientModelToResponse(i model.Ingredient) ingredientResponseBody {
 	}
 }
 
+func recipeToResponseModel(recipe model.Recipe) recipeResponseModel {
+	return recipeResponseModel{
+		Id:           recipe.Id,
+		Author:       recipe.Author,
+		Name:         recipe.Name,
+		Ingredients:  mapx(recipe.Ingredients, ingredientModelToResponse),
+		Directions:   recipe.Directions,
+		TimeEstimate: recipe.TimeEstimate,
+		Difficulty:   recipe.Difficulty,
+		FeedsPeople:  recipe.FeedsPeople,
+	}
+}
+
 func (ctrl *Controller) CreateRecipe(w http.ResponseWriter, r *http.Request) {
 
 	body, err := io.ReadAll(r.Body)
@@ -122,16 +135,7 @@ func (ctrl *Controller) CreateRecipe(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	response := recipeResponseModel{
-		Id:           newRecipe.Id,
-		Author:       newRecipe.Author,
-		Name:         newRecipe.Name,
-		Ingredients:  mapx(newRecipe.Ingredients, ingredientModelToResponse),
-		Directions:   newRecipe.Directions,
-		TimeEstimate: newRecipe.TimeEstimate,
-		Difficulty:   newRecipe.Difficulty,
-		FeedsPeople:  newRecipe.FeedsPeople,
-	}
+	response := recipeToResponseModel(newRecipe)
 
 	responseBytes, err := json.Marshal(response)
 	if err != nil {
