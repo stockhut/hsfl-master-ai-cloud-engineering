@@ -32,7 +32,7 @@ jobs:
         run: go get
 
       - name: Go generate mocks
-        run: go generate recipe/_mocks/gen.go
+        run: go generate _mocks/gen.go
 
       - name: Go Vet
         run: go vet ./...
