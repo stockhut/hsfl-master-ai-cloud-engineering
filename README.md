@@ -2,6 +2,8 @@
 
 # Taste Bud Tribe
 
+[![](https://codecov.io/gh/stockhut/hsfl-master-ai-cloud-engineering/graph/badge.svg?token=JD50FBWWAJ)](https://codecov.io/gh/stockhut/hsfl-master-ai-cloud-engineering)
+
 [![Test recipe service](https://github.com/stockhut/hsfl-master-ai-cloud-engineering/actions/workflows/test-recipe.yml/badge.svg)](https://github.com/stockhut/hsfl-master-ai-cloud-engineering/actions/workflows/test-recipe.yml)
 [![Go Report Card](https://goreportcard.com/badge/github.com/stockhut/hsfl-master-ai-cloud-engineering/recipe)](https://goreportcard.com/report/github.com/stockhut/hsfl-master-ai-cloud-engineering/recipe)
 
