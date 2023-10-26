@@ -35,6 +35,7 @@ func ValidateJwtMiddleware(publicKey any) func(http.HandlerFunc) http.HandlerFun
 
 				return
 			}
+
 			claims := token.Claims.(jwt.MapClaims)
 			ctx := context.WithValue(r.Context(), JwtContextKey, claims)
 
@@ -42,3 +43,5 @@ func ValidateJwtMiddleware(publicKey any) func(http.HandlerFunc) http.HandlerFun
 		}
 	}
 }
+
+
