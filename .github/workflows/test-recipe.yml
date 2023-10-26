@@ -26,6 +26,9 @@ jobs:
       - name: Go Format
         run: gofmt -s -w . && git diff --exit-code
 
+      - name: Go get
+        run: go get
+
       - name: Go Vet
         run: go vet ./...
 
