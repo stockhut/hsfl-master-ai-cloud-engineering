@@ -91,4 +91,35 @@ func TestGetByAuthor(t *testing.T) {
 		assert.Equal(t, http.StatusInternalServerError, w.Code)
 
 	})
+
+	t.Run("should handle users without recipes correct", func(t *testing.T) {
+
+		const testUserName = "testuser"
+
+		gomockController := gomock.NewController(t)
+
+		mockRepo := mockrecipes.NewMockRecipeRepository(gomockController)
+		mockRepo.
+			EXPECT().
+			GetAllByAuthor(testUserName).
+			Return([]model.Recipe{}, nil).
+			Times(1)
+
+		controller := NewController(mockRepo)
+
+		w := httptest.NewRecorder()
+		r := httptest.NewRequest(http.MethodPost, "/recipe", nil)
+
+		ctx := context.WithValue(r.Context(), "author", testUserName)
+
+		controller.GetByAuthor(w, r.WithContext(ctx))
+		assert.Equal(t, http.StatusOK, w.Code)
+
+		var responseBody []recipeResponseModel
+		err := json.NewDecoder(w.Body).Decode(&responseBody)
+
+		assert.Nil(t, err)
+
+		assert.Len(t, responseBody, 0)
+	})
 }
