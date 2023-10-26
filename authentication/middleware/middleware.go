@@ -43,5 +43,3 @@ func ValidateJwtMiddleware(publicKey any) func(http.HandlerFunc) http.HandlerFun
 		}
 	}
 }
-
-
