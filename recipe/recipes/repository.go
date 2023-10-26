@@ -4,8 +4,8 @@ import "github.com/stockhut/hsfl-master-ai-cloud-engineering/recipe/recipes/mode
 
 type RecipeRepository interface {
 	GetAllByAuthor(author string) ([]model.Recipe, error)
+	GetById(id model.RecipeId) (*model.Recipe, error)
 	CreateRecipe(model.Recipe) (model.Recipe, error)
-	//   DeleteRecipe(RecipeId) error
 }
 
 type InMemoryRecipeRepository struct {
@@ -21,5 +21,9 @@ func (repo *InMemoryRecipeRepository) CreateRecipe(recipe model.Recipe) (model.R
 }
 
 func (repo *InMemoryRecipeRepository) GetAllByAuthor(_ string) ([]model.Recipe, error) {
+	panic("not implemented")
+}
+
+func (repo *InMemoryRecipeRepository) GetById(id model.RecipeId) (*model.Recipe, error) {
 	panic("not implemented")
 }
