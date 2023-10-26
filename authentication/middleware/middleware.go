@@ -10,7 +10,7 @@ import (
 
 type JwtContextKeyType string
 
-const JwtContextKey JwtContextKeyType = "jwt"
+const JwtContextKey JwtContextKeyType = "jwt-claim"
 
 func ValidateJwtMiddleware(publicKey any) func(http.HandlerFunc) http.HandlerFunc {
 
@@ -36,7 +36,8 @@ func ValidateJwtMiddleware(publicKey any) func(http.HandlerFunc) http.HandlerFun
 				return
 			}
 
-			ctx := context.WithValue(r.Context(), JwtContextKey, token)
+			claims := token.Claims.(jwt.MapClaims)
+			ctx := context.WithValue(r.Context(), JwtContextKey, claims)
 
 			next(w, r.WithContext(ctx))
 		}

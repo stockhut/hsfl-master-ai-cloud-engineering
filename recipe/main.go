@@ -4,6 +4,7 @@ import (
 	"crypto/x509"
 	"encoding/pem"
 	"fmt"
+	"github.com/stockhut/hsfl-master-ai-cloud-engineering/recipe/recipes/model"
 	"net/http"
 	"os"
 
@@ -28,7 +29,7 @@ func main() {
 	}
 
 	repo := recipes.InMemoryRecipeRepository{
-		Recipes: make([]recipes.Recipe, 0),
+		Recipes: make([]model.Recipe, 0),
 	}
 
 	recipeController := recipes.NewController(&repo)
