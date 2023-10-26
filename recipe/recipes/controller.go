@@ -6,8 +6,8 @@ import (
 	"io"
 	"net/http"
 
-	"github.com/stockhut/hsfl-master-ai-cloud-engineering/authentication/middleware"
 	"github.com/golang-jwt/jwt"
+	"github.com/stockhut/hsfl-master-ai-cloud-engineering/authentication/middleware"
 )
 
 type Controller struct {
