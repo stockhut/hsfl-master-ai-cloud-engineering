@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/stockhut/hsfl-master-ai-cloud-engineering/common/middleware/request_body"
+	requestbodymiddleware "github.com/stockhut/hsfl-master-ai-cloud-engineering/common/middleware/request_body"
 	"net/http"
 	"strings"
 
@@ -115,8 +115,8 @@ func main() {
 
 	r := router.New()
 
-	r.POST("/account", request_body_middleware.Body[requestBodyCreateAccount](c.handleCreateAccount))
-	r.POST("/login", request_body_middleware.Body[requestBodyLoginAccount](c.handleLogin))
+	r.POST("/account", requestbodymiddleware.Body[requestBodyCreateAccount](c.handleCreateAccount))
+	r.POST("/login", requestbodymiddleware.Body[requestBodyLoginAccount](c.handleLogin))
 
 	err = http.ListenAndServe("localhost:8080", r)
 	panic(err)
@@ -124,7 +124,7 @@ func main() {
 
 func (ctrl *AccountController) handleCreateAccount(w http.ResponseWriter, r *http.Request) {
 
-	requestBody := request_body_middleware.GetBody[requestBodyCreateAccount](r.Context())
+	requestBody := requestbodymiddleware.GetBody[requestBodyCreateAccount](r.Context())
 
 	if requestBody.Email == "" || requestBody.Name == "" || requestBody.Password == "" {
 		w.WriteHeader(http.StatusBadRequest)
@@ -157,7 +157,7 @@ func (ctrl *AccountController) handleCreateAccount(w http.ResponseWriter, r *htt
 }
 
 func (ctrl *AccountController) handleLogin(w http.ResponseWriter, r *http.Request) {
-	requestBody := request_body_middleware.GetBody[requestBodyLoginAccount](r.Context())
+	requestBody := requestbodymiddleware.GetBody[requestBodyLoginAccount](r.Context())
 
 	username := requestBody.Name
 	password := requestBody.Password

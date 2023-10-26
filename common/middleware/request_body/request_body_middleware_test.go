@@ -1,4 +1,4 @@
-package request_body_middleware
+package request_body
 
 import (
 	"fmt"

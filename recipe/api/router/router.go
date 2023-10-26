@@ -18,7 +18,7 @@ func New(
 ) *Router {
 	router := router.New()
 
-	router.POST("/api/v1/recipe", authMiddleware(request_body_middleware.Body[recipes.CreateRecipeRequestBody](recipeController.CreateRecipe)))
+	router.POST("/api/v1/recipe", authMiddleware(request_body.Body[recipes.CreateRecipeRequestBody](recipeController.CreateRecipe)))
 
 	return &Router{router}
 }

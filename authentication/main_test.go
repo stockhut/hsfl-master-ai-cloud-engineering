@@ -4,7 +4,7 @@ import (
 	"crypto/ecdsa"
 	"crypto/elliptic"
 	"crypto/rand"
-	"github.com/stockhut/hsfl-master-ai-cloud-engineering/common/middleware/request_body"
+	requestbodymiddleware "github.com/stockhut/hsfl-master-ai-cloud-engineering/common/middleware/request_body"
 	"net/http"
 	"net/http/httptest"
 	"strings"
@@ -29,8 +29,8 @@ func TestPostAccount(t *testing.T) {
 	c := AccountController{accountRepo: &repo, tokenGenerator: *tokenGenerator}
 
 	router := router.New()
-	router.POST("/account", request_body_middleware.Body[requestBodyCreateAccount](c.handleCreateAccount))
-	router.POST("/login", request_body_middleware.Body[requestBodyLoginAccount](c.handleLogin))
+	router.POST("/account", requestbodymiddleware.Body[requestBodyCreateAccount](c.handleCreateAccount))
+	router.POST("/login", requestbodymiddleware.Body[requestBodyLoginAccount](c.handleLogin))
 
 	t.Run("PostAccount", func(t *testing.T) {
 		t.Run("should return 400 BAD REQUEST if payload is nil", func(t *testing.T) {
