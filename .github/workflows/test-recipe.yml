@@ -4,6 +4,8 @@ on:
   push:
     paths:
       - 'recipe/**'
+      - '.github/workflows/test-recipe.yml'
+
   workflow_dispatch:
 
 jobs:
