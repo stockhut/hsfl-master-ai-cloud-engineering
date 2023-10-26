@@ -4,6 +4,8 @@ on:
   push:
     paths:
       - 'authentication/**'
+      - '.github/workflows/test-auth.yml'
+
   workflow_dispatch:
 
 jobs:
