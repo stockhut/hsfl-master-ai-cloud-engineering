@@ -4,11 +4,13 @@ on:
   push:
     paths:
       - 'recipe/**'
+      - '.github/workflows/test-recipe.yml'
+
   workflow_dispatch:
 
 jobs:
   test:
-    name: Test auth service
+    name: Test recipe service
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -26,6 +28,12 @@ jobs:
       - name: Go Format
         run: gofmt -s -w . && git diff --exit-code
 
+      - name: Install mockgen
+        run: go install go.uber.org/mock/mockgen@latest
+
+      - name: Go generate mocks
+        run: go generate _mocks/gen.go
+
       - name: Go Vet
         run: go vet ./...
 
@@ -40,9 +48,6 @@ jobs:
 
       - name: Go Build
         run: go build -o /dev/null ./...
-
-      - name: Go generate mocks
-        run: go generate recipe/_mocks/gen.go
 
       - name: Go Test
         run: go test -race -shuffle=on -coverprofile=coverage.txt ./...
