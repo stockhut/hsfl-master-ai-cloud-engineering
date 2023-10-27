@@ -1,20 +1,20 @@
-name: Test auth service
+name: Test common package
 
 on:
   push:
     paths:
-      - 'authentication/**'
-      - '.github/workflows/test-auth.yml'
+      - 'common/**'
+      - '.github/workflows/test-common.yml'
 
   workflow_dispatch:
 
 jobs:
   test:
-    name: Test auth service
+    name: Test common package
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: authentication
+        working-directory: common
 
     steps:
       - uses: actions/checkout@v4
@@ -23,7 +23,7 @@ jobs:
         uses: actions/setup-go@v4
         with:
           go-version: '1.21.1'
-          cache-dependency-path: authentication/go.sum
+          cache-dependency-path: common/go.sum
 
       - name: Go Format
         run: gofmt -s -w . && git diff --exit-code
