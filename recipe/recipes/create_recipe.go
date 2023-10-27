@@ -5,8 +5,6 @@ import (
 	"fmt"
 	"github.com/golang-jwt/jwt"
 	"github.com/stockhut/hsfl-master-ai-cloud-engineering/authentication/middleware"
-	"github.com/stockhut/hsfl-master-ai-cloud-engineering/common/fun"
-	"github.com/stockhut/hsfl-master-ai-cloud-engineering/recipe/recipes/model"
 	"io"
 	"net/http"
 )
@@ -37,15 +35,7 @@ func (ctrl *Controller) CreateRecipe(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	recipe := model.Recipe{
-		Author:       username.(string),
-		Name:         requestBody.Name,
-		Ingredients:  fun.Map(requestBody.Ingredients, ingredientRequestToModel),
-		Directions:   requestBody.Directions,
-		TimeEstimate: requestBody.TimeEstimate,
-		Difficulty:   requestBody.Difficulty,
-		FeedsPeople:  requestBody.FeedsPeople,
-	}
+	recipe := recipeRequestToModel(requestBody, username.(string))
 
 	newRecipe, err := ctrl.repo.CreateRecipe(recipe)
 	if err != nil {

@@ -63,3 +63,15 @@ func recipeToResponseModel(recipe model.Recipe) recipeResponseModel {
 		FeedsPeople:  recipe.FeedsPeople,
 	}
 }
+
+func recipeRequestToModel(request createRecipeRequestBody, author string) model.Recipe {
+	return model.Recipe{
+		Author:       author,
+		Name:         request.Name,
+		Ingredients:  fun.Map(request.Ingredients, ingredientRequestToModel),
+		Directions:   request.Directions,
+		TimeEstimate: request.TimeEstimate,
+		Difficulty:   request.Difficulty,
+		FeedsPeople:  request.FeedsPeople,
+	}
+}

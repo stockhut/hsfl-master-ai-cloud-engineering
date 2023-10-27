@@ -83,3 +83,42 @@ func Test_recipeToResponseModel(t *testing.T) {
 		FeedsPeople:  10,
 	}, resp)
 }
+
+func Test_recipeRequestToModel(t *testing.T) {
+
+	req := createRecipeRequestBody{
+		Name: "somename",
+		Ingredients: []ingredientRequestBody{
+			{
+
+				Name:   "i",
+				Amount: 1,
+				Unit:   "unit",
+			},
+		},
+		Directions:   []string{"do stuff"},
+		TimeEstimate: 60,
+		Difficulty:   "easy",
+		FeedsPeople:  10,
+	}
+
+	recipe := recipeRequestToModel(req, "someuser")
+
+	assert.Equal(t, model.Recipe{
+		Id:     "",
+		Author: "someuser",
+		Name:   "somename",
+		Ingredients: []model.Ingredient{
+			{
+
+				Name:   "i",
+				Amount: 1,
+				Unit:   "unit",
+			},
+		},
+		Directions:   []string{"do stuff"},
+		TimeEstimate: 60,
+		Difficulty:   "easy",
+		FeedsPeople:  10,
+	}, recipe)
+}
