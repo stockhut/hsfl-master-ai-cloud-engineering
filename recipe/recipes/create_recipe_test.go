@@ -3,6 +3,7 @@ package recipes
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"github.com/golang-jwt/jwt"
 	"github.com/stockhut/hsfl-master-ai-cloud-engineering/authentication/middleware"
 	"github.com/stockhut/hsfl-master-ai-cloud-engineering/recipe/recipes/model"
@@ -71,5 +72,44 @@ func TestCreateRecipe(t *testing.T) {
 
 		assert.Equal(t, model.RecipeId("some-id"), responseBody.Id)
 		assert.Equal(t, "testuser", responseBody.Author)
+	})
+
+	t.Run("should return 500 INTERNAL SERVER ERROR when database write fails", func(t *testing.T) {
+
+		gomockController := gomock.NewController(t)
+
+		mockRepo := mock_recipes.NewMockRecipeRepository(gomockController)
+		mockRepo.EXPECT().CreateRecipe(gomock.Any()).Return(model.Recipe{}, errors.New("failed to save recipe")).Times(1)
+
+		controller := NewController(mockRepo)
+
+		testBody :=
+			`{
+				"name": "my recipe",
+				"ingredients": [
+					{
+						"name": "rat",
+						"unit": "pcs",
+						"amount": 1
+					}
+				],
+				"directions": [
+					"cook it"
+				],
+				"time_estimate": 60,
+				"difficulty": "easy",
+				"feeds_people": 10
+			}`
+
+		w := httptest.NewRecorder()
+		r := httptest.NewRequest(http.MethodPost, "/recipe", strings.NewReader(testBody))
+
+		claims := jwt.MapClaims{
+			"name": "testuser",
+		}
+		ctx := context.WithValue(r.Context(), middleware.JwtContextKey, claims)
+
+		controller.CreateRecipe(w, r.WithContext(ctx))
+		assert.Equal(t, http.StatusInternalServerError, w.Code)
 	})
 }
