@@ -1,6 +1,7 @@
 package recipes
 
 import "github.com/stockhut/hsfl-master-ai-cloud-engineering/recipe/recipes/model"
+import "github.com/stockhut/hsfl-master-ai-cloud-engineering/common/fun"
 
 type createRecipeRequestBody struct {
 	Name         string                  `json:"name"`
@@ -55,7 +56,7 @@ func recipeToResponseModel(recipe model.Recipe) recipeResponseModel {
 		Id:           recipe.Id,
 		Author:       recipe.Author,
 		Name:         recipe.Name,
-		Ingredients:  mapx(recipe.Ingredients, ingredientModelToResponse),
+		Ingredients:  fun.Map(recipe.Ingredients, ingredientModelToResponse),
 		Directions:   recipe.Directions,
 		TimeEstimate: recipe.TimeEstimate,
 		Difficulty:   recipe.Difficulty,

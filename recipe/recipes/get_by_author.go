@@ -3,6 +3,7 @@ package recipes
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/stockhut/hsfl-master-ai-cloud-engineering/common/fun"
 	"net/http"
 )
 
@@ -18,7 +19,7 @@ func (ctrl *Controller) GetByAuthor(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	response := mapx(recipes, recipeToResponseModel)
+	response := fun.Map(recipes, recipeToResponseModel)
 
 	responseBytes, err := json.Marshal(response)
 	if err != nil {
