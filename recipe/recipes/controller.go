@@ -21,38 +21,6 @@ func NewController(repo RecipeRepository) *Controller {
 	}
 }
 
-type createRecipeRequestBody struct {
-	Name         string                  `json:"name"`
-	Ingredients  []ingredientRequestBody `json:"ingredients"`
-	Directions   []string                `json:"directions"`
-	TimeEstimate int                     `json:"time_estimate"`
-	Difficulty   string                  `json:"difficulty"`
-	FeedsPeople  int                     `json:"feeds_people"`
-}
-
-type recipeResponseModel struct {
-	Author       string                   `json:"author"`
-	Id           model.RecipeId           `json:"id"`
-	Name         string                   `json:"name"`
-	Ingredients  []ingredientResponseBody `json:"ingredients"`
-	Directions   []string                 `json:"directions"`
-	TimeEstimate int                      `json:"time_estimate"`
-	Difficulty   string                   `json:"difficulty"`
-	FeedsPeople  int                      `json:"feeds_people"`
-}
-
-type ingredientRequestBody struct {
-	Name   string `json:"name"`
-	Unit   string `json:"unit"`
-	Amount int    `json:"amount"`
-}
-
-type ingredientResponseBody struct {
-	Name   string `json:"name"`
-	Unit   string `json:"unit"`
-	Amount int    `json:"amount"`
-}
-
 func mapx[T any, U any](ts []T, f func(T) U) []U {
 
 	us := make([]U, len(ts))
@@ -61,35 +29,6 @@ func mapx[T any, U any](ts []T, f func(T) U) []U {
 	}
 
 	return us
-}
-
-func ingredientRequestToModel(i ingredientRequestBody) model.Ingredient {
-	return model.Ingredient{
-		Name:   i.Name,
-		Unit:   i.Unit,
-		Amount: i.Amount,
-	}
-}
-
-func ingredientModelToResponse(i model.Ingredient) ingredientResponseBody {
-	return ingredientResponseBody{
-		Name:   i.Name,
-		Unit:   i.Unit,
-		Amount: i.Amount,
-	}
-}
-
-func recipeToResponseModel(recipe model.Recipe) recipeResponseModel {
-	return recipeResponseModel{
-		Id:           recipe.Id,
-		Author:       recipe.Author,
-		Name:         recipe.Name,
-		Ingredients:  mapx(recipe.Ingredients, ingredientModelToResponse),
-		Directions:   recipe.Directions,
-		TimeEstimate: recipe.TimeEstimate,
-		Difficulty:   recipe.Difficulty,
-		FeedsPeople:  recipe.FeedsPeople,
-	}
 }
 
 func (ctrl *Controller) CreateRecipe(w http.ResponseWriter, r *http.Request) {
