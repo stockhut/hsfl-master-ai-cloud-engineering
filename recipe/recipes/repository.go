@@ -6,6 +6,7 @@ type RecipeRepository interface {
 	GetAllByAuthor(author string) ([]model.Recipe, error)
 	GetById(id model.RecipeId) (*model.Recipe, error)
 	CreateRecipe(model.Recipe) (model.Recipe, error)
+	DeleteRecipe(id model.RecipeId) error
 }
 
 type InMemoryRecipeRepository struct {
