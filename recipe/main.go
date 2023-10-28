@@ -4,7 +4,9 @@ import (
 	"crypto/x509"
 	"encoding/pem"
 	"fmt"
+	requestlogger "github.com/stockhut/hsfl-master-ai-cloud-engineering/common/middleware/request-logger"
 	"github.com/stockhut/hsfl-master-ai-cloud-engineering/recipe/recipes/model"
+	"log"
 	"net/http"
 	"os"
 
@@ -36,8 +38,15 @@ func main() {
 
 	authMiddleware := middleware.ValidateJwtMiddleware(public_key)
 
-	router := router.New(authMiddleware, recipeController)
+	logFlags := log.Ltime | log.Lmsgprefix | log.Lmicroseconds
+	logger := log.New(os.Stdout, "", logFlags)
+	logMw := requestlogger.New(logger)
 
-	err = http.ListenAndServe(":8081", router)
+	router := router.New(authMiddleware, logMw, recipeController)
+
+	port := ":8081"
+
+	logger.Printf("Listening on %s\n", port)
+	err = http.ListenAndServe(port, router)
 	panic(err)
 }

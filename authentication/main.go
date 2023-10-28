@@ -3,8 +3,11 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	requestlogger "github.com/stockhut/hsfl-master-ai-cloud-engineering/common/middleware/request-logger"
 	"io"
+	"log"
 	"net/http"
+	"os"
 	"strings"
 
 	"github.com/stockhut/hsfl-master-ai-cloud-engineering/authentication/jwt_util"
@@ -114,10 +117,14 @@ func main() {
 
 	fmt.Println("Hello from Auth!")
 
+	logFlags := log.Ltime | log.Lmsgprefix | log.Lmicroseconds
+	logger := log.New(os.Stdout, "", logFlags)
+	logMw := requestlogger.New(logger)
+
 	r := router.New()
 
-	r.POST("/account", c.handleCreateAccount)
-	r.POST("/login", c.handleLogin)
+	r.POST("/account", logMw(c.handleCreateAccount))
+	r.POST("/login", logMw(c.handleLogin))
 
 	err = http.ListenAndServe("localhost:8080", r)
 	panic(err)
@@ -167,7 +174,6 @@ func (ctrl *AccountController) handleCreateAccount(w http.ResponseWriter, r *htt
 
 func (ctrl *AccountController) handleLogin(w http.ResponseWriter, r *http.Request) {
 	body, err := io.ReadAll(r.Body)
-
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return
