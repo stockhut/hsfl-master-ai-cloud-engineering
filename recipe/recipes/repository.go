@@ -28,3 +28,7 @@ func (repo *InMemoryRecipeRepository) GetAllByAuthor(_ string) ([]model.Recipe, 
 func (repo *InMemoryRecipeRepository) GetById(id model.RecipeId) (*model.Recipe, error) {
 	panic("not implemented")
 }
+
+func (repo *InMemoryRecipeRepository) DeleteRecipe(id model.RecipeId) error {
+	panic("not implemented")
+}

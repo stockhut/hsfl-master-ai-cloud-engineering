@@ -20,6 +20,7 @@ func New(
 	router.POST("/api/v1/recipe", authMiddleware(recipeController.CreateRecipe))
 	router.GET("/api/v1/recipe/by/:author", authMiddleware(recipeController.GetByAuthor))
 	router.GET("/api/v1/recipe/:id", authMiddleware(recipeController.GetById))
+	router.DELETE("/api/v1/recipe/:id", authMiddleware(recipeController.DeleteRecipe))
 
 	return &Router{router}
 }
