@@ -24,7 +24,7 @@ func TestDeleteRecipe(t *testing.T) {
 		gomockController := gomock.NewController(t)
 
 		mockRepo := mock_recipes.NewMockRecipeRepository(gomockController)
-		mockRepo.EXPECT().DeleteRecipe(model.RecipeId("testrecipe")).Return(nil).Times(1)
+		mockRepo.EXPECT().DeleteRecipe(model.RecipeId(testRecipeId)).Return(nil).Times(1)
 
 		controller := NewController(mockRepo)
 
@@ -35,7 +35,7 @@ func TestDeleteRecipe(t *testing.T) {
 			"name": testUserName,
 		}
 		ctx := context.WithValue(r.Context(), middleware.JwtContextKey, claims)
-		ctx = context.WithValue(ctx, "id", "testrecipe")
+		ctx = context.WithValue(ctx, "id", testRecipeId)
 
 		controller.DeleteRecipe(w, r.WithContext(ctx))
 		assert.Equal(t, http.StatusNoContent, w.Code)
@@ -50,7 +50,7 @@ func TestDeleteRecipe(t *testing.T) {
 		gomockController := gomock.NewController(t)
 
 		mockRepo := mock_recipes.NewMockRecipeRepository(gomockController)
-		mockRepo.EXPECT().DeleteRecipe(model.RecipeId("testrecipe")).Return(errors.New("failed to delete recipe")).Times(1)
+		mockRepo.EXPECT().DeleteRecipe(model.RecipeId(testRecipeId)).Return(errors.New("failed to delete recipe")).Times(1)
 
 		controller := NewController(mockRepo)
 
