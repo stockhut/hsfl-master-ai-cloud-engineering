@@ -47,7 +47,7 @@ func Test_responseWriterWithStatus_WriteHeader(t *testing.T) {
 
 func Test_request_logger_middleware(t *testing.T) {
 
-	t.Run("logs someething", func(t *testing.T) {
+	t.Run("logs something", func(t *testing.T) {
 
 		recorder := httptest.NewRecorder()
 
@@ -75,5 +75,29 @@ func Test_request_logger_middleware(t *testing.T) {
 		logString := logWriter.String()
 		assert.Contains(t, logString, "POST")
 		assert.Contains(t, logString, "418")
+	})
+
+	t.Run("recovers from panic in subsequent handlers", func(t *testing.T) {
+
+		recorder := httptest.NewRecorder()
+
+		// record bytes written by the middleware
+		logData := make([]byte, 0)
+		logWriter := bytes.NewBuffer(logData)
+
+		logger := log.New(logWriter, "", 0)
+		mw := New(logger)
+
+		r := httptest.NewRequest(http.MethodPost, "/test", nil)
+		handler := mw(func(w http.ResponseWriter, r *http.Request) {
+			panic("test")
+		})
+
+		handler(recorder, r)
+
+		assert.Equal(t, http.StatusInternalServerError, recorder.Result().StatusCode)
+
+		logString := logWriter.String()
+		assert.Contains(t, logString, "PANIC")
 	})
 }

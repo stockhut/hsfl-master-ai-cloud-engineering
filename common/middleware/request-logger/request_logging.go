@@ -1,6 +1,9 @@
+// request_logger implements a middleware that logs incoming requests and their responses.
+// In case a downstream handler panics, the logger recovers and sends a 500 response
 package request_logger
 
 import (
+	"fmt"
 	tc "github.com/stockhut/hsfl-master-ai-cloud-engineering/common/termcolor"
 	"log"
 	"net/http"
@@ -41,16 +44,24 @@ func New(logger *log.Logger) func(next http.HandlerFunc) http.HandlerFunc {
 				responseWriter: w,
 			}
 
+			defer func() {
+				var panicText string
+
+				if r := recover(); r != nil {
+					panicText = " " + tc.Bg(tc.BgRed)(fmt.Sprintf(" PANIC: %s", r))
+					responseWriter.WriteHeader(http.StatusInternalServerError)
+				}
+
+				method := httpMethodColorizer(r.Method)
+				url := r.URL
+				duration := time.Now().Sub(startTime)
+				var statusCode string
+				statusCode = statusCodeColorizer(*responseWriter.statusCode)
+
+				logger.Printf("[%s] %s %s %s%s", method, url, statusCode, duration, panicText)
+			}()
+
 			next(&responseWriter, r)
-
-			method := httpMethodColorizer(r.Method)
-			url := r.URL
-			duration := time.Now().Sub(startTime)
-			var statusCode string
-			statusCode = statusCodeColorizer(*responseWriter.statusCode)
-
-			// [GET] /foo/bar 404 12ms
-			logger.Printf("[%s] %s %s %s", method, url, statusCode, duration)
 		}
 	}
 }
