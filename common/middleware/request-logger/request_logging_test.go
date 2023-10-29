@@ -2,7 +2,9 @@ package request_logger
 
 import (
 	"bytes"
+	"fmt"
 	"github.com/stretchr/testify/assert"
+	"io"
 	"log"
 	"net/http"
 	"net/http/httptest"
@@ -11,7 +13,7 @@ import (
 
 func Test_responseWriterWithStatus_WriteHeader(t *testing.T) {
 
-	t.Run("records the first written status code", func(t *testing.T) {
+	t.Run("records the first written status code and calls wrapped methods", func(t *testing.T) {
 
 		recorder := httptest.NewRecorder()
 		responseWriter := responseWriterWithStatus{
@@ -19,14 +21,27 @@ func Test_responseWriterWithStatus_WriteHeader(t *testing.T) {
 		}
 
 		handler := func(w http.ResponseWriter, r *http.Request) {
+			w.Header().Add("foo", "bar")
+
 			w.WriteHeader(http.StatusTeapot)
 			w.WriteHeader(http.StatusOK)
+
+			fmt.Fprint(w, "test")
 		}
 
 		handler(&responseWriter, nil)
 
 		assert.Equal(t, http.StatusTeapot, *responseWriter.statusCode)
 		assert.Equal(t, recorder.Result().StatusCode, *responseWriter.statusCode)
+
+		body, err := io.ReadAll(recorder.Body)
+
+		assert.Nil(t, err)
+		assert.Equal(t, "test", string(body))
+
+		fooHeaders := recorder.Result().Header.Values("foo")
+		assert.Len(t, fooHeaders, 1)
+		assert.Equal(t, "bar", fooHeaders[0])
 	})
 }
 
