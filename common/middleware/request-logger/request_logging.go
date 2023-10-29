@@ -4,7 +4,6 @@ import (
 	tc "github.com/stockhut/hsfl-master-ai-cloud-engineering/common/termcolor"
 	"log"
 	"net/http"
-	"os"
 	"strconv"
 	"time"
 )
@@ -48,11 +47,7 @@ func New(logger *log.Logger) func(next http.HandlerFunc) http.HandlerFunc {
 			url := r.URL
 			duration := time.Now().Sub(startTime)
 			var statusCode string
-			if logger.Writer() == os.Stdout {
-				statusCode = statusCodeColorizer(*responseWriter.statusCode)
-			} else {
-				statusCode = strconv.Itoa(*responseWriter.statusCode)
-			}
+			statusCode = statusCodeColorizer(*responseWriter.statusCode)
 
 			// [GET] /foo/bar 404 12ms
 			logger.Printf("[%s] %s %s %s", method, url, statusCode, duration)
