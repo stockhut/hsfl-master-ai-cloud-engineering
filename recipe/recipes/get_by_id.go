@@ -1,8 +1,7 @@
 package recipes
 
 import (
-	"encoding/json"
-	"fmt"
+	"github.com/stockhut/hsfl-master-ai-cloud-engineering/common/presenter/json_presenter"
 	"github.com/stockhut/hsfl-master-ai-cloud-engineering/recipe/recipes/model"
 	"net/http"
 )
@@ -23,16 +22,5 @@ func (ctrl *Controller) GetById(w http.ResponseWriter, r *http.Request) {
 	}
 	response := recipeToResponseModel(*recipe)
 
-	responseBytes, err := json.Marshal(response)
-	if err != nil {
-		fmt.Printf("Failed to serialize recipe: %s\n", err)
-		w.WriteHeader(http.StatusInternalServerError)
-		return
-	}
-
-	w.WriteHeader(http.StatusOK)
-	_, err = w.Write(responseBytes)
-	if err != nil {
-		fmt.Printf("failed to write response: %s\n", err)
-	}
+	json_presenter.JsonPresenter(w, http.StatusOK, response)
 }
