@@ -48,7 +48,7 @@ func (repo *SqlcRepository) CreateRecipe(recipe model.Recipe) (model.Recipe, err
 	r, err := repo.queries.CreateRecipe(context.TODO(), params)
 
 	if err != nil {
-		panic(err)
+		return model.Recipe{}, err
 	}
 
 	ingredients := fun.Map(recipe.Ingredients, func(ingredient model.Ingredient) db.Ingredient {
@@ -76,6 +76,9 @@ func (repo *InMemoryRecipeRepository) GetAllByAuthor(_ string) ([]model.Recipe, 
 func (repo *SqlcRepository) GetAllByAuthor(author string) ([]model.Recipe, error) {
 
 	r, err := repo.queries.ListRecipes(context.TODO(), author)
+	if err != nil {
+		return nil, err
+	}
 
 	recipes := fun.Map(r, func(recipe db.Recipe) model.Recipe {
 		ingredients, _ := repo.queries.GetIngredientsByRecipe(context.TODO(), recipe.RecipeID)
@@ -83,7 +86,7 @@ func (repo *SqlcRepository) GetAllByAuthor(author string) ([]model.Recipe, error
 		return model.RecipeFromDatabaseModel(recipe, ingredients)
 	})
 
-	return recipes, err
+	return recipes, nil
 }
 
 func (repo *InMemoryRecipeRepository) GetById(id model.RecipeId) (*model.Recipe, error) {
@@ -94,15 +97,15 @@ func (repo *SqlcRepository) GetById(id model.RecipeId) (*model.Recipe, error) {
 	recipe, err := repo.queries.GetRecipe(context.TODO(), int64(id))
 
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
 
 	i, err := repo.queries.GetIngredientsByRecipe(context.TODO(), int64(id))
 
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
 
 	result := model.RecipeFromDatabaseModel(recipe, i)
-	return &result, err
+	return &result, nil
 }
