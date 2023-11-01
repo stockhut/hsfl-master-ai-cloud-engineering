@@ -13,14 +13,11 @@ require (
 	go.uber.org/mock v0.3.0
 )
 
-require golang.org/x/tools v0.12.1-0.20230825192346-2191a27a6dc5 // indirect
-
 require (
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/mattn/go-sqlite3 v1.14.17
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
-	honnef.co/go/tools v0.4.6
 )
 
 replace github.com/stockhut/hsfl-master-ai-cloud-engineering/common => ../common
