@@ -108,7 +108,7 @@ func Test_recipeRequestToModel(t *testing.T) {
 	recipe := recipeRequestToModel(req, "someuser")
 
 	assert.Equal(t, model.Recipe{
-		Id: 0,
+		Id:     0,
 		Author: "someuser",
 		Name:   "somename",
 		Ingredients: []model.Ingredient{
