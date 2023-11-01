@@ -3,15 +3,23 @@ package recipes
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/stockhut/hsfl-master-ai-cloud-engineering/recipe/recipes/model"
 	"net/http"
+	"strconv"
+
+	"github.com/stockhut/hsfl-master-ai-cloud-engineering/recipe/recipes/model"
 )
 
 func (ctrl *Controller) GetById(w http.ResponseWriter, r *http.Request) {
 
 	recipeId := r.Context().Value("id").(string)
 
-	recipe, err := ctrl.repo.GetById(model.RecipeId(recipeId))
+	id, err := strconv.Atoi(recipeId)
+
+	if err != nil {
+		panic(err)
+	}
+
+	recipe, err := ctrl.repo.GetById(model.RecipeId(id))
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return

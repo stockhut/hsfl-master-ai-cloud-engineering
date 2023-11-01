@@ -1,4 +1,4 @@
-CREATE TABLE "Profiles" (
+CREATE TABLE "Profile" (
 	"profileID"	INTEGER NOT NULL UNIQUE,
 	"username"	TEXT NOT NULL UNIQUE,
 	"password"	TEXT NOT NULL,
@@ -16,19 +16,20 @@ CREATE TABLE "Profiles" (
 --     FOREIGN KEY("profileID") REFERENCES "Profiles"("profileID"),
 --     PRIMARY KEY("userID") --autioincrement
 -- );
-CREATE TABLE "Recipes" (
-	"recipeID"	INTEGER NOT NULL,
+
+CREATE TABLE "Recipe" (
+	"recipeID"	INTEGER PRIMARY KEY AUTOINCREMENT,
 	"recipeName"	TEXT NOT NULL,
 	"recipePicture"	BLOB,
 	"timeEstimate"	INTEGER,
 	"difficulty"	TEXT,
 	"feedsPeople"	INTEGER,
-	"ingredients"	TEXT NOT NULL,
 	"directions"	TEXT NOT NULL,
 	"author"	TEXT NOT NULL,
-	FOREIGN KEY("author") REFERENCES "Profiles"("username"),
-	PRIMARY KEY("recipeID") --autoincrement
+	FOREIGN KEY("author") REFERENCES "Profile"("username")
+	--PRIMARY KEY("recipeID") --autoincrement
 );
+
 CREATE TABLE "RecipeCollection" (
 	"recipeCollectionID"	INTEGER NOT NULL,
 	"recipeCollectionName" TEXT NOT NULL,
@@ -36,8 +37,16 @@ CREATE TABLE "RecipeCollection" (
 	"ownerID"	INTEGER NOT NULL,
 	"date"	TEXT,
 	"subscriberID" INTEGER,
-	FOREIGN KEY("recipeID") REFERENCES "Recipes"("recipeID"),
-	FOREIGN KEY("ownerID") REFERENCES "Profiles"("profileID"),
-	FOREIGN KEY("subscriberID") REFERENCES "Profiles"("profileID"),
+	FOREIGN KEY("recipeID") REFERENCES "Recipe"("recipeID"),
+	FOREIGN KEY("ownerID") REFERENCES "Profile"("profileID"),
+	FOREIGN KEY("subscriberID") REFERENCES "Profile"("profileID"),
 	PRIMARY KEY("recipeCollectionID") --autoincrement
+);
+
+CREATE TABLE "Ingredient" (
+	"ingredientName" TEXT NOT NULL,
+	"ingredientAmount" INTEGER NOT NULL,
+	"ingredientUnit" TEXT NOT NULL,
+	"recipeID" INTEGER NOT NULL,
+	FOREIGN KEY("recipeID") REFERENCES "Recipe"("recipeID")
 );

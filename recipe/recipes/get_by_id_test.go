@@ -4,18 +4,20 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"net/http"
+	"net/http/httptest"
+	"strconv"
+	"testing"
+
 	mockrecipes "github.com/stockhut/hsfl-master-ai-cloud-engineering/recipe/_mocks"
 	"github.com/stockhut/hsfl-master-ai-cloud-engineering/recipe/recipes/model"
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/mock/gomock"
-	"net/http"
-	"net/http/httptest"
-	"testing"
 )
 
 func TestGetById(t *testing.T) {
 
-	const testRecipeId = "test-recipe-id"
+	const testRecipeId = 1
 
 	t.Run("should return all recipes by a specific user", func(t *testing.T) {
 
@@ -23,7 +25,7 @@ func TestGetById(t *testing.T) {
 
 		mockRepo := mockrecipes.NewMockRecipeRepository(gomockController)
 		mockRepo.EXPECT().GetById(model.RecipeId(testRecipeId)).Return(&model.Recipe{
-			Id:           testRecipeId,
+			Id:           model.RecipeId(testRecipeId),
 			Author:       "testuser",
 			Name:         "",
 			Ingredients:  nil,
@@ -38,7 +40,7 @@ func TestGetById(t *testing.T) {
 		w := httptest.NewRecorder()
 		r := httptest.NewRequest(http.MethodPost, "/test", nil)
 
-		ctx := context.WithValue(r.Context(), "id", testRecipeId)
+		ctx := context.WithValue(r.Context(), "id", strconv.Itoa(testRecipeId))
 
 		controller.GetById(w, r.WithContext(ctx))
 		assert.Equal(t, http.StatusOK, w.Code)
@@ -67,7 +69,7 @@ func TestGetById(t *testing.T) {
 		w := httptest.NewRecorder()
 		r := httptest.NewRequest(http.MethodPost, "/test", nil)
 
-		ctx := context.WithValue(r.Context(), "id", testRecipeId)
+		ctx := context.WithValue(r.Context(), "id", strconv.Itoa(testRecipeId))
 
 		controller.GetById(w, r.WithContext(ctx))
 		assert.Equal(t, http.StatusInternalServerError, w.Code)
@@ -90,7 +92,7 @@ func TestGetById(t *testing.T) {
 		w := httptest.NewRecorder()
 		r := httptest.NewRequest(http.MethodPost, "/test", nil)
 
-		ctx := context.WithValue(r.Context(), "id", testRecipeId)
+		ctx := context.WithValue(r.Context(), "id", strconv.Itoa(testRecipeId))
 
 		controller.GetById(w, r.WithContext(ctx))
 		assert.Equal(t, http.StatusNotFound, w.Code)

@@ -3,16 +3,52 @@
 //   sqlc v1.22.0
 // source: query.sql
 
-package db
+package database
 
 import (
 	"context"
 	"database/sql"
 )
 
+const createIngredient = `-- name: CreateIngredient :one
+INSERT INTO
+    "Ingredient" (
+        "recipeID",
+        "ingredientName",
+        "ingredientAmount",
+        "ingredientUnit"
+    )
+VALUES
+    (?, ?, ?, ?) RETURNING ingredientName, ingredientAmount, ingredientUnit, recipeID
+`
+
+type CreateIngredientParams struct {
+	RecipeID         int64
+	IngredientName   string
+	IngredientAmount int64
+	IngredientUnit   string
+}
+
+func (q *Queries) CreateIngredient(ctx context.Context, arg CreateIngredientParams) (Ingredient, error) {
+	row := q.db.QueryRowContext(ctx, createIngredient,
+		arg.RecipeID,
+		arg.IngredientName,
+		arg.IngredientAmount,
+		arg.IngredientUnit,
+	)
+	var i Ingredient
+	err := row.Scan(
+		&i.IngredientName,
+		&i.IngredientAmount,
+		&i.IngredientUnit,
+		&i.RecipeID,
+	)
+	return i, err
+}
+
 const createProfile = `-- name: CreateProfile :one
 INSERT INTO
-    "Profiles" (
+    "Profile" (
         "username",
         "password",
         "profilePicture",
@@ -29,14 +65,14 @@ type CreateProfileParams struct {
 	Bio            sql.NullString
 }
 
-func (q *Queries) CreateProfile(ctx context.Context, arg CreateProfileParams) (Profiles, error) {
+func (q *Queries) CreateProfile(ctx context.Context, arg CreateProfileParams) (Profile, error) {
 	row := q.db.QueryRowContext(ctx, createProfile,
 		arg.Username,
 		arg.Password,
 		arg.ProfilePicture,
 		arg.Bio,
 	)
-	var i Profiles
+	var i Profile
 	err := row.Scan(
 		&i.ProfileID,
 		&i.Username,
@@ -51,17 +87,17 @@ func (q *Queries) CreateProfile(ctx context.Context, arg CreateProfileParams) (P
 
 const createRecipe = `-- name: CreateRecipe :one
 INSERT INTO
-    "Recipes" (
+    "Recipe" (
         "recipeName",
         "recipePicture",
         "timeEstimate",
         "difficulty",
         "feedsPeople",
-        "ingredients",
-        "directions"
+        "directions",
+        "author"
     )
 VALUES
-    (?, ?, ?, ?, ?, ?, ?) RETURNING recipeID, recipeName, recipePicture, timeEstimate, difficulty, feedsPeople, ingredients, directions, author
+    (?, ?, ?, ?, ?, ?, ?) RETURNING recipeID, recipeName, recipePicture, timeEstimate, difficulty, feedsPeople, directions, author
 `
 
 type CreateRecipeParams struct {
@@ -70,21 +106,21 @@ type CreateRecipeParams struct {
 	TimeEstimate  sql.NullInt64
 	Difficulty    sql.NullString
 	FeedsPeople   sql.NullInt64
-	Ingredients   string
 	Directions    string
+	Author        string
 }
 
-func (q *Queries) CreateRecipe(ctx context.Context, arg CreateRecipeParams) (Recipes, error) {
+func (q *Queries) CreateRecipe(ctx context.Context, arg CreateRecipeParams) (Recipe, error) {
 	row := q.db.QueryRowContext(ctx, createRecipe,
 		arg.RecipeName,
 		arg.RecipePicture,
 		arg.TimeEstimate,
 		arg.Difficulty,
 		arg.FeedsPeople,
-		arg.Ingredients,
 		arg.Directions,
+		arg.Author,
 	)
-	var i Recipes
+	var i Recipe
 	err := row.Scan(
 		&i.RecipeID,
 		&i.RecipeName,
@@ -92,7 +128,6 @@ func (q *Queries) CreateRecipe(ctx context.Context, arg CreateRecipeParams) (Rec
 		&i.TimeEstimate,
 		&i.Difficulty,
 		&i.FeedsPeople,
-		&i.Ingredients,
 		&i.Directions,
 		&i.Author,
 	)
@@ -130,7 +165,7 @@ func (q *Queries) CreateRecipeCollection(ctx context.Context, arg CreateRecipeCo
 
 const deleteProfile = `-- name: DeleteProfile :exec
 DELETE FROM
-    "Profiles"
+    "Profile"
 WHERE
     "profileID" = ?
 `
@@ -142,7 +177,7 @@ func (q *Queries) DeleteProfile(ctx context.Context, profileid int64) error {
 
 const deleteRecipe = `-- name: DeleteRecipe :exec
 DELETE FROM
-    "Recipes"
+    "Recipe"
 WHERE
     "recipeID" = ?
 `
@@ -164,21 +199,59 @@ func (q *Queries) DeleteRecipeCollection(ctx context.Context, recipecollectionid
 	return err
 }
 
+const getIngredientsByRecipe = `-- name: GetIngredientsByRecipe :many
+SELECT
+    ingredientName, ingredientAmount, ingredientUnit, recipeID
+FROM 
+    "Ingredient"
+WHERE 
+    "recipeID" = ?
+`
+
+// ---------INGREDIENT------------
+func (q *Queries) GetIngredientsByRecipe(ctx context.Context, recipeid int64) ([]Ingredient, error) {
+	rows, err := q.db.QueryContext(ctx, getIngredientsByRecipe, recipeid)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Ingredient
+	for rows.Next() {
+		var i Ingredient
+		if err := rows.Scan(
+			&i.IngredientName,
+			&i.IngredientAmount,
+			&i.IngredientUnit,
+			&i.RecipeID,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const getProfile = `-- name: GetProfile :one
 SELECT
     profileID, username, password, profilePicture, bio, friends, weekplan
 FROM
-    "Profiles"
+    "Profile"
 WHERE
     "profileID" = ?
 LIMIT
     1
 `
 
-// --------PROFILES------------
-func (q *Queries) GetProfile(ctx context.Context, profileid int64) (Profiles, error) {
+// --------PROFILE------------
+func (q *Queries) GetProfile(ctx context.Context, profileid int64) (Profile, error) {
 	row := q.db.QueryRowContext(ctx, getProfile, profileid)
-	var i Profiles
+	var i Profile
 	err := row.Scan(
 		&i.ProfileID,
 		&i.Username,
@@ -193,9 +266,9 @@ func (q *Queries) GetProfile(ctx context.Context, profileid int64) (Profiles, er
 
 const getRecipe = `-- name: GetRecipe :one
 SELECT
-    recipeID, recipeName, recipePicture, timeEstimate, difficulty, feedsPeople, ingredients, directions, author
+    recipeID, recipeName, recipePicture, timeEstimate, difficulty, feedsPeople, directions, author
 FROM
-    "Recipes"
+    "Recipe"
 WHERE
     "recipeID" = ?
 LIMIT
@@ -203,9 +276,9 @@ LIMIT
 `
 
 // ---------RECIPE------------
-func (q *Queries) GetRecipe(ctx context.Context, recipeid int64) (Recipes, error) {
+func (q *Queries) GetRecipe(ctx context.Context, recipeid int64) (Recipe, error) {
 	row := q.db.QueryRowContext(ctx, getRecipe, recipeid)
-	var i Recipes
+	var i Recipe
 	err := row.Scan(
 		&i.RecipeID,
 		&i.RecipeName,
@@ -213,7 +286,6 @@ func (q *Queries) GetRecipe(ctx context.Context, recipeid int64) (Recipes, error
 		&i.TimeEstimate,
 		&i.Difficulty,
 		&i.FeedsPeople,
-		&i.Ingredients,
 		&i.Directions,
 		&i.Author,
 	)
@@ -250,20 +322,20 @@ const listProfiles = `-- name: ListProfiles :many
 SELECT
     profileID, username, password, profilePicture, bio, friends, weekplan
 FROM
-    "Profiles"
+    "Profile"
 ORDER BY
     "username"
 `
 
-func (q *Queries) ListProfiles(ctx context.Context) ([]Profiles, error) {
+func (q *Queries) ListProfiles(ctx context.Context) ([]Profile, error) {
 	rows, err := q.db.QueryContext(ctx, listProfiles)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	var items []Profiles
+	var items []Profile
 	for rows.Next() {
-		var i Profiles
+		var i Profile
 		if err := rows.Scan(
 			&i.ProfileID,
 			&i.Username,
@@ -327,22 +399,24 @@ func (q *Queries) ListRecipeCollection(ctx context.Context) ([]RecipeCollection,
 
 const listRecipes = `-- name: ListRecipes :many
 SELECT
-    recipeID, recipeName, recipePicture, timeEstimate, difficulty, feedsPeople, ingredients, directions, author
+    recipeID, recipeName, recipePicture, timeEstimate, difficulty, feedsPeople, directions, author
 FROM
-    "Recipes"
+    "Recipe"
+WHERE
+    "author" = ?
 ORDER BY
     "recipeName"
 `
 
-func (q *Queries) ListRecipes(ctx context.Context) ([]Recipes, error) {
-	rows, err := q.db.QueryContext(ctx, listRecipes)
+func (q *Queries) ListRecipes(ctx context.Context, author string) ([]Recipe, error) {
+	rows, err := q.db.QueryContext(ctx, listRecipes, author)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	var items []Recipes
+	var items []Recipe
 	for rows.Next() {
-		var i Recipes
+		var i Recipe
 		if err := rows.Scan(
 			&i.RecipeID,
 			&i.RecipeName,
@@ -350,7 +424,6 @@ func (q *Queries) ListRecipes(ctx context.Context) ([]Recipes, error) {
 			&i.TimeEstimate,
 			&i.Difficulty,
 			&i.FeedsPeople,
-			&i.Ingredients,
 			&i.Directions,
 			&i.Author,
 		); err != nil {
@@ -369,7 +442,7 @@ func (q *Queries) ListRecipes(ctx context.Context) ([]Recipes, error) {
 
 const updateProfile = `-- name: UpdateProfile :one
 UPDATE
-    "Profiles"
+    "Profile"
 set
     "username" = ?,
     "password" = ?,
@@ -391,7 +464,7 @@ type UpdateProfileParams struct {
 	ProfileID      int64
 }
 
-func (q *Queries) UpdateProfile(ctx context.Context, arg UpdateProfileParams) (Profiles, error) {
+func (q *Queries) UpdateProfile(ctx context.Context, arg UpdateProfileParams) (Profile, error) {
 	row := q.db.QueryRowContext(ctx, updateProfile,
 		arg.Username,
 		arg.Password,
@@ -401,7 +474,7 @@ func (q *Queries) UpdateProfile(ctx context.Context, arg UpdateProfileParams) (P
 		arg.Weekplan,
 		arg.ProfileID,
 	)
-	var i Profiles
+	var i Profile
 	err := row.Scan(
 		&i.ProfileID,
 		&i.Username,
@@ -416,17 +489,16 @@ func (q *Queries) UpdateProfile(ctx context.Context, arg UpdateProfileParams) (P
 
 const updateRecipe = `-- name: UpdateRecipe :one
 UPDATE
-    "Recipes"
+    "Recipe"
 set
     "recipeName" = ?,
     "recipePicture" = ?,
     "timeEstimate" = ?,
     "difficulty" = ?,
     "feedsPeople" = ?,
-    "ingredients" = ?,
     "directions" = ?
 WHERE
-    "recipeID" = ? RETURNING recipeID, recipeName, recipePicture, timeEstimate, difficulty, feedsPeople, ingredients, directions, author
+    "recipeID" = ? RETURNING recipeID, recipeName, recipePicture, timeEstimate, difficulty, feedsPeople, directions, author
 `
 
 type UpdateRecipeParams struct {
@@ -435,23 +507,21 @@ type UpdateRecipeParams struct {
 	TimeEstimate  sql.NullInt64
 	Difficulty    sql.NullString
 	FeedsPeople   sql.NullInt64
-	Ingredients   string
 	Directions    string
 	RecipeID      int64
 }
 
-func (q *Queries) UpdateRecipe(ctx context.Context, arg UpdateRecipeParams) (Recipes, error) {
+func (q *Queries) UpdateRecipe(ctx context.Context, arg UpdateRecipeParams) (Recipe, error) {
 	row := q.db.QueryRowContext(ctx, updateRecipe,
 		arg.RecipeName,
 		arg.RecipePicture,
 		arg.TimeEstimate,
 		arg.Difficulty,
 		arg.FeedsPeople,
-		arg.Ingredients,
 		arg.Directions,
 		arg.RecipeID,
 	)
-	var i Recipes
+	var i Recipe
 	err := row.Scan(
 		&i.RecipeID,
 		&i.RecipeName,
@@ -459,7 +529,6 @@ func (q *Queries) UpdateRecipe(ctx context.Context, arg UpdateRecipeParams) (Rec
 		&i.TimeEstimate,
 		&i.Difficulty,
 		&i.FeedsPeople,
-		&i.Ingredients,
 		&i.Directions,
 		&i.Author,
 	)
