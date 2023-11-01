@@ -51,7 +51,7 @@ func (repo *SqlcRepository) CreateRecipe(recipe model.Recipe) (model.Recipe, err
 		panic(err)
 	}
 
-	ingredients := fun.Map(recipe.Ingredients, func(ingredient model.Ingredient) model.Ingredient {
+	ingredients := fun.Map(recipe.Ingredients, func(ingredient model.Ingredient) db.Ingredient {
 		i, err := repo.queries.CreateIngredient(context.TODO(), db.CreateIngredientParams{
 			RecipeID:         r.RecipeID,
 			IngredientName:   ingredient.Name,
@@ -63,23 +63,10 @@ func (repo *SqlcRepository) CreateRecipe(recipe model.Recipe) (model.Recipe, err
 			panic(err)
 		}
 
-		return model.Ingredient{
-			Name:   i.IngredientName,
-			Amount: ingredient.Amount,
-			Unit:   i.IngredientUnit,
-		}
+		return i
 	})
 
-	return model.Recipe{
-		Id:           model.RecipeId(r.RecipeID),
-		Author:       r.Author,
-		Name:         r.RecipeName,
-		Ingredients:  ingredients,
-		Directions:   []string{r.Directions},
-		TimeEstimate: int(r.TimeEstimate.Int64),
-		Difficulty:   r.Difficulty.String,
-		FeedsPeople:  int(r.FeedsPeople.Int64),
-	}, nil
+	return model.RecipeFromDatabaseModel(r, ingredients), nil
 }
 
 func (repo *InMemoryRecipeRepository) GetAllByAuthor(_ string) ([]model.Recipe, error) {
@@ -91,26 +78,9 @@ func (repo *SqlcRepository) GetAllByAuthor(author string) ([]model.Recipe, error
 	r, err := repo.queries.ListRecipes(context.TODO(), author)
 
 	recipes := fun.Map(r, func(recipe db.Recipe) model.Recipe {
-		i, _ := repo.queries.GetIngredientsByRecipe(context.TODO(), recipe.RecipeID)
+		ingredients, _ := repo.queries.GetIngredientsByRecipe(context.TODO(), recipe.RecipeID)
 
-		ingredients := fun.Map(i, func(ingredient db.Ingredient) model.Ingredient {
-			return model.Ingredient{
-				Name:   ingredient.IngredientName,
-				Amount: int(ingredient.IngredientAmount),
-				Unit:   ingredient.IngredientUnit,
-			}
-		})
-
-		return model.Recipe{
-			Id:           model.RecipeId(recipe.RecipeID),
-			Author:       recipe.Author,
-			Name:         recipe.RecipeName,
-			Ingredients:  ingredients,
-			Directions:   []string{recipe.Directions},
-			TimeEstimate: int(recipe.TimeEstimate.Int64),
-			Difficulty:   recipe.Difficulty.String,
-			FeedsPeople:  int(recipe.FeedsPeople.Int64),
-		}
+		return model.RecipeFromDatabaseModel(recipe, ingredients)
 	})
 
 	return recipes, err
@@ -133,21 +103,6 @@ func (repo *SqlcRepository) GetById(id model.RecipeId) (*model.Recipe, error) {
 		panic(err)
 	}
 
-	ingredients := fun.Map(i, func(ingredient db.Ingredient) model.Ingredient {
-		return model.Ingredient{
-			Name:   ingredient.IngredientName,
-			Amount: int(ingredient.IngredientAmount),
-			Unit:   ingredient.IngredientUnit,
-		}
-	})
-	return &model.Recipe{
-		Id:           model.RecipeId(id),
-		Author:       recipe.Author,
-		Name:         recipe.RecipeName,
-		Ingredients:  ingredients,
-		Directions:   []string{recipe.Directions},
-		TimeEstimate: int(recipe.TimeEstimate.Int64),
-		Difficulty:   recipe.Difficulty.String,
-		FeedsPeople:  int(recipe.FeedsPeople.Int64),
-	}, err
+	result := model.RecipeFromDatabaseModel(recipe, i)
+	return &result, err
 }
