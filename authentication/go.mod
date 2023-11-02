@@ -4,7 +4,7 @@ go 1.21.1
 
 require (
 	github.com/golang-jwt/jwt v3.2.2+incompatible
-	github.com/stockhut/hsfl-master-ai-cloud-engineering/common v0.0.0-20231024173651-a5813f569bc5
+	github.com/stockhut/hsfl-master-ai-cloud-engineering/common v0.0.0-20231102074746-894c6f380192
 	github.com/stretchr/testify v1.8.4
 )
 

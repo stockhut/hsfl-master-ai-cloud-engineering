@@ -4,8 +4,8 @@ github.com/golang-jwt/jwt v3.2.2+incompatible h1:IfV12K8xAKAnZqdXVzCZ+TOjboZ2keL
 github.com/golang-jwt/jwt v3.2.2+incompatible/go.mod h1:8pz2t5EyA70fFQQSrl6XZXzqecmYZeUEB8OUGHkxJ+I=
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
-github.com/stockhut/hsfl-master-ai-cloud-engineering/common v0.0.0-20231024173651-a5813f569bc5 h1:HB5UOUV5s95v7XJBcd6OZhrHy0apKLcPuudF0BHy+9A=
-github.com/stockhut/hsfl-master-ai-cloud-engineering/common v0.0.0-20231024173651-a5813f569bc5/go.mod h1:ZNnojR8yorue7x9B25/+WGy0s6ZflGQ2FsDZUFTuZwQ=
+github.com/stockhut/hsfl-master-ai-cloud-engineering/common v0.0.0-20231102074746-894c6f380192 h1:+rN+QLjun/wSgqYI6FXjSCm3oKVYY65m9G8N+DHH0tg=
+github.com/stockhut/hsfl-master-ai-cloud-engineering/common v0.0.0-20231102074746-894c6f380192/go.mod h1:qp2ZtPcTn8yyy+RUMTTPss5sNJbgaCVWAmtqcTP9K0M=
 github.com/stretchr/testify v1.8.4 h1:CcVxjf3Q8PM0mHUKJCdn+eZZtm5yQwehR5yeSVQQcUk=
 github.com/stretchr/testify v1.8.4/go.mod h1:sz/lmYIOXD/1dqDmKjjqLyZ2RngseejIcXlSw2iwfAo=
 gopkg.in/check.v1 v0.0.0-20161208181325-20d25e280405 h1:yhCVgyC4o1eVCa2tZl7eS0r+SDo693bJlVdllGtEeKM=

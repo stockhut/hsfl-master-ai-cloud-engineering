@@ -121,9 +121,6 @@ func (repo *InMemoryRecipeRepository) GetById(id model.RecipeId) (*model.Recipe,
 	panic("not implemented")
 }
 
-func (repo *InMemoryRecipeRepository) DeleteRecipe(id model.RecipeId) error {
-	panic("not implemented")
-
 func (repo *SqlcRepository) GetById(id model.RecipeId) (*model.Recipe, error) {
 	recipe, err := repo.queries.GetRecipe(context.TODO(), int64(id))
 
@@ -154,4 +151,12 @@ func (repo *SqlcRepository) GetById(id model.RecipeId) (*model.Recipe, error) {
 		Difficulty:   recipe.Difficulty.String,
 		FeedsPeople:  int(recipe.FeedsPeople.Int64),
 	}, err
+}
+
+func (repo *InMemoryRecipeRepository) DeleteRecipe(id model.RecipeId) error {
+	panic("not implemented")
+}
+
+func (repo *SqlcRepository) DeleteRecipe(id model.RecipeId) error {
+	panic("not implemented")
 }

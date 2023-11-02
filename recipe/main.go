@@ -6,9 +6,8 @@ import (
 	"database/sql"
 	"encoding/pem"
 	"fmt"
-  
+
 	requestlogger "github.com/stockhut/hsfl-master-ai-cloud-engineering/common/middleware/request-logger"
-	"github.com/stockhut/hsfl-master-ai-cloud-engineering/recipe/recipes/model"
 	"log"
 
 	"net/http"
