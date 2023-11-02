@@ -4,27 +4,30 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"net/http"
+	"net/http/httptest"
+	"strings"
+	"testing"
+
 	"github.com/golang-jwt/jwt"
 	"github.com/stockhut/hsfl-master-ai-cloud-engineering/authentication/middleware"
 	"github.com/stockhut/hsfl-master-ai-cloud-engineering/recipe/recipes/model"
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/mock/gomock"
-	"net/http"
-	"net/http/httptest"
-	"strings"
-	"testing"
+
+	mock_recipes "github.com/stockhut/hsfl-master-ai-cloud-engineering/recipe/_mocks"
 )
-import "github.com/stockhut/hsfl-master-ai-cloud-engineering/recipe/_mocks"
 
 func TestCreateRecipe(t *testing.T) {
 
+	const id = 1
 	t.Run("should create recipe", func(t *testing.T) {
 
 		gomockController := gomock.NewController(t)
 
 		mockRepo := mock_recipes.NewMockRecipeRepository(gomockController)
 		mockRepo.EXPECT().CreateRecipe(gomock.Any()).Return(model.Recipe{
-			Id:           "some-id",
+			Id:           id,
 			Author:       "testuser",
 			Name:         "",
 			Ingredients:  nil,
@@ -70,7 +73,7 @@ func TestCreateRecipe(t *testing.T) {
 
 		assert.Nil(t, err)
 
-		assert.Equal(t, model.RecipeId("some-id"), responseBody.Id)
+		assert.Equal(t, model.RecipeId(id), responseBody.Id)
 		assert.Equal(t, "testuser", responseBody.Author)
 	})
 
