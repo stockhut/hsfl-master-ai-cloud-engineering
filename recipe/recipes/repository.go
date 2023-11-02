@@ -13,6 +13,7 @@ type RecipeRepository interface {
 	GetAllByAuthor(author string) ([]model.Recipe, error)
 	GetById(id model.RecipeId) (*model.Recipe, error)
 	CreateRecipe(model.Recipe) (model.Recipe, error)
+	DeleteRecipe(id model.RecipeId) error
 }
 
 type SqlcRepository struct {
@@ -119,6 +120,9 @@ func (repo *SqlcRepository) GetAllByAuthor(author string) ([]model.Recipe, error
 func (repo *InMemoryRecipeRepository) GetById(id model.RecipeId) (*model.Recipe, error) {
 	panic("not implemented")
 }
+
+func (repo *InMemoryRecipeRepository) DeleteRecipe(id model.RecipeId) error {
+	panic("not implemented")
 
 func (repo *SqlcRepository) GetById(id model.RecipeId) (*model.Recipe, error) {
 	recipe, err := repo.queries.GetRecipe(context.TODO(), int64(id))
