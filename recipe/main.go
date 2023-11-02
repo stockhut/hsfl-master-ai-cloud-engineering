@@ -6,7 +6,7 @@ import (
 	"database/sql"
 	"encoding/pem"
 	"fmt"
-  
+
 	requestlogger "github.com/stockhut/hsfl-master-ai-cloud-engineering/common/middleware/request-logger"
 	"log"
 
