@@ -10,6 +10,7 @@ import (
 	"go.uber.org/mock/gomock"
 	"net/http"
 	"net/http/httptest"
+	"strconv"
 	"testing"
 )
 import "github.com/stockhut/hsfl-master-ai-cloud-engineering/recipe/_mocks"
@@ -18,7 +19,7 @@ func TestDeleteRecipe(t *testing.T) {
 
 	t.Run("should delete recipe", func(t *testing.T) {
 
-		const testRecipeId = "testrecipe"
+		const testRecipeId = 1
 		const testUserName = "testuser"
 
 		gomockController := gomock.NewController(t)
@@ -35,7 +36,7 @@ func TestDeleteRecipe(t *testing.T) {
 			"name": testUserName,
 		}
 		ctx := context.WithValue(r.Context(), middleware.JwtContextKey, claims)
-		ctx = context.WithValue(ctx, "id", testRecipeId)
+		ctx = context.WithValue(ctx, "id", strconv.Itoa(testRecipeId))
 
 		controller.DeleteRecipe(w, r.WithContext(ctx))
 		assert.Equal(t, http.StatusNoContent, w.Code)
@@ -44,7 +45,7 @@ func TestDeleteRecipe(t *testing.T) {
 
 	t.Run("should return 500 INTERNAL SERVER ERROR when database write fails", func(t *testing.T) {
 
-		const testRecipeId = "testrecipe"
+		const testRecipeId = 1
 		const testUserName = "testuser"
 
 		gomockController := gomock.NewController(t)
@@ -61,7 +62,7 @@ func TestDeleteRecipe(t *testing.T) {
 			"name": testUserName,
 		}
 		ctx := context.WithValue(r.Context(), middleware.JwtContextKey, claims)
-		ctx = context.WithValue(ctx, "id", testRecipeId)
+		ctx = context.WithValue(ctx, "id", strconv.Itoa(testRecipeId))
 
 		controller.DeleteRecipe(w, r.WithContext(ctx))
 		assert.Equal(t, http.StatusInternalServerError, w.Code)
