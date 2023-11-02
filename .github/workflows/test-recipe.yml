@@ -56,4 +56,5 @@ jobs:
         uses: codecov/codecov-action@v3
         continue-on-error: true
         with:
+          flags: recipe
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
