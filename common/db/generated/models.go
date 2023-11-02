@@ -2,13 +2,20 @@
 // versions:
 //   sqlc v1.22.0
 
-package db
+package database
 
 import (
 	"database/sql"
 )
 
-type Profiles struct {
+type Ingredient struct {
+	IngredientName   string
+	IngredientAmount int64
+	IngredientUnit   string
+	RecipeID         int64
+}
+
+type Profile struct {
 	ProfileID      int64
 	Username       string
 	Password       string
@@ -18,6 +25,17 @@ type Profiles struct {
 	Weekplan       sql.NullInt64
 }
 
+type Recipe struct {
+	RecipeID      int64
+	RecipeName    string
+	RecipePicture []byte
+	TimeEstimate  sql.NullInt64
+	Difficulty    sql.NullString
+	FeedsPeople   sql.NullInt64
+	Directions    string
+	Author        string
+}
+
 type RecipeCollection struct {
 	RecipeCollectionID   int64
 	RecipeCollectionName string
@@ -25,16 +43,4 @@ type RecipeCollection struct {
 	OwnerID              int64
 	Date                 sql.NullString
 	SubscriberID         sql.NullInt64
-}
-
-type Recipes struct {
-	RecipeID      int64
-	RecipeName    string
-	RecipePicture []byte
-	TimeEstimate  sql.NullInt64
-	Difficulty    sql.NullString
-	FeedsPeople   sql.NullInt64
-	Ingredients   string
-	Directions    string
-	Author        string
 }

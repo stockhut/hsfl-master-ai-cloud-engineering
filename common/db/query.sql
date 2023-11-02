@@ -1,9 +1,9 @@
-----------PROFILES------------
+----------PROFILE------------
 -- name: GetProfile :one
 SELECT
     *
 FROM
-    "Profiles"
+    "Profile"
 WHERE
     "profileID" = ?
 LIMIT
@@ -13,13 +13,13 @@ LIMIT
 SELECT
     *
 FROM
-    "Profiles"
+    "Profile"
 ORDER BY
     "username";
 
 -- name: CreateProfile :one
 INSERT INTO
-    "Profiles" (
+    "Profile" (
         "username",
         "password",
         "profilePicture",
@@ -30,7 +30,7 @@ VALUES
 
 -- name: UpdateProfile :one
 UPDATE
-    "Profiles"
+    "Profile"
 set
     "username" = ?,
     "password" = ?,
@@ -43,16 +43,37 @@ WHERE
 
 -- name: DeleteProfile :exec
 DELETE FROM
-    "Profiles"
+    "Profile"
 WHERE
     "profileID" = ?;
+
+-----------INGREDIENT------------
+-- name: GetIngredientsByRecipe :many
+SELECT
+    *
+FROM 
+    "Ingredient"
+WHERE 
+    "recipeID" = ?;
+
+-- name: CreateIngredient :one
+INSERT INTO
+    "Ingredient" (
+        "recipeID",
+        "ingredientName",
+        "ingredientAmount",
+        "ingredientUnit"
+    )
+VALUES
+    (?, ?, ?, ?) RETURNING *;
+
 
 -----------RECIPE------------
 -- name: GetRecipe :one
 SELECT
     *
 FROM
-    "Recipes"
+    "Recipe"
 WHERE
     "recipeID" = ?
 LIMIT
@@ -62,41 +83,42 @@ LIMIT
 SELECT
     *
 FROM
-    "Recipes"
+    "Recipe"
+WHERE
+    "author" = ?
 ORDER BY
     "recipeName";
 
 -- name: CreateRecipe :one
 INSERT INTO
-    "Recipes" (
+    "Recipe" (
         "recipeName",
         "recipePicture",
         "timeEstimate",
         "difficulty",
         "feedsPeople",
-        "ingredients",
-        "directions"
+        "directions",
+        "author"
     )
 VALUES
     (?, ?, ?, ?, ?, ?, ?) RETURNING *;
 
 -- name: UpdateRecipe :one
 UPDATE
-    "Recipes"
+    "Recipe"
 set
     "recipeName" = ?,
     "recipePicture" = ?,
     "timeEstimate" = ?,
     "difficulty" = ?,
     "feedsPeople" = ?,
-    "ingredients" = ?,
     "directions" = ?
 WHERE
     "recipeID" = ? RETURNING *;
 
 -- name: DeleteRecipe :exec
 DELETE FROM
-    "Recipes"
+    "Recipe"
 WHERE
     "recipeID" = ?;
 
