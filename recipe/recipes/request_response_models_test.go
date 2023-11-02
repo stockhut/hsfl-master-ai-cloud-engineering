@@ -1,9 +1,10 @@
 package recipes
 
 import (
+	"testing"
+
 	"github.com/stockhut/hsfl-master-ai-cloud-engineering/recipe/recipes/model"
 	"github.com/stretchr/testify/assert"
-	"testing"
 )
 
 func Test_ingredientModelToResponse(t *testing.T) {
@@ -45,8 +46,10 @@ func Test_ingredientRequestToModel(t *testing.T) {
 
 func Test_recipeToResponseModel(t *testing.T) {
 
+	const id = 1
+
 	r := model.Recipe{
-		Id:     "someid",
+		Id:     id,
 		Author: "someauthor",
 		Name:   "somename",
 		Ingredients: []model.Ingredient{
@@ -66,7 +69,7 @@ func Test_recipeToResponseModel(t *testing.T) {
 	resp := recipeToResponseModel(r)
 
 	assert.Equal(t, recipeResponseModel{
-		Id:     "someid",
+		Id:     id,
 		Author: "someauthor",
 		Name:   "somename",
 		Ingredients: []ingredientResponseBody{
@@ -105,7 +108,7 @@ func Test_recipeRequestToModel(t *testing.T) {
 	recipe := recipeRequestToModel(req, "someuser")
 
 	assert.Equal(t, model.Recipe{
-		Id:     "",
+		Id:     0,
 		Author: "someuser",
 		Name:   "somename",
 		Ingredients: []model.Ingredient{

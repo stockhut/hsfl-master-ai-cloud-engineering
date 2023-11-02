@@ -6,7 +6,7 @@ type Ingredient struct {
 	Unit   string
 }
 
-type RecipeId string
+type RecipeId int64
 
 type Recipe struct {
 	Id RecipeId

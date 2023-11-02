@@ -4,13 +4,14 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"net/http"
+	"net/http/httptest"
+	"testing"
+
 	mockrecipes "github.com/stockhut/hsfl-master-ai-cloud-engineering/recipe/_mocks"
 	"github.com/stockhut/hsfl-master-ai-cloud-engineering/recipe/recipes/model"
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/mock/gomock"
-	"net/http"
-	"net/http/httptest"
-	"testing"
 )
 
 func TestGetByAuthor(t *testing.T) {
@@ -24,7 +25,7 @@ func TestGetByAuthor(t *testing.T) {
 		mockRepo := mockrecipes.NewMockRecipeRepository(gomockController)
 		mockRepo.EXPECT().GetAllByAuthor(testUserName).Return([]model.Recipe{
 			{
-				Id:           "some-id",
+				Id:           1,
 				Author:       testUserName,
 				Name:         "",
 				Ingredients:  nil,
@@ -34,7 +35,7 @@ func TestGetByAuthor(t *testing.T) {
 				FeedsPeople:  0,
 			},
 			{
-				Id:           "some-other-id",
+				Id:           2,
 				Author:       testUserName,
 				Name:         "",
 				Ingredients:  nil,

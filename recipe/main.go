@@ -1,12 +1,22 @@
 package main
 
 import (
+	"context"
 	"crypto/x509"
+	"database/sql"
 	"encoding/pem"
 	"fmt"
+  
+	requestlogger "github.com/stockhut/hsfl-master-ai-cloud-engineering/common/middleware/request-logger"
 	"github.com/stockhut/hsfl-master-ai-cloud-engineering/recipe/recipes/model"
+	"log"
+
 	"net/http"
 	"os"
+
+	_ "github.com/mattn/go-sqlite3"
+	dll "github.com/stockhut/hsfl-master-ai-cloud-engineering/common/db"
+	database "github.com/stockhut/hsfl-master-ai-cloud-engineering/common/db/generated"
 
 	"github.com/stockhut/hsfl-master-ai-cloud-engineering/authentication/middleware"
 	"github.com/stockhut/hsfl-master-ai-cloud-engineering/recipe/api/router"
@@ -16,6 +26,20 @@ import (
 func main() {
 
 	fmt.Println("Hello from Recipe!")
+
+	ctx := context.Background()
+
+	db, err := sql.Open("sqlite3", ":memory:")
+	if err != nil {
+		panic(err)
+	}
+
+	// create tables
+	if _, err := db.ExecContext(ctx, dll.Ddl); err != nil {
+		panic(err)
+	}
+
+	queries := database.New(db)
 
 	bytes, err := os.ReadFile("../authentication/jwt_public_key.key")
 	if err != nil {
@@ -28,16 +52,25 @@ func main() {
 		panic(err)
 	}
 
-	repo := recipes.InMemoryRecipeRepository{
+	/* repo := recipes.InMemoryRecipeRepository{
 		Recipes: make([]model.Recipe, 0),
-	}
+	} */
+
+	repo := recipes.New(queries)
 
 	recipeController := recipes.NewController(&repo)
 
 	authMiddleware := middleware.ValidateJwtMiddleware(public_key)
 
-	router := router.New(authMiddleware, recipeController)
+	logFlags := log.Ltime | log.Lmsgprefix | log.Lmicroseconds
+	logger := log.New(os.Stdout, "", logFlags)
+	logMw := requestlogger.New(logger)
 
-	err = http.ListenAndServe(":8081", router)
+	router := router.New(authMiddleware, logMw, recipeController)
+
+	port := ":8081"
+
+	logger.Printf("Listening on %s\n", port)
+	err = http.ListenAndServe(port, router)
 	panic(err)
 }
