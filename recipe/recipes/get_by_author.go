@@ -1,9 +1,10 @@
 package recipes
 
 import (
-	"github.com/stockhut/hsfl-master-ai-cloud-engineering/common/fun"
-	"github.com/stockhut/hsfl-master-ai-cloud-engineering/common/presenter/json_presenter"
+	"html/template"
 	"net/http"
+
+	"github.com/stockhut/hsfl-master-ai-cloud-engineering/common/fun"
 )
 
 func (ctrl *Controller) GetByAuthor(w http.ResponseWriter, r *http.Request) {
@@ -18,7 +19,19 @@ func (ctrl *Controller) GetByAuthor(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// template.Must(template.ParseGlob("templates/*.gohtml")) <--alex sagt
 	response := fun.Map(recipes, recipeToResponseModel)
 
-	json_presenter.JsonPresenter(w, http.StatusOK, response)
+	tmplFile := "templates/displayRecipe.html"
+	tmpl, err := template.ParseFiles(tmplFile)
+	if err != nil {
+		panic(err)
+	}
+	w.WriteHeader(http.StatusOK)
+	err = tmpl.Execute(w, response)
+	if err != nil {
+		panic(err)
+	}
+
+	//json_presenter.JsonPresenter(w, http.StatusOK, response)
 }
