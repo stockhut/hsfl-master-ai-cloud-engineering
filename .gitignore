@@ -3,6 +3,8 @@
 
 *.key
 
+
+*.sqlite
 .envrc
 .direnv
 shell.nix
