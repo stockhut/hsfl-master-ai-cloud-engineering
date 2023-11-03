@@ -21,6 +21,7 @@ func New(
 	logAndAuth := fun.Apply(logMiddleware, authMiddleware)
 
 	router.POST("/api/v1/recipe", logAndAuth(recipeController.CreateRecipe))
+	router.GET("/api/v1/recipe/by/:self", logAndAuth(recipeController.GetBySelf))
 	router.GET("/api/v1/recipe/by/:author", logAndAuth(recipeController.GetByAuthor))
 	router.GET("/api/v1/recipe/:id", logAndAuth(recipeController.GetById))
 	router.DELETE("/api/v1/recipe/:id", logAndAuth(recipeController.DeleteRecipe))
