@@ -24,7 +24,7 @@ jobs:
         uses: actions/setup-go@v4
         with:
           go-version: '1.21.1'
-          cache-dependency-path: recipe/go.sum
+          cache-dependency-path: ${{ inputs.workdir }}/go.sum
 
       - name: Install mockgen
         run: go install go.uber.org/mock/mockgen@latest
