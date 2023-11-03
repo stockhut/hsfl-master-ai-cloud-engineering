@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/golang-jwt/jwt"
 	"github.com/stockhut/hsfl-master-ai-cloud-engineering/authentication/middleware"
+	"github.com/stockhut/hsfl-master-ai-cloud-engineering/common/presenter/json_presenter"
 	"io"
 	"net/http"
 )
@@ -46,16 +47,5 @@ func (ctrl *Controller) CreateRecipe(w http.ResponseWriter, r *http.Request) {
 
 	response := recipeToResponseModel(newRecipe)
 
-	responseBytes, err := json.Marshal(response)
-	if err != nil {
-		fmt.Printf("Failed to serialize recipe: %s\n", err)
-		w.WriteHeader(http.StatusInternalServerError)
-		return
-	}
-
-	w.WriteHeader(http.StatusCreated)
-	_, err = w.Write(responseBytes)
-	if err != nil {
-		fmt.Printf("failed to write response: %s\n", err)
-	}
+	json_presenter.JsonPresenter(w, http.StatusCreated, response)
 }
