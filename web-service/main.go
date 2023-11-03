@@ -11,7 +11,7 @@ func main() {
 	fmt.Println("Hello from the static file server")
 
 	router := http.NewServeMux()
-	router.Handle("/static/", http.StripPrefix("/public/", http.FileServer(http.Dir("public"))))
+	router.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("public"))))
 
 	log.Fatal(http.ListenAndServe("0.0.0.0:3000", router))
 }
