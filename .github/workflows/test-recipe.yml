@@ -7,7 +7,7 @@ on:
       - '.github/workflows/test-recipe.yml'
       - '.github/workflows/test.yml'
       - '.github/workflows/check.yml'
-      - '.github/workflows/setup.yml'
+      - '.github/workflows/setup-go.yml'
 
   workflow_dispatch:
 
