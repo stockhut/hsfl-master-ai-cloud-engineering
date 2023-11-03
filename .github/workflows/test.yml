@@ -1,0 +1,34 @@
+name: Test
+
+on:
+  workflow_call:
+    inputs:
+      codecov-flag:
+        required: true
+        type: string
+    secrets:
+      token:
+        required: true
+
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.21.1'
+          cache-dependency-path: recipe/go.sum
+
+      - name: Go Test
+        run: go test -race -shuffle=on -coverprofile=coverage.txt ./...
+
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v3
+        continue-on-error: true
+        with:
+          flags: ${{ inputs.codecov-flag }}
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}

@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  test:
+  checks:
     name: Test recipe service
     runs-on: ubuntu-latest
     defaults:
@@ -49,12 +49,9 @@ jobs:
       - name: Go Build
         run: go build -o /dev/null ./...
 
-      - name: Go Test
-        run: go test -race -shuffle=on -coverprofile=coverage.txt ./...
-
-      - name: Upload coverage reports to Codecov
-        uses: codecov/codecov-action@v3
-        continue-on-error: true
-        with:
-          flags: recipe
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+  test:
+    uses: ./.github/workflows/test.yml
+    with:
+      codecov-flag: recipe
+    secrets:
+      token: ${{ secrets.GITHUB_TOKEN }}
