@@ -15,6 +15,10 @@
 
 A Food-focused social media platform for like-minded people, centered around tags and communities (tribes). Share your favorite recipies, follow your favorite Foodies on the platform and create meal plans to get you through the week.
 
+## API Client
+
+There is a collection for the API client [Bruno](https://www.usebruno.com/) in the `bruno` directory.
+
 ## Authors
 Fabian Wesemann\
 fabian.wesemann@stud.hs-flensburg.de\
