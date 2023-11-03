@@ -56,7 +56,11 @@ func New(logger *log.Logger) func(next http.HandlerFunc) http.HandlerFunc {
 				url := r.URL
 				duration := time.Now().Sub(startTime)
 				var statusCode string
-				statusCode = statusCodeColorizer(*responseWriter.statusCode)
+				if responseWriter.statusCode == nil {
+					statusCode = statusCodeColorizer(0)
+				} else {
+					statusCode = statusCodeColorizer(*responseWriter.statusCode)
+				}
 
 				logger.Printf("[%s] %s %s %s%s", method, url, statusCode, duration, panicText)
 			}()

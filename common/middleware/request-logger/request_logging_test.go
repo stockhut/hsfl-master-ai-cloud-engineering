@@ -100,4 +100,28 @@ func Test_request_logger_middleware(t *testing.T) {
 		logString := logWriter.String()
 		assert.Contains(t, logString, "PANIC")
 	})
+
+	t.Run("should not break when the handler did not set a response code", func(t *testing.T) {
+
+		recorder := httptest.NewRecorder()
+
+		// record bytes written by the middleware
+		logData := make([]byte, 0)
+		logWriter := bytes.NewBuffer(logData)
+
+		logger := log.New(logWriter, "", 0)
+		mw := New(logger)
+
+		r := httptest.NewRequest(http.MethodPost, "/test", nil)
+		handler := mw(func(w http.ResponseWriter, r *http.Request) {
+
+		})
+
+		handler(recorder, r)
+
+		//assert.Equal(t, http.StatusInternalServerError, recorder.Result().StatusCode)
+
+		//logString := logWriter.String()
+		//assert.Contains(t, logString, "PANIC")
+	})
 }
