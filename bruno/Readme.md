@@ -12,5 +12,5 @@ This environment contains a placeholder where a valid jwt token has to be insert
 
 ### User=test;HTMX
 
-This environment contains a placeholder where a valid jwt token has to be insertedi.
+This environment contains a placeholder where a valid jwt token has to be inserted.
 Is also sets the `HX-Request` header to `true`, so use this setting if you want to test hypermedia endpoints.
