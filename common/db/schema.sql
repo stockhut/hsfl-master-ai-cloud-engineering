@@ -1,4 +1,4 @@
-CREATE TABLE "Profile" (
+CREATE TABLE IF NOT EXISTS "Profile" (
 	"profileID"	INTEGER NOT NULL UNIQUE,
 	"username"	TEXT NOT NULL UNIQUE,
 	"password"	TEXT NOT NULL,
@@ -17,7 +17,7 @@ CREATE TABLE "Profile" (
 --     PRIMARY KEY("userID") --autioincrement
 -- );
 
-CREATE TABLE "Recipe" (
+CREATE TABLE IF NOT EXISTS "Recipe" (
 	"recipeID"	INTEGER PRIMARY KEY AUTOINCREMENT,
 	"recipeName"	TEXT NOT NULL,
 	"recipePicture"	BLOB,
@@ -30,7 +30,7 @@ CREATE TABLE "Recipe" (
 	--PRIMARY KEY("recipeID") --autoincrement
 );
 
-CREATE TABLE "RecipeCollection" (
+CREATE TABLE IF NOT EXISTS "RecipeCollection" (
 	"recipeCollectionID"	INTEGER NOT NULL,
 	"recipeCollectionName" TEXT NOT NULL,
 	"recipeID"	INTEGER NOT NULL,
@@ -43,7 +43,7 @@ CREATE TABLE "RecipeCollection" (
 	PRIMARY KEY("recipeCollectionID") --autoincrement
 );
 
-CREATE TABLE "Ingredient" (
+CREATE TABLE IF NOT EXISTS "Ingredient" (
 	"ingredientName" TEXT NOT NULL,
 	"ingredientAmount" INTEGER NOT NULL,
 	"ingredientUnit" TEXT NOT NULL,
