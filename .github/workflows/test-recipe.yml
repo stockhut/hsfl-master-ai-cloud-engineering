@@ -1,16 +1,28 @@
-name: Test recipe service
+name: Recipe service
 
 on:
   push:
     paths:
       - 'recipe/**'
       - '.github/workflows/test-recipe.yml'
+      - '.github/workflows/test.yml'
+      - '.github/workflows/check.yml'
+      - '.github/workflows/setup.yml'
 
   workflow_dispatch:
 
 jobs:
+  setup:
+    uses: ./.github/workflows/setup.yml
+    with:
+      workdir: recipe
+    secrets:
+      token: ${{ secrets.GITHUB_TOKEN }}
+
   build:
-    name: Test recipe service
+    needs:
+      - setup
+    name: test and check recipe service
     runs-on: ubuntu-latest
     defaults:
       run:
