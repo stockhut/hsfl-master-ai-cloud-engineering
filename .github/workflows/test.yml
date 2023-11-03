@@ -23,7 +23,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - uses: ./.github/workflows/setup-go.yml
+      - uses: ../.github/workflows/setup-go.yml
         with:
           workdir: ${{ inputs.workdir }}
 
