@@ -1,0 +1,20 @@
+{
+    # disable https
+    auto_https off
+}
+
+:5000 {
+    route /api* {
+        reverse_proxy localhost:8081
+    }
+
+    route /* {
+        reverse_proxy localhost:3000
+    }
+
+    log {
+        output stdout
+        format console
+        level DEBUG
+    }
+}

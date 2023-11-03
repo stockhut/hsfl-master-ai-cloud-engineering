@@ -1,0 +1,27 @@
+meta {
+  name: CreateRecipe
+  type: http
+  seq: 1
+}
+
+post {
+  url: http://localhost:8081/api/v1/recipe
+  body: json
+}
+
+headers {
+  Cookie: jwt={{jwt-value}}
+  HX-Request: {{HX-Request}}
+}
+
+body:json {
+  {
+    "Author": "test",
+    "Name": "my recipe",
+    "Ingredients": [],
+    "Directions": ["cook"],
+    "TimeEstimate": 0,
+    "Difficulty": "",
+    "FeedsPeople": 0
+  }
+}
