@@ -47,6 +47,8 @@ jobs:
         run: go build -o /dev/null ./...
 
   test:
+    needs:
+      - setup
     uses: ./.github/workflows/test.yml
     with:
       codecov-flag: recipe
