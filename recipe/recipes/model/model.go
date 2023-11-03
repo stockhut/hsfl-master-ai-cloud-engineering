@@ -1,6 +1,8 @@
 package model
 
 import (
+	"strconv"
+
 	db "github.com/stockhut/hsfl-master-ai-cloud-engineering/common/db/generated"
 	"github.com/stockhut/hsfl-master-ai-cloud-engineering/common/fun"
 )
@@ -12,6 +14,15 @@ type Ingredient struct {
 }
 
 type RecipeId int64
+
+func RecipeIdFromString(s string) (RecipeId, error) {
+	i, err := strconv.Atoi(s)
+	if err != nil {
+		return 0, err
+	} else {
+		return RecipeId(i), nil
+	}
+}
 
 type Recipe struct {
 	Id RecipeId
