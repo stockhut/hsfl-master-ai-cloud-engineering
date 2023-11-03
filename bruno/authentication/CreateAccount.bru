@@ -1,0 +1,18 @@
+meta {
+  name: CreateAccount
+  type: http
+  seq: 2
+}
+
+post {
+  url: http://localhost:8080/account
+  body: json
+}
+
+body:json {
+  {
+    "name": "test",
+    "email": "test@test.de",
+    "password": "pass"
+  }
+}

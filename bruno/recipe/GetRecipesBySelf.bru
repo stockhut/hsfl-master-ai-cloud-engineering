@@ -1,0 +1,15 @@
+meta {
+  name: GetRecipesBySelf
+  type: http
+  seq: 3
+}
+
+get {
+  url: http://localhost:8081/api/v1/recipe/by/self
+  body: none
+}
+
+headers {
+  Cookie: jwt={{jwt-value}}
+  HX-Request: {{HX-Request}}
+}
