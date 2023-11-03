@@ -12,16 +12,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  setup:
-    uses: ./.github/workflows/setup-go.yml
-    with:
-      workdir: recipe
-    secrets:
-      token: ${{ secrets.GITHUB_TOKEN }}
-
   build:
-    needs:
-      - setup
     name: test and check recipe service
     runs-on: ubuntu-latest
     defaults:
@@ -47,8 +38,6 @@ jobs:
         run: go build -o /dev/null ./...
 
   test:
-    needs:
-      - setup
     uses: ./.github/workflows/test.yml
     with:
       codecov-flag: recipe

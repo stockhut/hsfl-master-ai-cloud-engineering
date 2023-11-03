@@ -6,9 +6,6 @@ on:
       workdir:
         required: true
         type: string
-    secrets:
-      token:
-        required: true
 
 jobs:
   check:

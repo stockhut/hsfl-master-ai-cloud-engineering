@@ -23,6 +23,10 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - uses: ./.github/workflows/setup-go.yml
+        with:
+          workdir: ${{ inputs.workdir }}
+
       - name: Go Test
         run: go test -race -shuffle=on -coverprofile=coverage.txt ./...
 
