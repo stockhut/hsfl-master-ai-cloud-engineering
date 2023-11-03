@@ -1,0 +1,48 @@
+name: Check
+
+on:
+  workflow_call:
+    inputs:
+      workdir:
+        required: true
+        type: string
+    secrets:
+      token:
+        required: true
+
+jobs:
+  check:
+    name: Check 🔎
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ${{ inputs.workdir }}
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.21.1'
+          cache-dependency-path: recipe/go.sum
+
+      - name: Install mockgen
+        run: go install go.uber.org/mock/mockgen@latest
+
+      - name: Go generate mocks
+        run: go generate _mocks/gen.go
+
+      - name: Go Format
+        run: gofmt -s -w . && git diff --exit-code
+
+      - name: Go Vet
+        run: go vet ./...
+
+      - name: Go Tidy
+        run: go mod tidy && git diff --exit-code
+
+      - name: Go Mod
+        run: go mod download
+
+      - name: Go Mod Verify
+        run: go mod verify
