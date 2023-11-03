@@ -37,7 +37,7 @@ jobs:
         run: go build -o /dev/null ./...
 
   test:
-    uses: ./.github/workflows/test.yml
+    uses: ../.github/workflows/test.yml
     with:
       codecov-flag: auth
       workdir: authentication
