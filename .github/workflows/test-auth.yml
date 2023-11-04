@@ -37,16 +37,26 @@ jobs:
         run: go build -o /dev/null ./...
 
   test:
-    uses: ${{ GITHUB_WORKSPACE }}/.github/workflows/test.yml
-    with:
-      codecov-flag: auth
-      workdir: authentication
-    secrets:
-      token: ${{ secrets.GITHUB_TOKEN }}
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: authentication
+    steps:
+      - uses: ${{ GITHUB_WORKSPACE }}/.github/workflows/test.yml
+        with:
+          codecov-flag: auth
+          workdir: authentication
+          secrets:
+            token: ${{ secrets.GITHUB_TOKEN }}
 
   checks:
-    uses: ${{ GITHUB_WORKSPACE }}/.github/workflows/check.yml
-    with:
-      workdir: authentication
-    secrets:
-      token: ${{ secrets.GITHUB_TOKEN }}
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: authentication
+    steps:
+      - uses: ${{ GITHUB_WORKSPACE }}/.github/workflows/check.yml
+        with:
+          workdir: authentication
+        secrets:
+          token: ${{ secrets.GITHUB_TOKEN }}
