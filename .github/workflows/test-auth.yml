@@ -37,7 +37,7 @@ jobs:
         run: go build -o /dev/null ./...
 
   test:
-    uses: ../.github/workflows/test.yml
+    uses: ${{ GITHUB_WORKSPACE }}/.github/workflows/test.yml
     with:
       codecov-flag: auth
       workdir: authentication
@@ -45,7 +45,7 @@ jobs:
       token: ${{ secrets.GITHUB_TOKEN }}
 
   checks:
-    uses: ./.github/workflows/check.yml
+    uses: ${{ GITHUB_WORKSPACE }}/.github/workflows/check.yml
     with:
       workdir: authentication
     secrets:
