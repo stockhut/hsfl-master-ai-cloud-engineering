@@ -3,11 +3,14 @@ package recipes
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/golang-jwt/jwt"
-	"github.com/stockhut/hsfl-master-ai-cloud-engineering/authentication/middleware"
-	"github.com/stockhut/hsfl-master-ai-cloud-engineering/common/presenter/json_presenter"
+	"html/template"
 	"io"
 	"net/http"
+
+	"github.com/golang-jwt/jwt"
+	"github.com/stockhut/hsfl-master-ai-cloud-engineering/authentication/middleware"
+	"github.com/stockhut/hsfl-master-ai-cloud-engineering/common/htmx"
+	"github.com/stockhut/hsfl-master-ai-cloud-engineering/common/presenter/json_presenter"
 )
 
 func (ctrl *Controller) CreateRecipe(w http.ResponseWriter, r *http.Request) {
@@ -47,5 +50,19 @@ func (ctrl *Controller) CreateRecipe(w http.ResponseWriter, r *http.Request) {
 
 	response := recipeToResponseModel(newRecipe)
 
-	json_presenter.JsonPresenter(w, http.StatusCreated, response)
+	if htmx.IsHtmxRequest(r) {
+		tmplFile := "templates/CreateRecipe/recipeSuccessfulCreate.html"
+		tmpl, err := template.ParseFiles(tmplFile)
+		if err != nil {
+			panic(err)
+		}
+		w.WriteHeader(http.StatusOK)
+		err = tmpl.Execute(w, response)
+		if err != nil {
+			panic(err)
+		}
+	} else {
+		json_presenter.JsonPresenter(w, http.StatusOK, response)
+	}
+
 }

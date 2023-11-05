@@ -1,10 +1,11 @@
 package recipes
 
 import (
-	"github.com/stockhut/hsfl-master-ai-cloud-engineering/common/htmx"
-	"github.com/stockhut/hsfl-master-ai-cloud-engineering/common/presenter/json_presenter"
 	"html/template"
 	"net/http"
+
+	"github.com/stockhut/hsfl-master-ai-cloud-engineering/common/htmx"
+	"github.com/stockhut/hsfl-master-ai-cloud-engineering/common/presenter/json_presenter"
 
 	"github.com/stockhut/hsfl-master-ai-cloud-engineering/common/fun"
 )
@@ -25,7 +26,7 @@ func (ctrl *Controller) GetByAuthor(w http.ResponseWriter, r *http.Request) {
 	response := fun.Map(recipes, recipeToResponseModel)
 
 	if htmx.IsHtmxRequest(r) {
-		tmplFile := "templates/displayRecipe.html"
+		tmplFile := "templates/displayRecipesShort.html"
 		tmpl, err := template.ParseFiles(tmplFile)
 		if err != nil {
 			panic(err)

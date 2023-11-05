@@ -1,13 +1,14 @@
 package recipes
 
 import (
+	"html/template"
+	"net/http"
+
 	"github.com/golang-jwt/jwt"
 	"github.com/stockhut/hsfl-master-ai-cloud-engineering/authentication/middleware"
 	"github.com/stockhut/hsfl-master-ai-cloud-engineering/common/fun"
 	"github.com/stockhut/hsfl-master-ai-cloud-engineering/common/htmx"
 	"github.com/stockhut/hsfl-master-ai-cloud-engineering/common/presenter/json_presenter"
-	"html/template"
-	"net/http"
 )
 
 func (ctrl *Controller) GetBySelf(w http.ResponseWriter, r *http.Request) {
@@ -30,7 +31,7 @@ func (ctrl *Controller) GetBySelf(w http.ResponseWriter, r *http.Request) {
 	response := fun.Map(recipes, recipeToResponseModel)
 
 	if htmx.IsHtmxRequest(r) {
-		tmplFile := "templates/displayRecipe.html"
+		tmplFile := "templates/displayRecipesShort.html"
 		tmpl, err := template.ParseFiles(tmplFile)
 		if err != nil {
 			panic(err)

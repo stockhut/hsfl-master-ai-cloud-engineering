@@ -1,0 +1,19 @@
+<div>
+  <h3><em>{{.Name}}</em> wurde erfolgreich erstellt</h3>
+
+  <button
+    hx-get="api/v1/recipe/{{.Id}}"
+    hx-target="#content"
+    hx-swap="innerHTML"
+  >
+    Rezept ansehen
+  </button>
+  
+  <button
+    hx-get="createRecipe.html"
+    hx-target="#content"
+    hx-swap="innerHTML"
+  >
+    Weiteres Rezept verfassen
+  </button>
+</div>
