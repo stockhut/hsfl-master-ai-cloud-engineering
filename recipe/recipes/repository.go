@@ -116,5 +116,5 @@ func (repo *InMemoryRecipeRepository) DeleteRecipe(id model.RecipeId) error {
 }
 
 func (repo *SqlcRepository) DeleteRecipe(id model.RecipeId) error {
-	panic("not implemented")
+	return repo.queries.DeleteRecipe(context.TODO(), int64(id))
 }
