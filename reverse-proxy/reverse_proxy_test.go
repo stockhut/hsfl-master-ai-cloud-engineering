@@ -41,7 +41,7 @@ func TestForward(t *testing.T) {
 
 	assert.Nil(t, err)
 
-	Forward(recorder, request, service)
+	forward(recorder, request, service)
 
 	assert.Equal(t, http.StatusTeapot, recorder.Code, "Forwarded wrong http status code")
 

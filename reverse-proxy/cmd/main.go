@@ -2,12 +2,10 @@ package main
 
 import (
 	"fmt"
+	"github.com/stockhut/hsfl-master-ai-cloud-engineering/reverse-proxy"
 	"log"
 	"net/http"
 	"os"
-	"strings"
-
-	"github.com/stockhut/hsfl-master-ai-cloud-engineering/reverse-proxy"
 )
 
 const Port int = 5000
@@ -30,30 +28,8 @@ func main() {
 
 	logger := log.New(os.Stdout, "", 0)
 
-	router := http.NewServeMux()
-	router.HandleFunc("/",
-		func(w http.ResponseWriter, r *http.Request) {
-
-			handled := false
-			for _, service := range services {
-				if strings.HasPrefix(r.URL.Path, service.Route) {
-					handled = true
-
-					logger.Printf("%s => %s (%s)\n", r.URL, service.Name, service.TargetHost)
-					err := reverse_proxy.Forward(w, r, service)
-					if err != nil {
-						w.WriteHeader(http.StatusInternalServerError)
-						logger.Printf("Failed to forward request: %s", err)
-					}
-					break
-				}
-			}
-
-			if !handled {
-				logger.Printf("No matching service for %v\n", r.URL)
-			}
-		})
+	proxy := reverse_proxy.New(logger, services)
 
 	addr := fmt.Sprintf("%s:%d", Host, Port)
-	log.Fatal(http.ListenAndServe(addr, router))
+	log.Fatal(http.ListenAndServe(addr, proxy))
 }
