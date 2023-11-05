@@ -123,8 +123,8 @@ func main() {
 
 	r := router.New()
 
-	r.POST("/account", logMw(c.handleCreateAccount))
-	r.POST("/login", logMw(c.handleLogin))
+	r.POST("/api/v1/authentication/account", logMw(c.handleCreateAccount))
+	r.POST("/api/v1/authentication/login", logMw(c.handleLogin))
 
 	err = http.ListenAndServe("localhost:8080", r)
 	panic(err)
