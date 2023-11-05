@@ -28,7 +28,7 @@ func main() {
 
 	ctx := context.Background()
 
-	db, err := sql.Open("sqlite3", ":memory:")
+	db, err := sql.Open("sqlite3", "database.sqlite")
 	if err != nil {
 		panic(err)
 	}

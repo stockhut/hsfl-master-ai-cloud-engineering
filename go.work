@@ -4,4 +4,5 @@ use (
 	./authentication
 	./common
 	./recipe
+	./web-service
 )

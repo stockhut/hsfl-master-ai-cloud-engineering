@@ -1,27 +1,32 @@
 package recipes
 
 import (
+	"github.com/golang-jwt/jwt"
+	"github.com/stockhut/hsfl-master-ai-cloud-engineering/authentication/middleware"
+	"github.com/stockhut/hsfl-master-ai-cloud-engineering/common/fun"
 	"github.com/stockhut/hsfl-master-ai-cloud-engineering/common/htmx"
 	"github.com/stockhut/hsfl-master-ai-cloud-engineering/common/presenter/json_presenter"
 	"html/template"
 	"net/http"
-
-	"github.com/stockhut/hsfl-master-ai-cloud-engineering/common/fun"
 )
 
-func (ctrl *Controller) GetByAuthor(w http.ResponseWriter, r *http.Request) {
+func (ctrl *Controller) GetBySelf(w http.ResponseWriter, r *http.Request) {
 
 	// TODO: check if user exists, needs repository for accounts/users
 
-	author := r.Context().Value("author").(string)
+	claims := r.Context().Value(middleware.JwtContextKey).(jwt.MapClaims)
 
-	recipes, err := ctrl.repo.GetAllByAuthor(author)
+	user, ok := claims["name"].(string)
+	if !ok {
+		panic("kein name im claim")
+	}
+
+	recipes, err := ctrl.repo.GetAllByAuthor(user)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
-	// template.Must(template.ParseGlob("templates/*.gohtml")) <--alex sagt
 	response := fun.Map(recipes, recipeToResponseModel)
 
 	if htmx.IsHtmxRequest(r) {
@@ -38,4 +43,5 @@ func (ctrl *Controller) GetByAuthor(w http.ResponseWriter, r *http.Request) {
 	} else {
 		json_presenter.JsonPresenter(w, http.StatusOK, response)
 	}
+
 }

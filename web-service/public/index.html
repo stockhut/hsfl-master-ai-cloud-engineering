@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TasteBudTribes</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <script src="https://unpkg.com/htmx.org@1.9.6" integrity="sha384-FhXw7b6AlE/jyjlZH5iHa/tTe9EpJ1Y55RjcgPbjeWMskSxZt1v9qkxLJWNJaGni" crossorigin="anonymous"></script>
+  </head>
+  <body>
+    <div class="page-wrapper">
+      <div class="content-wrapper">
+        <div class="oben">
+          <header>
+            
+            <nav>
+              <ul>
+                <li><a href="login.html">Login</a></li>
+                <li><a href="index.html">FYP</a></li>
+                <li>
+                    <a hx-get="/api/v1/recipe/by/self"
+                       hx-target="#content"
+                       hx-swap="innerHTML">Profil
+                    </a>
+                </li>
+                <li><a href="postRecipe.html">Rezept verfassen</a></li>
+              </ul>
+            </nav>
+          </header>
+        </div>
+
+        <div id="content"></div>
+
+      </div>
+
+
+      <div class="unten">
+        <footer>
+          <ul>
+          </ul>
+        </footer>
+      </div>
+    </div>
+  </body>
+</html>
