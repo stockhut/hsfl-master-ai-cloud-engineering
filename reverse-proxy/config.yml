@@ -1,4 +1,7 @@
 services:
+  authentication:
+    route: /api/v1/authentication
+    targetHost: localhost:8080
   recipe:
     route: /api/v1/recipe
     targetHost: localhost:8081
