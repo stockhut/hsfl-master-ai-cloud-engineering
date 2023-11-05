@@ -1,0 +1,7 @@
+services:
+  recipe:
+    route: /api/v1/recipe
+    targetHost: localhost:8081
+  web:
+    route: /
+    targetHost: localhost:3000
