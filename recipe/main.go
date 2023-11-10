@@ -22,7 +22,15 @@ import (
 	"github.com/stockhut/hsfl-master-ai-cloud-engineering/recipe/recipes"
 )
 
+const JwtPublicKeyEnvKey = "JWT_PUBLIC_KEY"
+
 func main() {
+
+	jwtPrivateKeyFile, ok := os.LookupEnv(JwtPublicKeyEnvKey)
+	if !ok {
+		fmt.Printf("No %s configured\n", JwtPublicKeyEnvKey)
+		os.Exit(1)
+	}
 
 	fmt.Println("Hello from Recipe!")
 
@@ -40,7 +48,7 @@ func main() {
 
 	queries := database.New(db)
 
-	bytes, err := os.ReadFile("../authentication/jwt_public_key.key")
+	bytes, err := os.ReadFile(jwtPrivateKeyFile)
 	if err != nil {
 		panic(err)
 	}

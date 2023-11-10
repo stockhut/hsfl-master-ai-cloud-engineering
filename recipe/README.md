@@ -12,6 +12,11 @@ Before testing, generate the mocks:
 ```shell
 go generate _mocks/gen.go
 ```
+## Configuration
+
+| JWT_PUBLIC_KEY | Path to a jwt public keyfile |
+|----------------|------------------------------|
+|                |                              |
 
 ## Responsibilities
 
