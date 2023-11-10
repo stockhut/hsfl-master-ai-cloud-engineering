@@ -56,13 +56,13 @@ func (ctrl *Controller) CreateRecipe(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			panic(err)
 		}
-		w.WriteHeader(http.StatusOK)
+		w.WriteHeader(http.StatusCreated)
 		err = tmpl.Execute(w, response)
 		if err != nil {
 			panic(err)
 		}
 	} else {
-		json_presenter.JsonPresenter(w, http.StatusOK, response)
+		json_presenter.JsonPresenter(w, http.StatusCreated, response)
 	}
 
 }
