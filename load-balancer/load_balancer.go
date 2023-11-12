@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/stockhut/hsfl-master-ai-cloud-engineering/reverse-proxy"
 	"net/http"
+	"sync"
 	"time"
 )
 
@@ -16,30 +17,50 @@ func New(replicas []string, strategy balancingStrategy, healthcheckInterval time
 		replicas:            replicas,
 		strategy:            strategy,
 		healthcheckInterval: healthcheckInterval,
+		healthyLock:         &sync.Mutex{},
 	}
 }
 
 type LoadBalancer struct {
-	replicas            []string
-	healthyReplicas     []string
+	replicas        []string
+	healthyReplicas []string
+	// healthyLock guards access to the healthyReplicas slice
+	healthyLock         *sync.Mutex
 	strategy            balancingStrategy
 	healthcheckInterval time.Duration
 }
 
 // StartHealthchecks regularly checks which replicas are healthy and populate healthyReplicas
 func (lb *LoadBalancer) StartHealthchecks() {
+
+	lb.healthyLock.Lock()
 	lb.healthyReplicas = healthyHosts(lb.replicas)
+	lb.healthyLock.Unlock()
 
 	go func() {
 
 		for {
 			select {
 			case <-time.After(lb.healthcheckInterval):
+				lb.healthyLock.Lock()
 				lb.healthyReplicas = healthyHosts(lb.replicas)
+				lb.healthyLock.Unlock()
 			}
 		}
 
 	}()
+
+}
+
+func (lb *LoadBalancer) markUnhealthy(host string) {
+
+	lb.healthyLock.Lock()
+	for i, h := range lb.healthyReplicas {
+		if h == host {
+			lb.healthyReplicas = append(lb.healthyReplicas[:i], lb.healthyReplicas[i+1:]...)
+		}
+	}
+	lb.healthyLock.Unlock()
 }
 
 func healthyHosts(hosts []string) []string {
@@ -76,8 +97,7 @@ func (lb *LoadBalancer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		fmt.Printf("Target: %s\n", host)
 		err := reverse_proxy.Forward(w, r, host)
 		if err != nil {
-			// TODO: mark target host as unhealthy
-			panic(err)
+			lb.markUnhealthy(host)
 		}
 	})
 }
