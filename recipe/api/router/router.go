@@ -25,6 +25,7 @@ func New(
 	router.GET("/api/v1/recipe/by/:author", logAndAuth(recipeController.GetByAuthor))
 	router.GET("/api/v1/recipe/:id", logAndAuth(recipeController.GetById))
 	router.DELETE("/api/v1/recipe/:id", logAndAuth(recipeController.DeleteRecipe))
+	router.GET("/health", recipeController.GetHealth)
 
 	return &Router{router}
 }
