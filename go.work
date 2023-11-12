@@ -6,4 +6,5 @@ use (
 	./recipe
 	./web-service
 	./reverse-proxy
+	./load-balancer
 )

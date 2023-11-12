@@ -20,7 +20,7 @@ func (proxy *ReverseProxy) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			handled = true
 
 			proxy.logger.Printf("%s => %s (%s)\n", r.URL, service.Name, service.TargetHost)
-			err := forward(w, r, service)
+			err := Forward(w, r, service.TargetHost)
 			if err != nil {
 				w.WriteHeader(http.StatusInternalServerError)
 				proxy.logger.Printf("Failed to forward request: %s", err)
@@ -47,12 +47,12 @@ type Service struct {
 	TargetHost string
 }
 
-// forward the request to the given service, writing the service response to w
-func forward(w http.ResponseWriter, r *http.Request, service Service) error {
+// Forward the request to the given service, writing the service response to w
+func Forward(w http.ResponseWriter, r *http.Request, host string) error {
 
-	r.Host = service.TargetHost
+	r.Host = host
 
-	newUrl := "http://" + service.TargetHost + r.URL.Path
+	newUrl := "http://" + host + r.URL.Path
 
 	req, err := http.NewRequest(r.Method, newUrl, r.Body)
 	if err != nil {
