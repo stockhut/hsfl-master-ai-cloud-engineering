@@ -59,10 +59,6 @@ func main() {
 		panic(err)
 	}
 
-	/* repo := recipes.InMemoryRecipeRepository{
-		Recipes: make([]model.Recipe, 0),
-	} */
-
 	repo := recipes.New(queries)
 
 	recipeController := recipes.NewController(&repo)
