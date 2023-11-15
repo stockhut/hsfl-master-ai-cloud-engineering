@@ -2,22 +2,105 @@ package main
 
 import (
 	"fmt"
+	"github.com/docker/docker/client"
+	"github.com/stockhut/hsfl-master-ai-cloud-engineering/common/fun"
 	"github.com/stockhut/hsfl-master-ai-cloud-engineering/load-balancer"
+	"github.com/stockhut/hsfl-master-ai-cloud-engineering/load-balancer/orchestration"
 	"github.com/stockhut/hsfl-master-ai-cloud-engineering/load-balancer/strategies/round_robin"
 	"net/http"
+	"os"
+	"os/signal"
+	"strconv"
 	"time"
 )
 
 func main() {
 
+	serviceConfigs := []orchestration.ServiceContainerConfig{
+		{
+			Name:  "recipe",
+			Image: "recipe:latest",
+			Environment: map[string]string{
+				"JWT_PUBLIC_KEY": "/keys/jwt_public_key.key",
+			},
+			Mounts: map[string]string{
+				"/home/f/Projects/Hochschule/hsfl-master-ai-cloud-engineering/authentication": "/keys",
+			},
+			MinReplicas: 2,
+		},
+	}
+
+	cli, err := client.NewClientWithOpts(client.FromEnv, client.WithAPIVersionNegotiation())
+	if err != nil {
+		panic(err)
+	}
+
+	containers := make([]orchestration.ServiceContainer, 0)
+
+	defer func() {
+		p := recover()
+		if p != nil {
+			fmt.Printf("Panic: %s\n", p)
+			fmt.Print("Recovered, stopping containers")
+			orchestration.StopAll(cli, containers)
+		}
+	}()
+
+	for _, serviceConfig := range serviceConfigs {
+
+		for i := 0; i < serviceConfig.MinReplicas; i++ {
+
+			serviceContainer, err := orchestration.CreateAndStartContainer(cli, serviceConfig)
+			if err != nil {
+				fmt.Printf("Failed to start service container: %s\n", err)
+			}
+			fmt.Printf("started container %v\n", serviceContainer)
+			containers = append(containers, serviceContainer)
+		}
+	}
+
+	sigs := make(chan os.Signal, 1)
+	signal.Notify(sigs, os.Kill, os.Interrupt)
+	go func() {
+
+		sig := <-sigs
+		fmt.Printf("Received signal %s\n", sig)
+		orchestration.StopAll(cli, containers)
+		os.Exit(1)
+	}()
+
+	//go func() {
+	//	for {
+	//		select {
+	//		case err := <-serviceContainer.errorChan:
+	//			if err != nil {
+	//				panic(err)
+	//			}
+	//		case s := <-serviceContainer.stoppedChan:
+	//			fmt.Printf("status change: %v\n", s)
+	//		}
+	//	}
+	//}()
+	//
+	//out, err := cli.ContainerLogs(context.Background(), serviceContainer.ID, types.ContainerLogsOptions{ShowStdout: true})
+	//if err != nil {
+	//	panic(err)
+	//}
+	//
+	//stdcopy.StdCopy(os.Stdout, os.Stderr, out)
+
 	fmt.Println("Starting load balancer")
 
-	replicas := []string{
-		"localhost:8081",
-		//"localhost:9001",
-		//"localhost:9002",
-		"localhost:9003",
-	}
+	//replicas := []string{
+	//	"localhost:8081",
+	//	//"localhost:9001",
+	//	//"localhost:9002",
+	//	"localhost:9003",
+	//}
+
+	replicas := fun.Map(containers, func(c orchestration.ServiceContainer) string {
+		return c.Ip + ":" + strconv.Itoa(c.Port)
+	})
 
 	lb := load_balancer.New(replicas, round_robin.New(), 10*time.Second)
 	lb.StartHealthchecks()
