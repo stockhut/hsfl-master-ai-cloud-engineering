@@ -7,6 +7,7 @@ import (
 	"io"
 	"net/http"
 	"net/http/httptest"
+	"net/url"
 	"testing"
 )
 
@@ -52,4 +53,52 @@ func TestForward(t *testing.T) {
 	assert.Equal(t, "response body", string(body))
 
 	assert.Equal(t, "TestHeaderValue", recorder.Result().Header.Get("TestHeader"))
+}
+
+func TestPickService(t *testing.T) {
+
+	t.Run("picks matching route", func(t *testing.T) {
+
+		services := []Service{
+			{
+				Name:       "a",
+				Route:      "/a",
+				TargetHost: "a.example.org",
+			},
+			{
+				Name:       "a",
+				Route:      "/a/foo",
+				TargetHost: "a.example.org",
+			},
+			{
+				Name:       "b",
+				Route:      "/b",
+				TargetHost: "b.example.org",
+			},
+			{
+				Name:       "wildcard",
+				Route:      "/",
+				TargetHost: "slash.example.org",
+			},
+		}
+
+		for _, s := range services {
+
+			t.Run(fmt.Sprintf("%s -> %s", s.Route, s.TargetHost), func(t *testing.T) {
+
+				u := url.URL{
+					Path: s.Route,
+				}
+
+				service := pickService(services, &u)
+
+				assert.Equal(t, s.TargetHost, service.TargetHost)
+			})
+		}
+	})
+
+	t.Run("returns nil when no match is found", func(t *testing.T) {
+
+		assert.Nil(t, pickService([]Service{}, &url.URL{Path: "/foo/bar"}))
+	})
 }
