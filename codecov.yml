@@ -8,6 +8,12 @@ flags:
   common:
     paths:
       - common
+  loadbalancer:
+    paths:
+      - reverse-proxy
+  reverseproxy:
+    paths:
+      - load-balancer
 
 flag_management:
   default_rules:
