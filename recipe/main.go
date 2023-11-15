@@ -54,7 +54,7 @@ func main() {
 	}
 
 	block, _ := pem.Decode(bytes)
-	public_key, err := x509.ParsePKIXPublicKey(block.Bytes)
+	publicKey, err := x509.ParsePKIXPublicKey(block.Bytes)
 	if err != nil {
 		panic(err)
 	}
@@ -63,17 +63,17 @@ func main() {
 
 	recipeController := recipes.NewController(&repo)
 
-	authMiddleware := middleware.ValidateJwtMiddleware(public_key)
+	authMiddleware := middleware.ValidateJwtMiddleware(publicKey)
 
 	logFlags := log.Ltime | log.Lmsgprefix | log.Lmicroseconds
 	logger := log.New(os.Stdout, "", logFlags)
 	logMw := requestlogger.New(logger)
 
-	router := router.New(authMiddleware, logMw, recipeController)
+	r := router.New(authMiddleware, logMw, recipeController)
 
 	port := ":8081"
 
 	logger.Printf("Listening on %s\n", port)
-	err = http.ListenAndServe(port, router)
+	err = http.ListenAndServe(port, r)
 	panic(err)
 }
