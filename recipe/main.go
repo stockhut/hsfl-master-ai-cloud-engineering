@@ -37,12 +37,14 @@ func main() {
 
 	db, err := sql.Open("sqlite3", "database.sqlite")
 	if err != nil {
-		panic(err)
+		fmt.Printf("Failed to open database: %s\n", err)
+		return
 	}
 
 	// create tables
 	if _, err := db.ExecContext(ctx, dll.Ddl); err != nil {
-		panic(err)
+		fmt.Printf("Failed to create tables: %s\n", err)
+		return
 	}
 
 	queries := database.New(db)
