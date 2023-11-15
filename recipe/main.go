@@ -2,10 +2,9 @@ package main
 
 import (
 	"context"
-	"crypto/x509"
 	"database/sql"
-	"encoding/pem"
 	"fmt"
+	"github.com/stockhut/hsfl-master-ai-cloud-engineering/common/jwt_public_key"
 
 	requestlogger "github.com/stockhut/hsfl-master-ai-cloud-engineering/common/middleware/request-logger"
 	"log"
@@ -26,7 +25,7 @@ const JwtPublicKeyEnvKey = "JWT_PUBLIC_KEY"
 
 func main() {
 
-	jwtPrivateKeyFile, ok := os.LookupEnv(JwtPublicKeyEnvKey)
+	jwtPublicKeyFile, ok := os.LookupEnv(JwtPublicKeyEnvKey)
 	if !ok {
 		fmt.Printf("No %s configured\n", JwtPublicKeyEnvKey)
 		os.Exit(1)
@@ -48,15 +47,10 @@ func main() {
 
 	queries := database.New(db)
 
-	bytes, err := os.ReadFile(jwtPrivateKeyFile)
+	publicKey, err := jwt_public_key.FromFile(jwtPublicKeyFile)
 	if err != nil {
-		panic(err)
-	}
-
-	block, _ := pem.Decode(bytes)
-	publicKey, err := x509.ParsePKIXPublicKey(block.Bytes)
-	if err != nil {
-		panic(err)
+		fmt.Printf("Failed to load JWT public key: %s\n", err)
+		return
 	}
 
 	repo := recipes.New(queries)
