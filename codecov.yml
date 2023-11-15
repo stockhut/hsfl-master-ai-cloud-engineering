@@ -1,0 +1,14 @@
+flags:
+  auth:
+    paths:
+      - authentication
+  recipe:
+    paths:
+      - recipe
+  common:
+    paths:
+      - common
+
+flag_management:
+  default_rules:
+    carryforward: true
