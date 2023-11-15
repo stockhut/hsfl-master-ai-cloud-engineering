@@ -2,12 +2,15 @@ package reverse_proxy
 
 import (
 	"bytes"
+	"errors"
 	"fmt"
 	"github.com/stretchr/testify/assert"
 	"io"
+	"log"
 	"net/http"
 	"net/http/httptest"
 	"net/url"
+	"os"
 	"testing"
 )
 
@@ -100,5 +103,55 @@ func TestPickService(t *testing.T) {
 	t.Run("returns nil when no match is found", func(t *testing.T) {
 
 		assert.Nil(t, pickService([]Service{}, &url.URL{Path: "/foo/bar"}))
+	})
+}
+
+func TestReverseProxy_ServeHTTP(t *testing.T) {
+
+	services := []Service{
+		{
+			Name:       "a",
+			Route:      "/a",
+			TargetHost: "a.example.org",
+		},
+	}
+
+	t.Run("uses provided HttpForwarder", func(t *testing.T) {
+
+		called := false
+		fwd := func(w http.ResponseWriter, r *http.Request, host string) error {
+			called = true
+			return nil
+		}
+
+		rp := newWithForwarder(log.New(os.Stdout, "", 0), fwd, services)
+
+		recorder := httptest.NewRecorder()
+		req, err := http.NewRequest(http.MethodGet, "https://a.example.org/a", nil)
+
+		assert.Nil(t, err, "http request failed")
+
+		rp.ServeHTTP(recorder, req)
+
+		assert.True(t, called)
+
+	})
+
+	t.Run("responds with 502 BAD GATEWAY when forwarding fails", func(t *testing.T) {
+
+		fwd := func(w http.ResponseWriter, r *http.Request, host string) error {
+			return errors.New("some error")
+		}
+
+		rp := newWithForwarder(log.New(os.Stdout, "", 0), fwd, services)
+
+		recorder := httptest.NewRecorder()
+		req, err := http.NewRequest(http.MethodGet, "https://a.example.org/a", nil)
+
+		assert.Nil(t, err, "http request failed")
+
+		rp.ServeHTTP(recorder, req)
+
+		assert.Equal(t, http.StatusBadGateway, recorder.Code)
 	})
 }

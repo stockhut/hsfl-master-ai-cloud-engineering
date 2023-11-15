@@ -10,8 +10,9 @@ import (
 )
 
 type ReverseProxy struct {
-	logger   *log.Logger
-	services []Service
+	logger    *log.Logger
+	services  []Service
+	forwarder HttpForwarder
 }
 
 func (proxy *ReverseProxy) ServeHTTP(w http.ResponseWriter, r *http.Request) {
@@ -23,9 +24,9 @@ func (proxy *ReverseProxy) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 
 	proxy.logger.Printf("%s => %s (%s)\n", r.URL, service.Name, service.TargetHost)
-	err := Forward(w, r, service.TargetHost)
+	err := proxy.forwarder(w, r, service.TargetHost)
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
+		w.WriteHeader(http.StatusBadGateway)
 		proxy.logger.Printf("Failed to forward request: %s", err)
 	}
 }
@@ -42,9 +43,17 @@ func pickService(services []Service, u *url.URL) *Service {
 
 func New(logger *log.Logger, services []Service) *ReverseProxy {
 	return &ReverseProxy{
-		logger:   logger,
-		services: services,
+		logger:    logger,
+		services:  services,
+		forwarder: Forward,
 	}
+}
+
+func newWithForwarder(logger *log.Logger, forwarder HttpForwarder, services []Service) *ReverseProxy {
+	rp := New(logger, services)
+	rp.forwarder = forwarder
+
+	return rp
 }
 
 type Service struct {
@@ -52,6 +61,8 @@ type Service struct {
 	Route      string
 	TargetHost string
 }
+
+type HttpForwarder func(w http.ResponseWriter, r *http.Request, host string) error
 
 // Forward the request to the given service, writing the service response to w
 func Forward(w http.ResponseWriter, r *http.Request, host string) error {
