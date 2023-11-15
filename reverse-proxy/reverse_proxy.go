@@ -19,6 +19,7 @@ func (proxy *ReverseProxy) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	service := pickService(proxy.services, r.URL)
 	if service == nil {
+		w.WriteHeader(http.StatusBadGateway)
 		proxy.logger.Printf("No matching service for %v\n", r.URL)
 		return
 	}

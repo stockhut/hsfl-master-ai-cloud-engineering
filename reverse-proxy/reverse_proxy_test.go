@@ -154,4 +154,25 @@ func TestReverseProxy_ServeHTTP(t *testing.T) {
 
 		assert.Equal(t, http.StatusBadGateway, recorder.Code)
 	})
+
+	t.Run("responds with 502 BAD GATEWAY when no matching service is found", func(t *testing.T) {
+
+		called := false
+		fwd := func(w http.ResponseWriter, r *http.Request, host string) error {
+			called = true
+			return errors.New("some error")
+		}
+
+		rp := newWithForwarder(log.New(os.Stdout, "", 0), fwd, services)
+
+		recorder := httptest.NewRecorder()
+		req, err := http.NewRequest(http.MethodGet, "https://a.example.org/some/different/route", nil)
+
+		assert.Nil(t, err, "http request failed")
+
+		rp.ServeHTTP(recorder, req)
+
+		assert.Equal(t, http.StatusBadGateway, recorder.Code)
+		assert.False(t, called, "Proxy should not call the forward method when no service is found")
+	})
 }
