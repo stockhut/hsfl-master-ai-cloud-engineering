@@ -11,7 +11,7 @@ func TestFromFile(t *testing.T) {
 
 	config := configFile{
 		Services: map[string]configItem{
-			"foo": configItem{
+			"foo": {
 				Route:      "/foo",
 				TargetHost: "foo.example.org",
 			},
