@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/stockhut/hsfl-master-ai-cloud-engineering/reverse-proxy"
 	"net/http"
+	"slices"
 	"sync"
 	"time"
 )
@@ -93,7 +94,12 @@ func healthCheck(host string) (bool, error) {
 
 func (lb *LoadBalancer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
-	lb.strategy.GetTarget(r, lb.healthyReplicas, func(host string) {
+	// create a copy of the slice to avoid race conditions with healthcheck updates on lb.healthyReplicas
+	lb.healthyLock.Lock()
+	h := slices.Clone(lb.healthyReplicas)
+	lb.healthyLock.Unlock()
+
+	lb.strategy.GetTarget(r, h, func(host string) {
 		fmt.Printf("Target: %s\n", host)
 		err := reverse_proxy.Forward(w, r, host)
 		if err != nil {
