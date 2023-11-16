@@ -5,40 +5,56 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"net/url"
 	"strings"
 )
 
 type ReverseProxy struct {
-	logger   *log.Logger
-	services []Service
+	logger    *log.Logger
+	services  []Service
+	forwarder HttpForwarder
 }
 
 func (proxy *ReverseProxy) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	handled := false
-	for _, service := range proxy.services {
-		if strings.HasPrefix(r.URL.Path, service.Route) {
-			handled = true
 
-			proxy.logger.Printf("%s => %s (%s)\n", r.URL, service.Name, service.TargetHost)
-			err := Forward(w, r, service.TargetHost)
-			if err != nil {
-				w.WriteHeader(http.StatusInternalServerError)
-				proxy.logger.Printf("Failed to forward request: %s", err)
-			}
-			break
+	service := pickService(proxy.services, r.URL)
+	if service == nil {
+		w.WriteHeader(http.StatusBadGateway)
+		proxy.logger.Printf("No matching service for %v\n", r.URL)
+		return
+	}
+
+	proxy.logger.Printf("%s => %s (%s)\n", r.URL, service.Name, service.TargetHost)
+	err := proxy.forwarder(w, r, service.TargetHost)
+	if err != nil {
+		w.WriteHeader(http.StatusBadGateway)
+		proxy.logger.Printf("Failed to forward request: %s", err)
+	}
+}
+
+func pickService(services []Service, u *url.URL) *Service {
+	for _, service := range services {
+		if strings.HasPrefix(u.Path, service.Route) {
+			return &service
 		}
 	}
 
-	if !handled {
-		proxy.logger.Printf("No matching service for %v\n", r.URL)
-	}
+	return nil
 }
 
 func New(logger *log.Logger, services []Service) *ReverseProxy {
 	return &ReverseProxy{
-		logger:   logger,
-		services: services,
+		logger:    logger,
+		services:  services,
+		forwarder: Forward,
 	}
+}
+
+func newWithForwarder(logger *log.Logger, forwarder HttpForwarder, services []Service) *ReverseProxy {
+	rp := New(logger, services)
+	rp.forwarder = forwarder
+
+	return rp
 }
 
 type Service struct {
@@ -46,6 +62,8 @@ type Service struct {
 	Route      string
 	TargetHost string
 }
+
+type HttpForwarder func(w http.ResponseWriter, r *http.Request, host string) error
 
 // Forward the request to the given service, writing the service response to w
 func Forward(w http.ResponseWriter, r *http.Request, host string) error {
