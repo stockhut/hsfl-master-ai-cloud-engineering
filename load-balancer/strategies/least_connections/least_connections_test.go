@@ -16,7 +16,7 @@ func TestLeastConnections_GetTarget(t *testing.T) {
 				"b": 0,
 				"c": 0,
 			},
-			m: &sync.Mutex{},
+			m: &sync.RWMutex{},
 		}
 
 		replicas := []string{
@@ -69,7 +69,7 @@ func TestLeastConnections_GetTarget(t *testing.T) {
 			t.Run(fmt.Sprintf("case %d", i), func(t *testing.T) {
 				strategy := &LeastConnections{
 					connectionCount: tc.connectionCount,
-					m:               &sync.Mutex{},
+					m:               &sync.RWMutex{},
 				}
 
 				replicas := []string{
