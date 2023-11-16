@@ -18,7 +18,7 @@ func New(replicas []string, strategy balancingStrategy, healthcheckInterval time
 		replicas:            replicas,
 		strategy:            strategy,
 		healthcheckInterval: healthcheckInterval,
-		healthyLock:         &sync.Mutex{},
+		healthyLock:         &sync.RWMutex{},
 	}
 }
 
@@ -26,7 +26,7 @@ type LoadBalancer struct {
 	replicas        []string
 	healthyReplicas []string
 	// healthyLock guards access to the healthyReplicas slice
-	healthyLock         *sync.Mutex
+	healthyLock         *sync.RWMutex
 	strategy            balancingStrategy
 	healthcheckInterval time.Duration
 }
@@ -53,6 +53,7 @@ func (lb *LoadBalancer) StartHealthchecks() {
 
 }
 
+// markUnhealthy marks the given host as unhealthy. Acquires healthyLock
 func (lb *LoadBalancer) markUnhealthy(host string) {
 
 	lb.healthyLock.Lock()
@@ -95,9 +96,9 @@ func healthCheck(host string) (bool, error) {
 func (lb *LoadBalancer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	// create a copy of the slice to avoid race conditions with healthcheck updates on lb.healthyReplicas
-	lb.healthyLock.Lock()
+	lb.healthyLock.RLock()
 	h := slices.Clone(lb.healthyReplicas)
-	lb.healthyLock.Unlock()
+	lb.healthyLock.RUnlock()
 
 	lb.strategy.GetTarget(r, h, func(host string) {
 		fmt.Printf("Target: %s\n", host)
