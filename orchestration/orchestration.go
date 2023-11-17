@@ -25,7 +25,6 @@ type ServiceContainer struct {
 	ID          string
 	Name        string
 	Ip          string
-	Port        int
 	StoppedChan <-chan container.WaitResponse
 	ErrorChan   <-chan error
 }
@@ -54,12 +53,6 @@ func createContainer(cli *client.Client, sc ServiceContainerConfig) (container.C
 
 	// TODO: move port config to ServiceContainerConfig
 	hostConfig := container.HostConfig{
-		PortBindings: map[nat.Port][]nat.PortBinding{
-			"80": {
-				{HostIP: "0.0.0.0",
-					HostPort: "8080"},
-			},
-		},
 		Mounts:     mounts,
 		AutoRemove: true,
 	}
@@ -93,7 +86,6 @@ func CreateAndStartContainer(cli *client.Client, sc ServiceContainerConfig) (Ser
 
 	return ServiceContainer{
 		ID:          resp.ID,
-		Port:        sc.Port,
 		Ip:          ip,
 		StoppedChan: statusCh,
 		ErrorChan:   errCh,
