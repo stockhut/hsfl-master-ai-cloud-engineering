@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/stockhut/hsfl-master-ai-cloud-engineering/common/environment"
 	requestlogger "github.com/stockhut/hsfl-master-ai-cloud-engineering/common/middleware/request-logger"
 	"io"
 	"log"
@@ -94,7 +95,12 @@ func (repo *inMemoryAccountRepository) checkDuplicate(acc account) (AccountInfoD
 
 }
 
+const JwtPrivateKeyEnvKey = "JWT_PRIVATE_KEY"
+
 func main() {
+
+	jwtPrivateKeyFile := environment.GetRequiredEnvVar(JwtPrivateKeyEnvKey)
+
 	var repo inMemoryAccountRepository = inMemoryAccountRepository{
 		accounts: make([]account, 0),
 	}
@@ -103,7 +109,7 @@ func main() {
 	repo.accounts = append(repo.accounts, account{name: "Fabi", email: "fabi@nele.de", password: "def123"})
 
 	tokenGeneratorConfig := jwt_util.JwtConfig{
-		SignKey: "jwt_private_key.key",
+		SignKey: jwtPrivateKeyFile,
 	}
 	tokenGenerator, err := jwt_util.NewJwtTokenGenerator(tokenGeneratorConfig)
 	if err != nil {
