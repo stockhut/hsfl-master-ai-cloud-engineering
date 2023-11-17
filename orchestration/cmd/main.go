@@ -4,25 +4,23 @@ import (
 	"fmt"
 	"github.com/docker/docker/client"
 	"github.com/stockhut/hsfl-master-ai-cloud-engineering/orchestration"
+	"github.com/stockhut/hsfl-master-ai-cloud-engineering/orchestration/config"
+	"log"
 	"os"
 	"os/signal"
 )
 
 func main() {
 
-	serviceConfigs := []orchestration.ServiceContainerConfig{
-		{
-			Name:  "recipe",
-			Image: "recipe:latest",
-			Environment: map[string]string{
-				"JWT_PUBLIC_KEY": "/keys/jwt_public_key.key",
-			},
-			Mounts: map[string]string{
-				"/home/f/Projects/Hochschule/hsfl-master-ai-cloud-engineering/authentication": "/keys",
-			},
-			MinReplicas: 2,
-		},
+	configFilePath := "config.yml"
+	c, err := config.FromFile(configFilePath)
+	if err != nil {
+		log.Fatalf("⚠️ Failed to load config file %s: %s\n", configFilePath, err)
 	}
+
+	log.Printf("🔧 Loaded config file %s", configFilePath)
+	log.Printf("🔧 %d services configured", len(c.Services))
+	fmt.Println(c)
 
 	cli, err := client.NewClientWithOpts(client.FromEnv, client.WithAPIVersionNegotiation())
 	if err != nil {
@@ -40,7 +38,7 @@ func main() {
 		}
 	}()
 
-	for _, serviceConfig := range serviceConfigs {
+	for _, serviceConfig := range c.Services {
 
 		for i := 0; i < serviceConfig.MinReplicas; i++ {
 

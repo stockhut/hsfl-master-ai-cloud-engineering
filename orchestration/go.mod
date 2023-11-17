@@ -6,6 +6,7 @@ require (
 	github.com/docker/docker v24.0.7+incompatible
 	github.com/docker/go-connections v0.4.0
 	github.com/stockhut/hsfl-master-ai-cloud-engineering/common v0.0.0-20231116193307-b7c5344866de
+	gopkg.in/yaml.v3 v3.0.1
 )
 
 require (
