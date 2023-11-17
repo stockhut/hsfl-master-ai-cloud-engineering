@@ -70,6 +70,11 @@ func CreateAndStartContainer(cli *client.Client, sc ServiceContainerConfig) (Ser
 		return ServiceContainer{}, err
 	}
 
+	err = cli.ContainerStart(context.Background(), resp.ID, types.ContainerStartOptions{})
+	if err != nil {
+		return ServiceContainer{}, err
+	}
+
 	info, err := cli.ContainerInspect(context.Background(), resp.ID)
 	if err != nil {
 		return ServiceContainer{}, err
@@ -77,14 +82,10 @@ func CreateAndStartContainer(cli *client.Client, sc ServiceContainerConfig) (Ser
 
 	ip := info.NetworkSettings.IPAddress
 
-	err = cli.ContainerStart(context.Background(), resp.ID, types.ContainerStartOptions{})
-	if err != nil {
-		return ServiceContainer{}, err
-	}
-
 	statusCh, errCh := cli.ContainerWait(context.Background(), resp.ID, container.WaitConditionNotRunning)
 
 	return ServiceContainer{
+		Name:        info.Name,
 		ID:          resp.ID,
 		Ip:          ip,
 		StoppedChan: statusCh,
