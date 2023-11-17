@@ -1,0 +1,65 @@
+name: Build latest version
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  recipe-service:
+    name: build latest version of recipe-service
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Clone repository
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+        ref: ${{ github.repository }}/recipe
+    - name: Get next version
+      id: get_next_version
+      uses: thenativeweb/get-next-version@main
+      with:
+        prefix: 'v' # optional, defaults to ''
+    - name: Show the next version
+      run: |
+        echo ${{ steps.get_next_version.outputs.version }}
+        echo ${{ steps.get_next_version.outputs.hasNextVersion }}
+  authentication-service:
+    name: build latest version of authentication-service
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Clone repository
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+        ref: ${{ github.repository }}/authentication
+    - name: Get next version
+      id: get_next_version
+      uses: thenativeweb/get-next-version@main
+      with:
+        prefix: 'v' # optional, defaults to ''
+    - name: Show the next version
+      run: |
+        echo ${{ steps.get_next_version.outputs.version }}
+        echo ${{ steps.get_next_version.outputs.hasNextVersion }}
+  reverse-proxy-service:
+    name: build latest version of reverse-proxy-service
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Clone repository
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+        ref: ${{ github.repository }}/reverse-proxy
+    - name: Get next version
+      id: get_next_version
+      uses: thenativeweb/get-next-version@main
+      with:
+        prefix: 'v' # optional, defaults to ''
+    - name: Show the next version
+      run: |
+        echo ${{ steps.get_next_version.outputs.version }}
+        echo ${{ steps.get_next_version.outputs.hasNextVersion }}
