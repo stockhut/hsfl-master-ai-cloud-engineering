@@ -55,7 +55,7 @@ func main() {
 
 	sigs := make(chan os.Signal, 1)
 	signal.Notify(sigs, os.Kill, os.Interrupt)
-	go func() {
+	func() {
 
 		sig := <-sigs
 		fmt.Printf("Received signal %s\n", sig)
