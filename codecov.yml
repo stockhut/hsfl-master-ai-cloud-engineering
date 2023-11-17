@@ -1,0 +1,20 @@
+flags:
+  auth:
+    paths:
+      - authentication
+  recipe:
+    paths:
+      - recipe
+  common:
+    paths:
+      - common
+  loadbalancer:
+    paths:
+      - reverse-proxy
+  reverseproxy:
+    paths:
+      - load-balancer
+
+flag_management:
+  default_rules:
+    carryforward: true

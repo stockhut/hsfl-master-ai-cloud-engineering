@@ -2,10 +2,10 @@ package main
 
 import (
 	"context"
-	"crypto/x509"
 	"database/sql"
-	"encoding/pem"
 	"fmt"
+	"github.com/stockhut/hsfl-master-ai-cloud-engineering/common/environment"
+	"github.com/stockhut/hsfl-master-ai-cloud-engineering/common/jwt_public_key"
 
 	requestlogger "github.com/stockhut/hsfl-master-ai-cloud-engineering/common/middleware/request-logger"
 	"log"
@@ -23,61 +23,52 @@ import (
 )
 
 const JwtPublicKeyEnvKey = "JWT_PUBLIC_KEY"
+const SqlitePathEnvKey = "SQLITE_DB_PATH"
 
 func main() {
 
-	jwtPrivateKeyFile, ok := os.LookupEnv(JwtPublicKeyEnvKey)
-	if !ok {
-		fmt.Printf("No %s configured\n", JwtPublicKeyEnvKey)
-		os.Exit(1)
-	}
+	jwtPublicKeyFile := environment.GetRequiredEnvVar(JwtPublicKeyEnvKey)
+	sqliteFile := environment.GetRequiredEnvVar(SqlitePathEnvKey)
 
 	fmt.Println("Hello from Recipe!")
 
 	ctx := context.Background()
 
-	db, err := sql.Open("sqlite3", "database.sqlite")
+	db, err := sql.Open("sqlite3", sqliteFile)
 	if err != nil {
-		panic(err)
+		fmt.Printf("Failed to open database: %s\n", err)
+		return
 	}
 
 	// create tables
 	if _, err := db.ExecContext(ctx, dll.Ddl); err != nil {
-		panic(err)
+		fmt.Printf("Failed to create tables: %s\n", err)
+		return
 	}
 
 	queries := database.New(db)
 
-	bytes, err := os.ReadFile(jwtPrivateKeyFile)
+	publicKey, err := jwt_public_key.FromFile(jwtPublicKeyFile)
 	if err != nil {
-		panic(err)
+		fmt.Printf("Failed to load JWT public key: %s\n", err)
+		return
 	}
-
-	block, _ := pem.Decode(bytes)
-	public_key, err := x509.ParsePKIXPublicKey(block.Bytes)
-	if err != nil {
-		panic(err)
-	}
-
-	/* repo := recipes.InMemoryRecipeRepository{
-		Recipes: make([]model.Recipe, 0),
-	} */
 
 	repo := recipes.New(queries)
 
 	recipeController := recipes.NewController(&repo)
 
-	authMiddleware := middleware.ValidateJwtMiddleware(public_key)
+	authMiddleware := middleware.ValidateJwtMiddleware(publicKey)
 
 	logFlags := log.Ltime | log.Lmsgprefix | log.Lmicroseconds
 	logger := log.New(os.Stdout, "", logFlags)
 	logMw := requestlogger.New(logger)
 
-	router := router.New(authMiddleware, logMw, recipeController)
+	r := router.New(authMiddleware, logMw, recipeController)
 
 	port := ":8081"
 
 	logger.Printf("Listening on %s\n", port)
-	err = http.ListenAndServe(port, router)
+	err = http.ListenAndServe(port, r)
 	panic(err)
 }

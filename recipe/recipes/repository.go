@@ -24,18 +24,6 @@ func New(q *db.Queries) SqlcRepository {
 	return SqlcRepository{queries: q}
 }
 
-type InMemoryRecipeRepository struct {
-	Recipes []model.Recipe
-}
-
-func (repo *InMemoryRecipeRepository) CreateRecipe(recipe model.Recipe) (model.Recipe, error) {
-
-	recipe.Id = 0 //"TODO generate random id"
-	repo.Recipes = append(repo.Recipes, recipe)
-
-	return recipe, nil
-}
-
 func (repo *SqlcRepository) CreateRecipe(recipe model.Recipe) (model.Recipe, error) {
 
 	params := db.CreateRecipeParams{
@@ -70,10 +58,6 @@ func (repo *SqlcRepository) CreateRecipe(recipe model.Recipe) (model.Recipe, err
 	return model.RecipeFromDatabaseModel(r, ingredients), nil
 }
 
-func (repo *InMemoryRecipeRepository) GetAllByAuthor(_ string) ([]model.Recipe, error) {
-	panic("not implemented")
-}
-
 func (repo *SqlcRepository) GetAllByAuthor(author string) ([]model.Recipe, error) {
 
 	r, err := repo.queries.ListRecipes(context.TODO(), author)
@@ -88,10 +72,6 @@ func (repo *SqlcRepository) GetAllByAuthor(author string) ([]model.Recipe, error
 	})
 
 	return recipes, nil
-}
-
-func (repo *InMemoryRecipeRepository) GetById(id model.RecipeId) (*model.Recipe, error) {
-	panic("not implemented")
 }
 
 func (repo *SqlcRepository) GetById(id model.RecipeId) (*model.Recipe, error) {
@@ -109,10 +89,6 @@ func (repo *SqlcRepository) GetById(id model.RecipeId) (*model.Recipe, error) {
 
 	result := model.RecipeFromDatabaseModel(recipe, i)
 	return &result, nil
-}
-
-func (repo *InMemoryRecipeRepository) DeleteRecipe(id model.RecipeId) error {
-	panic("not implemented")
 }
 
 func (repo *SqlcRepository) DeleteRecipe(id model.RecipeId) error {
