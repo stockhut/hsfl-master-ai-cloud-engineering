@@ -7,6 +7,7 @@ import (
 	"github.com/docker/docker/client"
 	"github.com/stockhut/hsfl-master-ai-cloud-engineering/orchestration"
 	"github.com/stockhut/hsfl-master-ai-cloud-engineering/orchestration/config"
+	"io"
 	"log"
 	"os"
 	"os/signal"
@@ -42,9 +43,12 @@ func main() {
 	for _, serviceConfig := range c.Services {
 
 		log.Printf("🏗️ Pulling image %s\n", serviceConfig.Image)
-		_, err := cli.ImagePull(context.TODO(), serviceConfig.Image, types.ImagePullOptions{})
+		out, err := cli.ImagePull(context.TODO(), serviceConfig.Image, types.ImagePullOptions{})
 		if err != nil {
 			log.Printf("⚠️ %s", err)
+		} else {
+			// wait until image is pulled
+			io.ReadAll(out)
 		}
 		for i := 0; i < serviceConfig.MinReplicas; i++ {
 
