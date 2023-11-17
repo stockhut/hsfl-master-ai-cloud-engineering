@@ -2,13 +2,13 @@ package orchestration
 
 import (
 	"context"
-	"fmt"
 	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/api/types/container"
 	"github.com/docker/docker/api/types/mount"
 	"github.com/docker/docker/client"
 	"github.com/docker/go-connections/nat"
 	"github.com/stockhut/hsfl-master-ai-cloud-engineering/common/fun"
+	"log"
 )
 
 type ServiceContainerConfig struct {
@@ -104,9 +104,9 @@ func StopAll(cli *client.Client, containers []ServiceContainer) {
 	for _, c := range containers {
 		err := cli.ContainerStop(context.Background(), c.ID, container.StopOptions{})
 		if err != nil {
-			fmt.Printf("Failed to stop container: %s", c.ID)
+			log.Printf("⚠️ Failed to stop container: %s:%s\n", c.Name, err)
 		} else {
-			fmt.Printf("Stopped container %s\n", c.ID)
+			log.Printf("🛑 Stopped container %s\n", c.Name)
 		}
 	}
 }

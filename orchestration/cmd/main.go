@@ -22,7 +22,6 @@ func main() {
 
 	log.Printf("🔧 Loaded config file %s", configFilePath)
 	log.Printf("🔧 %d services configured", len(c.Services))
-	fmt.Println(c)
 
 	cli, err := client.NewClientWithOpts(client.FromEnv, client.WithAPIVersionNegotiation())
 	if err != nil {
@@ -34,8 +33,8 @@ func main() {
 	defer func() {
 		p := recover()
 		if p != nil {
-			fmt.Printf("Panic: %s\n", p)
-			fmt.Print("Recovered, stopping containers")
+			fmt.Printf("⚠️ Panic: %s\n", p)
+			fmt.Print(" ⚠️ Recovered, stopping containers")
 			orchestration.StopAll(cli, containers)
 		}
 	}()
@@ -51,9 +50,9 @@ func main() {
 
 			serviceContainer, err := orchestration.CreateAndStartContainer(cli, serviceConfig)
 			if err != nil {
-				fmt.Printf("Failed to start service container: %s\n", err)
+				log.Printf("⚠️ Failed to start service container: %s\n", err)
 			}
-			fmt.Printf("started container %v\n", serviceContainer)
+			log.Printf("🚀 Started container '%s' with IP %s\n", serviceContainer.Name, serviceContainer.Ip)
 			containers = append(containers, serviceContainer)
 		}
 	}
@@ -63,7 +62,7 @@ func main() {
 	func() {
 
 		sig := <-sigs
-		fmt.Printf("Received signal %s\n", sig)
+		log.Printf("🛑 Received %s signal\n", sig)
 		orchestration.StopAll(cli, containers)
 		os.Exit(1)
 	}()
