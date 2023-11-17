@@ -60,7 +60,8 @@ func createContainer(cli *client.Client, sc ServiceContainerConfig) (container.C
 					HostPort: "8080"},
 			},
 		},
-		Mounts: mounts,
+		Mounts:     mounts,
+		AutoRemove: true,
 	}
 
 	return cli.ContainerCreate(context.Background(),
