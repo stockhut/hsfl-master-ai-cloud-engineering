@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	"github.com/stockhut/hsfl-master-ai-cloud-engineering/common/environment"
 	"github.com/stockhut/hsfl-master-ai-cloud-engineering/common/jwt_public_key"
 
 	requestlogger "github.com/stockhut/hsfl-master-ai-cloud-engineering/common/middleware/request-logger"
@@ -22,20 +23,18 @@ import (
 )
 
 const JwtPublicKeyEnvKey = "JWT_PUBLIC_KEY"
+const SqlitePathEnvKey = "SQLITE_DB_PATH"
 
 func main() {
 
-	jwtPublicKeyFile, ok := os.LookupEnv(JwtPublicKeyEnvKey)
-	if !ok {
-		fmt.Printf("No %s configured\n", JwtPublicKeyEnvKey)
-		os.Exit(1)
-	}
+	jwtPublicKeyFile := environment.GetRequiredEnvVar(JwtPublicKeyEnvKey)
+	sqliteFile := environment.GetRequiredEnvVar(SqlitePathEnvKey)
 
 	fmt.Println("Hello from Recipe!")
 
 	ctx := context.Background()
 
-	db, err := sql.Open("sqlite3", "database.sqlite")
+	db, err := sql.Open("sqlite3", sqliteFile)
 	if err != nil {
 		fmt.Printf("Failed to open database: %s\n", err)
 		return

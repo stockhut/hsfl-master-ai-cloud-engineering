@@ -14,9 +14,11 @@ go generate _mocks/gen.go
 ```
 ## Configuration
 
-| JWT_PUBLIC_KEY | Path to a jwt public keyfile |
-|----------------|------------------------------|
-|                |                              |
+### Environment variables
+| Key            | Value                            |
+|----------------|----------------------------------|
+| JWT_PUBLIC_KEY | Path to a jwt public keyfile     |
+| SQLITE_DB_PATH | Path to the SQLite database file |
 
 ## Responsibilities
 
