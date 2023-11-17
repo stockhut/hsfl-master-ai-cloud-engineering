@@ -52,6 +52,7 @@ func createContainer(cli *client.Client, sc ServiceContainerConfig) (container.C
 		}
 	})
 
+	// TODO: move port config to ServiceContainerConfig
 	hostConfig := container.HostConfig{
 		PortBindings: map[nat.Port][]nat.PortBinding{
 			"80": {
