@@ -1,7 +1,9 @@
 package main
 
 import (
+	"context"
 	"fmt"
+	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/client"
 	"github.com/stockhut/hsfl-master-ai-cloud-engineering/orchestration"
 	"github.com/stockhut/hsfl-master-ai-cloud-engineering/orchestration/config"
@@ -40,6 +42,11 @@ func main() {
 
 	for _, serviceConfig := range c.Services {
 
+		log.Printf("🏗️ Pulling image %s\n", serviceConfig.Image)
+		_, err := cli.ImagePull(context.TODO(), serviceConfig.Image, types.ImagePullOptions{})
+		if err != nil {
+			log.Printf("⚠️ %s", err)
+		}
 		for i := 0; i < serviceConfig.MinReplicas; i++ {
 
 			serviceContainer, err := orchestration.CreateAndStartContainer(cli, serviceConfig)
