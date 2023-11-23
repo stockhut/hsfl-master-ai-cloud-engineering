@@ -16,6 +16,6 @@ WORKDIR /app
 
 COPY --from=0 /go/src/app/main ./
 
-EXPOSE 8081
+EXPOSE 3000
 
 CMD ["/app/main"]
