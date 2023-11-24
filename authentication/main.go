@@ -1,97 +1,61 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
-	"github.com/stockhut/hsfl-master-ai-cloud-engineering/common/environment"
-	requestlogger "github.com/stockhut/hsfl-master-ai-cloud-engineering/common/middleware/request-logger"
-	"io"
 	"log"
 	"net/http"
 	"os"
 	"strings"
 
+	"github.com/stockhut/hsfl-master-ai-cloud-engineering/common/environment"
+	requestlogger "github.com/stockhut/hsfl-master-ai-cloud-engineering/common/middleware/request-logger"
+
+	"github.com/stockhut/hsfl-master-ai-cloud-engineering/authentication/accounts"
+	"github.com/stockhut/hsfl-master-ai-cloud-engineering/authentication/accounts/model"
+	"github.com/stockhut/hsfl-master-ai-cloud-engineering/authentication/api/router"
 	"github.com/stockhut/hsfl-master-ai-cloud-engineering/authentication/jwt_util"
-	"github.com/stockhut/hsfl-master-ai-cloud-engineering/common/router"
 )
-
-type account struct {
-	name     string
-	email    string
-	password string
-}
-
-type requestBodyCreateAccount struct {
-	Name     string
-	Email    string
-	Password string
-}
-
-type requestBodyLoginAccount struct {
-	Name     string
-	Password string
-}
-
-type AccountController struct {
-	accountRepo    accountRepository
-	tokenGenerator jwt_util.JwtTokenGenerator
-}
-
-type AccountInfoDuplicate = int
-
-const (
-	UNDEFINED AccountInfoDuplicate = iota
-	DUPLICATE_EMAIL
-	DUPLICATE_NAME
-	NO_DUPLICATES
-)
-
-type accountRepository interface {
-	createAccount(acc account) error
-	checkDuplicate(acc account) (AccountInfoDuplicate, error)
-	findAccount(name string) (*account, error)
-}
 
 type inMemoryAccountRepository struct {
-	accounts []account
+	accounts []model.Account
 }
 
-func (repo *inMemoryAccountRepository) createAccount(acc account) error {
+func (repo *inMemoryAccountRepository) CreateAccount(acc model.Account) error {
 	repo.accounts = append(repo.accounts, acc)
 
 	fmt.Println(repo.accounts)
 	return nil
 }
 
-func (repo *inMemoryAccountRepository) findAccount(name string) (*account, error) {
+func (repo *inMemoryAccountRepository) FindAccount(name string) (*model.Account, error) {
 
 	for _, acc := range repo.accounts {
-		if acc.name == name {
+		if acc.Name == name {
 
 			// return a pointer to a deep copy of acc, to avoid memory aliasing
 			// and giving the caller write access to the repo memory
-			return &account{
-				name:     strings.Clone(acc.name),
-				password: strings.Clone(acc.password),
-				email:    strings.Clone(acc.email),
+			return &model.Account{
+				Name:     strings.Clone(acc.Name),
+				Password: strings.Clone(acc.Password),
+				Email:    strings.Clone(acc.Email),
 			}, nil
 		}
 	}
 	return nil, nil
 }
 
-func (repo *inMemoryAccountRepository) checkDuplicate(acc account) (AccountInfoDuplicate, error) {
+func (repo *inMemoryAccountRepository) CheckDuplicate(acc model.Account) (accounts.AccountInfoDuplicate, error) {
 
 	for _, a := range repo.accounts {
-		if a.name == acc.name {
-			return DUPLICATE_NAME, nil
+		if a.Name == acc.Name {
+			return accounts.DUPLICATE_NAME, nil
 		}
-		if a.email == acc.email {
-			return DUPLICATE_EMAIL, nil
+		if a.Email == acc.Email {
+			return accounts.DUPLICATE_EMAIL, nil
 		}
 	}
 
-	return NO_DUPLICATES, nil
+	return accounts.NO_DUPLICATES, nil
 
 }
 
@@ -102,11 +66,11 @@ func main() {
 	jwtPrivateKeyFile := environment.GetRequiredEnvVar(JwtPrivateKeyEnvKey)
 
 	var repo inMemoryAccountRepository = inMemoryAccountRepository{
-		accounts: make([]account, 0),
+		accounts: make([]model.Account, 0),
 	}
-	repo.accounts = append(repo.accounts, account{name: "Nele", email: "nele@nele.de", password: "xyz123"})
-	repo.accounts = append(repo.accounts, account{name: "Alex", email: "alex@nele.de", password: "abc123"})
-	repo.accounts = append(repo.accounts, account{name: "Fabi", email: "fabi@nele.de", password: "def123"})
+	repo.accounts = append(repo.accounts, model.Account{Name: "Nele", Email: "nele@nele.de", Password: "xyz123"})
+	repo.accounts = append(repo.accounts, model.Account{Name: "Alex", Email: "alex@nele.de", Password: "abc123"})
+	repo.accounts = append(repo.accounts, model.Account{Name: "Fabi", Email: "fabi@nele.de", Password: "def123"})
 
 	tokenGeneratorConfig := jwt_util.JwtConfig{
 		SignKey: jwtPrivateKeyFile,
@@ -116,10 +80,7 @@ func main() {
 		panic(err)
 	}
 
-	c := AccountController{
-		accountRepo:    &repo,
-		tokenGenerator: *tokenGenerator,
-	}
+	c := accounts.NewController(&repo, *tokenGenerator)
 
 	fmt.Println("Hello from Auth!")
 
@@ -127,110 +88,8 @@ func main() {
 	logger := log.New(os.Stdout, "", logFlags)
 	logMw := requestlogger.New(logger)
 
-	r := router.New()
-
-	r.POST("/api/v1/authentication/account", logMw(c.handleCreateAccount))
-	r.POST("/api/v1/authentication/login", logMw(c.handleLogin))
+	r := router.New(logMw, c)
 
 	err = http.ListenAndServe("localhost:8080", r)
 	panic(err)
-}
-
-func (ctrl *AccountController) handleCreateAccount(w http.ResponseWriter, r *http.Request) {
-	body, err := io.ReadAll(r.Body)
-
-	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
-	var requestBody requestBodyCreateAccount
-	if err := json.Unmarshal(body, &requestBody); err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
-	if requestBody.Email == "" || requestBody.Name == "" || requestBody.Password == "" {
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
-	newAcc := account{name: requestBody.Name, email: requestBody.Email, password: requestBody.Password}
-
-	duplicate, err := ctrl.accountRepo.checkDuplicate(newAcc)
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		return
-	}
-
-	switch duplicate {
-	case DUPLICATE_NAME:
-		w.WriteHeader(http.StatusBadRequest)
-	case DUPLICATE_EMAIL:
-		w.WriteHeader(http.StatusBadRequest)
-	case NO_DUPLICATES:
-		err := ctrl.accountRepo.createAccount(newAcc)
-		if err != nil {
-			w.WriteHeader(http.StatusInternalServerError)
-		} else {
-			w.WriteHeader(http.StatusCreated)
-		}
-	default:
-		panic("unexpected value")
-	}
-
-}
-
-func (ctrl *AccountController) handleLogin(w http.ResponseWriter, r *http.Request) {
-	body, err := io.ReadAll(r.Body)
-	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
-
-	var requestBody requestBodyLoginAccount
-	if err := json.Unmarshal(body, &requestBody); err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
-
-	username := requestBody.Name
-	password := requestBody.Password
-
-	acc, err := ctrl.accountRepo.findAccount(username)
-
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		return
-	}
-
-	if acc == nil {
-		// username not found
-		w.WriteHeader(http.StatusNotFound)
-		return
-	}
-
-	fmt.Println(acc)
-
-	if acc.password != password {
-		w.WriteHeader(http.StatusNotFound)
-		fmt.Fprintln(w, "Falsches Passwort!")
-		return
-	}
-
-	jwtToken, err := ctrl.tokenGenerator.CreateToken(map[string]interface{}{ //todo: Struct serializen statt map
-		"name": acc.name,
-	})
-
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		return
-	}
-	fmt.Println(jwtToken)
-
-	cookie := http.Cookie{
-		Name:  "jwt",
-		Value: jwtToken,
-	}
-	http.SetCookie(w, &cookie)
-	w.WriteHeader(http.StatusOK)
-	fmt.Fprintln(w, "Login")
-
 }
