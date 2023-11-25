@@ -1,47 +1,47 @@
 env:
-    SERVICE_NAME: recipe
-  
-name: Build and push docker image for $SERVICE_NAME
-  
+  SERVICE_NAME: recipe
+
+name: Build and push docker image for recipe
+
 on:
-    workflow_run:
-      workflows: 
-        - 'test-$SERVICE_NAME'
-      types:
-        - 'completed'
-      branches:
-        - 'main/$SERVICE_NAME/**'
-  
+  workflow_run:
+    workflows: 
+      - 'test-recipe'
+    types:
+      - 'completed'
+    branches:
+      - 'main/recipe/**'
+
 jobs:
-    build-and-push-image:
-      runs-on: ubuntu-latest
-  
-      permissions:
-        contents: read
-        packages: write
-  
-      steps:
-        - name: Checkout repository
-          uses: actions/checkout@v4
-  
-        - name: Log in to the Container registry
-          uses: docker/login-action@v3
-          with:
-            registry: ghcr.io
-            username: ${{ github.actor }}
-            password: ${{ secrets.GITHUB_TOKEN }}
-  
-        - name: Extract metadata (tags, labels) for Docker
-          id: meta
-          uses: docker/metadata-action@v5
-          with:
-            images: ghcr.io/${{ github.repository }}/$SERVICE_NAME
-  
-        - name: Build and push Docker image
-          uses: docker/build-push-action@v5
-          with:
-            context: .
-            file: ./$SERVICE_NAME/Dockerfile
-            push: true
-            tags: ${{ steps.meta.outputs.tags }}
-            labels: ${{ steps.meta.outputs.labels }}
+  build-and-push-image:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/${{ github.repository }}/recipe
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./recipe/Dockerfile
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
