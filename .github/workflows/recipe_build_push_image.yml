@@ -6,7 +6,7 @@ name: Build and push docker image for recipe
 on:
   workflow_run:
     workflows: 
-      - 'test-recipe'
+      - 'Test recipe service'
     types:
       - 'completed'
     branches:
