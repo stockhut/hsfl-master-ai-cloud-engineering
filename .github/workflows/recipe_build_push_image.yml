@@ -1,16 +1,16 @@
 env:
     SERVICE_NAME: recipe
   
-name: Build and push docker image for $SERVICE_NAME
+name: Build and push docker image for recipe
   
 on:
     workflow_run:
       workflows: 
-        - 'test-$SERVICE_NAME'
+        - 'test-recipe'
       types:
         - 'completed'
       branches:
-        - 'main/$SERVICE_NAME/**'
+        - 'main/recipe/**'
   
 jobs:
     build-and-push-image:
@@ -35,13 +35,13 @@ jobs:
           id: meta
           uses: docker/metadata-action@v5
           with:
-            images: ghcr.io/${{ github.repository }}/$SERVICE_NAME
+            images: ghcr.io/${{ github.repository }}/recipe
   
         - name: Build and push Docker image
           uses: docker/build-push-action@v5
           with:
             context: .
-            file: ./$SERVICE_NAME/Dockerfile
+            file: ./recipe/Dockerfile
             push: true
             tags: ${{ steps.meta.outputs.tags }}
             labels: ${{ steps.meta.outputs.labels }}
