@@ -5,16 +5,15 @@ name: Build and push docker image for recipe
 
 on:
   workflow_run:
-    workflows: 
-      - 'Test recipe service'
-    types:
-      - 'completed'
-    branches:
-      - 'main/recipe/**'
+    workflows: [Test recipe service]
+    types: [completed]
+
+  workflow_dispatch:
 
 jobs:
   build-and-push-image:
     runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
 
     permissions:
       contents: read
