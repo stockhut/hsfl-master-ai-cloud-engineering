@@ -5,6 +5,7 @@ go 1.21.1
 require (
 	github.com/stockhut/hsfl-master-ai-cloud-engineering/reverse-proxy v0.0.0-20231112111810-e3eee8482615
 	github.com/stretchr/testify v1.8.4
+	go.uber.org/mock v0.3.0
 )
 
 require (
