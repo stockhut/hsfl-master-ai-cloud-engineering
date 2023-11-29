@@ -21,3 +21,4 @@ require (
 )
 
 replace github.com/stockhut/hsfl-master-ai-cloud-engineering/common => ../common
+replace github.com/stockhut/hsfl-master-ai-cloud-engineering/authentication => ../authentication

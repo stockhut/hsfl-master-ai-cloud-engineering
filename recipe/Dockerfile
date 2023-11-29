@@ -12,7 +12,6 @@ COPY recipe/go.sum .
 RUN go install github.com/mattn/go-sqlite3
 
 RUN go mod download github.com/stockhut/hsfl-master-ai-cloud-engineering/recipe
-RUN go get github.com/stockhut/hsfl-master-ai-cloud-engineering/authentication@v0.0.0-20231129152031-9b022fc0c38c
 
 COPY . .
 
