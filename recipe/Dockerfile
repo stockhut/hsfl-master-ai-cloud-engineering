@@ -1,9 +1,9 @@
-FROM golang:1.21-alpine
+FROM golang:1.21
 
 WORKDIR /go/src/app
 
 # for go-sqlite3
-RUN apk --no-cache add gcc g++
+#RUN apk --no-cache add gcc g++
 
 COPY recipe/go.mod .
 COPY recipe/go.sum .
