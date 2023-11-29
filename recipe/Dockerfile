@@ -5,8 +5,8 @@ WORKDIR /go/src/app
 # for go-sqlite3
 #RUN apk --no-cache add gcc g++
 
-COPY recipe/go.mod .
-COPY recipe/go.sum .
+COPY go.mod .
+COPY go.sum .
 
 # install and go-sqlite3 driver in an early layer as it takes forever to build
 RUN go install github.com/mattn/go-sqlite3
