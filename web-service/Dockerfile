@@ -2,7 +2,7 @@ FROM golang:1.21-alpine
 
 WORKDIR /go/src/app
 
-COPY go.mod .
+COPY web-service/go.mod .
 
 RUN go mod download github.com/stockhut/hsfl-master-ai-cloud-engineering/web-service
 
