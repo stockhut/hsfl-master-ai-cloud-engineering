@@ -1,12 +1,9 @@
-env:
-  SERVICE_NAME: reverse-proxy
-
-name: Build and push docker image for $SERVICE_NAME
+name: Build and push docker image for reverse-proxy
 
 on:
   workflow_run:
     workflows: 
-      - 'test-$SERVICE_NAME'
+      - 'test-reverse-proxy'
     types:
       - 'completed'
 
@@ -34,13 +31,13 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ghcr.io/${{ github.repository }}/$SERVICE_NAME
+          images: ghcr.io/${{ github.repository }}/reverse-proxy
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
           context: .
-          file: ./$SERVICE_NAME/Dockerfile
+          file: ./reverse-proxy/Dockerfile
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
