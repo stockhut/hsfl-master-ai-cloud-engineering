@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"log"
 	"net/http"
 
 	"github.com/stockhut/hsfl-master-ai-cloud-engineering/authentication/accounts/model"
@@ -24,19 +25,24 @@ func NewController(accountRepo repository.AccountRepository, tokenGenerator jwt_
 }
 
 func (ctrl *Controller) HandleCreateAccount(w http.ResponseWriter, r *http.Request) {
+	log.Printf("Start HandleCreateAccount")
 	body, err := io.ReadAll(r.Body)
 
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
+		log.Printf("Failed to read RequestBody: %s\n", err)
 		return
 	}
 	var requestBody requestBodyCreateAccount
 	if err := json.Unmarshal(body, &requestBody); err != nil {
 		w.WriteHeader(http.StatusBadRequest)
+		log.Printf("Failed to Unmarshal RequestBody: %s\n", err)
+
 		return
 	}
 	if requestBody.Email == "" || requestBody.Name == "" || requestBody.Password == "" {
 		w.WriteHeader(http.StatusBadRequest)
+		log.Println("Empty RequestBody Email or name or password")
 		return
 	}
 	newAcc := model.Account{Name: requestBody.Name, Email: requestBody.Email, Password: requestBody.Password}
@@ -50,8 +56,10 @@ func (ctrl *Controller) HandleCreateAccount(w http.ResponseWriter, r *http.Reque
 	switch duplicate {
 	case repository.DUPLICATE_NAME:
 		w.WriteHeader(http.StatusBadRequest)
+		log.Println("DUPLICATE_NAME CASE")
 	case repository.DUPLICATE_EMAIL:
 		w.WriteHeader(http.StatusBadRequest)
+		log.Println("DUPLICATE_EMAIL CASE")
 	case repository.NO_DUPLICATES:
 		err := ctrl.accountRepo.CreateAccount(newAcc)
 		if err != nil {
@@ -60,7 +68,9 @@ func (ctrl *Controller) HandleCreateAccount(w http.ResponseWriter, r *http.Reque
 			w.WriteHeader(http.StatusCreated)
 		}
 	default:
+		w.WriteHeader(http.StatusInternalServerError)
 		panic("unexpected value")
+
 	}
 
 }
