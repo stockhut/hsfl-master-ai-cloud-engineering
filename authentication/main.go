@@ -12,6 +12,7 @@ import (
 
 	"github.com/stockhut/hsfl-master-ai-cloud-engineering/authentication/accounts"
 	"github.com/stockhut/hsfl-master-ai-cloud-engineering/authentication/accounts/model"
+	"github.com/stockhut/hsfl-master-ai-cloud-engineering/authentication/accounts/repository"
 	"github.com/stockhut/hsfl-master-ai-cloud-engineering/authentication/api/router"
 	"github.com/stockhut/hsfl-master-ai-cloud-engineering/authentication/jwt_util"
 )
@@ -44,18 +45,18 @@ func (repo *inMemoryAccountRepository) FindAccount(name string) (*model.Account,
 	return nil, nil
 }
 
-func (repo *inMemoryAccountRepository) CheckDuplicate(acc model.Account) (accounts.AccountInfoDuplicate, error) {
+func (repo *inMemoryAccountRepository) CheckDuplicate(acc model.Account) (repository.AccountInfoDuplicate, error) {
 
 	for _, a := range repo.accounts {
 		if a.Name == acc.Name {
-			return accounts.DUPLICATE_NAME, nil
+			return repository.DUPLICATE_EMAIL, nil
 		}
 		if a.Email == acc.Email {
-			return accounts.DUPLICATE_EMAIL, nil
+			return repository.DUPLICATE_EMAIL, nil
 		}
 	}
 
-	return accounts.NO_DUPLICATES, nil
+	return repository.NO_DUPLICATES, nil
 
 }
 

@@ -1,4 +1,4 @@
-package accounts
+package repository
 
 import "github.com/stockhut/hsfl-master-ai-cloud-engineering/authentication/accounts/model"
 

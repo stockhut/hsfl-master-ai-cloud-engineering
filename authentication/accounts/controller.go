@@ -7,15 +7,16 @@ import (
 	"net/http"
 
 	"github.com/stockhut/hsfl-master-ai-cloud-engineering/authentication/accounts/model"
+	"github.com/stockhut/hsfl-master-ai-cloud-engineering/authentication/accounts/repository"
 	"github.com/stockhut/hsfl-master-ai-cloud-engineering/authentication/jwt_util"
 )
 
 type Controller struct {
-	accountRepo    AccountRepository
+	accountRepo    repository.AccountRepository
 	tokenGenerator jwt_util.JwtTokenGenerator
 }
 
-func NewController(accountRepo AccountRepository, tokenGenerator jwt_util.JwtTokenGenerator) *Controller {
+func NewController(accountRepo repository.AccountRepository, tokenGenerator jwt_util.JwtTokenGenerator) *Controller {
 	return &Controller{
 		accountRepo:    accountRepo,
 		tokenGenerator: tokenGenerator,
@@ -47,11 +48,11 @@ func (ctrl *Controller) HandleCreateAccount(w http.ResponseWriter, r *http.Reque
 	}
 
 	switch duplicate {
-	case DUPLICATE_NAME:
+	case repository.DUPLICATE_NAME:
 		w.WriteHeader(http.StatusBadRequest)
-	case DUPLICATE_EMAIL:
+	case repository.DUPLICATE_EMAIL:
 		w.WriteHeader(http.StatusBadRequest)
-	case NO_DUPLICATES:
+	case repository.NO_DUPLICATES:
 		err := ctrl.accountRepo.CreateAccount(newAcc)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
