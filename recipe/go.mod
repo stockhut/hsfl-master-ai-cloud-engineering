@@ -13,6 +13,8 @@ require (
 	go.uber.org/mock v0.3.0
 )
 
+require golang.org/x/exp v0.0.0-20231127185646-65229373498e // indirect
+
 require (
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/mattn/go-sqlite3 v1.14.17
