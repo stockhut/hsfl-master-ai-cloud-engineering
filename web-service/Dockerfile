@@ -15,7 +15,7 @@ FROM alpine:latest
 WORKDIR /app
 
 COPY --from=0 /go/src/app/main ./
-COPY --from=0 /go/src/app/public/* ./public/
+COPY --from=0 /go/src/app/web-service/public/ ./public/
 
 EXPOSE 3000
 
