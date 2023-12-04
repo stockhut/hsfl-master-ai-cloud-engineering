@@ -3,7 +3,7 @@ FROM golang:1.21-alpine
 WORKDIR /go/src/app
 
 # for go-sqlite3
-#RUN apk --no-cache add gcc g++
+RUN apk --no-cache add gcc g++
 
 COPY recipe/go.mod .
 COPY recipe/go.sum .
@@ -15,7 +15,7 @@ RUN go mod download github.com/stockhut/hsfl-master-ai-cloud-engineering/recipe
 
 COPY . .
 
-RUN go build -o main github.com/stockhut/hsfl-master-ai-cloud-engineering/recipe
+RUN CGO_ENABLED=1 go build -o main github.com/stockhut/hsfl-master-ai-cloud-engineering/recipe
 
 FROM alpine:latest
 
