@@ -13,7 +13,7 @@ require (
 	go.uber.org/mock v0.3.0
 )
 
-require golang.org/x/exp v0.0.0-20231127185646-65229373498e // indirect
+require golang.org/x/exp v0.0.0-20231206192017-f3f8817b8deb // indirect
 
 require (
 	github.com/davecgh/go-spew v1.1.1 // indirect
