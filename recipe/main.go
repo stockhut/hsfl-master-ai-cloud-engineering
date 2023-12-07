@@ -17,24 +17,26 @@ import (
 	dll "github.com/stockhut/hsfl-master-ai-cloud-engineering/common/db"
 	database "github.com/stockhut/hsfl-master-ai-cloud-engineering/common/db/generated"
 
+	_ "github.com/jackc/pgx/v5/stdlib"
 	"github.com/stockhut/hsfl-master-ai-cloud-engineering/authentication/middleware"
 	"github.com/stockhut/hsfl-master-ai-cloud-engineering/recipe/api/router"
 	"github.com/stockhut/hsfl-master-ai-cloud-engineering/recipe/recipes"
 )
 
 const JwtPublicKeyEnvKey = "JWT_PUBLIC_KEY"
-const SqlitePathEnvKey = "SQLITE_DB_PATH"
+const PostgresConnectionStringKey = "PG_CONN_STRING"
 
 func main() {
 
 	jwtPublicKeyFile := environment.GetRequiredEnvVar(JwtPublicKeyEnvKey)
-	sqliteFile := environment.GetRequiredEnvVar(SqlitePathEnvKey)
+	pgConnString := environment.GetRequiredEnvVar(PostgresConnectionStringKey)
 
 	fmt.Println("Hello from Recipe!")
 
 	ctx := context.Background()
 
-	db, err := sql.Open("sqlite3", sqliteFile)
+	// TODO: sslmode=disable should not be default, but it's too convenient atm
+	db, err := sql.Open("pgx", pgConnString+"?sslmode=disable")
 	if err != nil {
 		fmt.Printf("Failed to open database: %s\n", err)
 		return

@@ -10,37 +10,37 @@ import (
 
 type Ingredient struct {
 	IngredientName   string
-	IngredientAmount int64
+	IngredientAmount int32
 	IngredientUnit   string
-	RecipeID         int64
+	RecipeID         int32
 }
 
 type Profile struct {
-	ProfileID      int64
+	ProfileID      int32
 	Username       string
 	Password       string
 	ProfilePicture []byte
 	Bio            sql.NullString
-	Friends        sql.NullInt64
-	Weekplan       sql.NullInt64
+	Friends        sql.NullInt32
+	Weekplan       sql.NullInt32
 }
 
 type Recipe struct {
-	RecipeID      int64
+	RecipeID      int32
 	RecipeName    string
 	RecipePicture []byte
-	TimeEstimate  sql.NullInt64
+	TimeEstimate  sql.NullInt32
 	Difficulty    sql.NullString
-	FeedsPeople   sql.NullInt64
+	FeedsPeople   sql.NullInt32
 	Directions    string
 	Author        string
 }
 
 type RecipeCollection struct {
-	RecipeCollectionID   int64
+	RecipeCollectionID   int32
 	RecipeCollectionName string
-	RecipeID             int64
-	OwnerID              int64
+	RecipeID             int32
+	OwnerID              int32
 	Date                 sql.NullString
-	SubscriberID         sql.NullInt64
+	SubscriberID         sql.NullInt32
 }

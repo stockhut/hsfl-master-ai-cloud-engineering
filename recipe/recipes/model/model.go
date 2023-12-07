@@ -51,8 +51,8 @@ func RecipeFromDatabaseModel(recipe db.Recipe, ingredients []db.Ingredient) Reci
 		Name:         recipe.RecipeName,
 		Ingredients:  fun.Map(ingredients, IngredientFromDatabaseModel),
 		Directions:   []string{recipe.Directions},
-		TimeEstimate: int(recipe.TimeEstimate.Int64),
+		TimeEstimate: int(recipe.TimeEstimate.Int32),
 		Difficulty:   recipe.Difficulty.String,
-		FeedsPeople:  int(recipe.FeedsPeople.Int64),
+		FeedsPeople:  int(recipe.FeedsPeople.Int32),
 	}
 }
