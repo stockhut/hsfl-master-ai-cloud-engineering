@@ -16,10 +16,10 @@ spec:
         tier: recipe
         track: stable
     spec:
-      volumes:
-        - name: volume-example-pv
-          persistentVolumeClaim:
-            claimName: example-pv
+#      volumes:
+#        - name: volume-example-pv
+#          persistentVolumeClaim:
+#            claimName: example-pv
       containers:
         - name: recipe-service
           env:
@@ -33,6 +33,6 @@ spec:
             #preStop:
               #exec:
                 #command: ["/usr/sbin/nginx","-s","quit"]
-          volumeMounts:
-          - mountPath: "/data"
-            name: volume-example-pv
+#          volumeMounts:
+#          - mountPath: "/data"
+#            name: volume-example-pv
