@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: recipe
+spec:
+  selector:
+    matchLabels:
+      app: hello
+      tier: recipe
+      track: stable
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: hello
+        tier: recipe
+        track: stable
+    spec:
+      volumes:
+        - name: volume-example-pv
+          persistentVolumeClaim:
+            claimName: example-pv
+      containers:
+        - name: recipe-service
+          env:
+          - name: JWT_PUBLIC_KEY
+            value: "/data/keys/jwt_public_key.key"
+          - name: SQLITE_DB_PATH
+            value: "/data/db/database.sqlite"
+          imagePullPolicy: Always
+          image: ghcr.io/stockhut/hsfl-master-ai-cloud-engineering/recipe:main
+          #lifecycle:
+            #preStop:
+              #exec:
+                #command: ["/usr/sbin/nginx","-s","quit"]
+          volumeMounts:
+          - mountPath: "/data"
+            name: volume-example-pv
