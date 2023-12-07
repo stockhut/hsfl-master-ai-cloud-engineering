@@ -1,8 +1,8 @@
-name: Build and push docker image for reverse-proxy
+name: Build and push docker image for load-balancer
 
 on:
   workflow_run:
-    workflows: [Test reverse-proxy]
+    workflows: [Test load-balancer]
     types: [completed]
 
   workflow_dispatch:
@@ -31,13 +31,13 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ghcr.io/${{ github.repository }}/reverse-proxy
+          images: ghcr.io/${{ github.repository }}/load-balancer
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
           context: .
-          file: ./reverse-proxy/Dockerfile
+          file: ./load-balancer/Dockerfile
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}

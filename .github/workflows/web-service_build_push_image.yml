@@ -1,21 +1,16 @@
-env:
-  SERVICE_NAME: web-service
-
-name: Build and push docker image for $SERVICE_NAME
+name: Build and push docker image for web-service
 
 on:
   workflow_run:
-    workflows: 
-      - 'test-$SERVICE_NAME'
-    types:
-      - 'completed'
-    branches:
-      - 'main/$SERVICE_NAME/**'
+    workflows: [Test web-service]
+    types: [completed]
+
+  workflow_dispatch:
 
 jobs:
   build-and-push-image:
     runs-on: ubuntu-latest
-
+    # if: ${{ github.event.workflow_run.conclusion == 'success' }}
     permissions:
       contents: read
       packages: write
@@ -35,13 +30,13 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ghcr.io/${{ github.repository }}/$SERVICE_NAME
+          images: ghcr.io/${{ github.repository }}/web-service
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
           context: .
-          file: ./$SERVICE_NAME/Dockerfile
+          file: ./web-service/Dockerfile
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
