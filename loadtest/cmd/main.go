@@ -1,9 +1,12 @@
 package main
 
 import (
+	"fmt"
 	"github.com/stockhut/hsfl-master-ai-cloud-engineering/loadtest/config"
 	"github.com/stockhut/hsfl-master-ai-cloud-engineering/loadtest/worker"
 	"log"
+	"math/rand"
+	"net/http"
 	"time"
 )
 
@@ -17,10 +20,21 @@ func main() {
 
 	numWorkers := conf.Users
 
-	job := worker.JobFunc[int](func() int {
-		return 2
+	jobFactory := worker.JobFactoryFunc[any](func() worker.Job[any] {
+		return worker.JobFunc[any](func() any {
+			target := randomItemFromSlice(conf.Targets)
+
+			_, err := http.Get(target)
+			if err != nil {
+				log.Printf("Request to target %s failed: %s", target, err)
+			}
+			//time.Sleep(1 * time.Second)
+			fmt.Println(target)
+
+			return true
+		})
 	})
-	p := worker.NewRampedPool[int](numWorkers, job)
+	p := worker.NewRampedPool[any](numWorkers, jobFactory)
 
 	go p.Start()
 
@@ -29,4 +43,9 @@ func main() {
 	<-timeout
 	p.Stop()
 
+}
+
+func randomItemFromSlice[T any](ts []T) T {
+	i := rand.Intn(len(ts))
+	return ts[i]
 }

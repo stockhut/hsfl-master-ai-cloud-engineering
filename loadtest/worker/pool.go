@@ -16,17 +16,17 @@ type rampedWorkerPool[R any] struct {
 	results    chan R
 	rampUpTime int
 	size       int
-	job        Job[R]
+	jobFactory JobFactory[R]
 	cancel     chan any
 }
 
-func NewRampedPool[R any](numWorkers int, job Job[R]) Pool[R] {
+func NewRampedPool[R any](numWorkers int, jobFactory JobFactory[R]) Pool[R] {
 	return &rampedWorkerPool[R]{
-		jobs:    make(chan Job[R], 1),
-		results: make(chan R, numWorkers),
-		size:    numWorkers,
-		job:     job,
-		cancel:  make(chan any),
+		jobs:       make(chan Job[R], 1),
+		results:    make(chan R, numWorkers),
+		size:       numWorkers,
+		jobFactory: jobFactory,
+		cancel:     make(chan any),
 	}
 }
 
@@ -42,7 +42,8 @@ func (p *rampedWorkerPool[R]) Start() {
 	for {
 		r := <-p.results
 		fmt.Println("r", r)
-		p.jobs <- p.job
+		job := p.jobFactory.Get()
+		p.jobs <- job
 	}
 }
 
@@ -57,7 +58,8 @@ func (p *rampedWorkerPool[R]) rampUp() {
 	for w := 1; w <= steps; w++ {
 		fmt.Printf("spawning %d new workers\n", workersPerStep)
 		for i := 0; i < workersPerStep; i++ {
-			p.jobs <- p.job
+			job := p.jobFactory.Get()
+			p.jobs <- job
 			go DefaultWorker[R](workerCount, p.jobs, p.results)
 
 			workerCount++
