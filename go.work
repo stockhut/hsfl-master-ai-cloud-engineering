@@ -7,4 +7,6 @@ use (
 	./web-service
 	./reverse-proxy
 	./load-balancer
+	./orchestration
+	./loadtest
 )

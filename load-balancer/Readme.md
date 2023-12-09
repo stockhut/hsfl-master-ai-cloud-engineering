@@ -1,5 +1,12 @@
 # Load balancer
 
+## Testing
+
+### Generating mocks
+```shell
+go generate strategies/ip-hash/_mocks/gen.go
+```
+
 ## Thread safety
 
 Since requests are handled concurrently and some state is accessed across thread boundaries, there are some efforts made to avoid race conditions.

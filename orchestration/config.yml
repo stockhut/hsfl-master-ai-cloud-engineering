@@ -1,0 +1,9 @@
+services:
+  recipe-service:
+    image: "recipe:latest"
+    env:
+      SQLITE_DB_FILE: database.sqlite
+      JWT_PUBLIC_KEY: /keys/jwt_public_key.key
+    mounts:
+      /home/f/Projects/Hochschule/hsfl-master-ai-cloud-engineering/authentication: /keys
+    minInstances: 2

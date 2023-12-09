@@ -15,7 +15,7 @@ RUN go mod download github.com/stockhut/hsfl-master-ai-cloud-engineering/recipe
 
 COPY . .
 
-RUN go build -o main github.com/stockhut/hsfl-master-ai-cloud-engineering/recipe
+RUN CGO_ENABLED=1 go build -o main github.com/stockhut/hsfl-master-ai-cloud-engineering/recipe
 
 FROM alpine:latest
 

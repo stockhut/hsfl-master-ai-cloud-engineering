@@ -1,10 +1,9 @@
-FROM golang:1.21-alpine
+FROM golang:1.21
 
 WORKDIR /go/src/app
 
 COPY authentication/go.mod .
 COPY authentication/go.sum .
-
 
 RUN go mod download github.com/stockhut/hsfl-master-ai-cloud-engineering/authentication
 

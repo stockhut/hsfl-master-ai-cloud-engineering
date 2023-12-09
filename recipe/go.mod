@@ -4,7 +4,7 @@ go 1.21.1
 
 require (
 	github.com/stockhut/hsfl-master-ai-cloud-engineering/authentication v0.0.0-20231018220427-ee024c3b7b14
-	github.com/stockhut/hsfl-master-ai-cloud-engineering/common v0.0.0-20231018220427-ee024c3b7b14
+	github.com/stockhut/hsfl-master-ai-cloud-engineering/common v0.0.0-20231117115519-16be31557dde
 )
 
 require (
@@ -12,6 +12,8 @@ require (
 	github.com/stretchr/testify v1.8.4
 	go.uber.org/mock v0.3.0
 )
+
+require golang.org/x/exp v0.0.0-20231206192017-f3f8817b8deb // indirect
 
 require (
 	github.com/davecgh/go-spew v1.1.1 // indirect
@@ -21,3 +23,5 @@ require (
 )
 
 replace github.com/stockhut/hsfl-master-ai-cloud-engineering/common => ../common
+
+replace github.com/stockhut/hsfl-master-ai-cloud-engineering/authentication => ../authentication
