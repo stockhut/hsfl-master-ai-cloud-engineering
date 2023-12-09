@@ -28,6 +28,12 @@ jobs:
       - name: Go Format
         run: gofmt -s -w . && git diff --exit-code
 
+      - name: Install mockgen
+        run: go install go.uber.org/mock/mockgen@latest
+
+      - name: Go generate mocks
+        run: go generate _mocks/gen.go
+        
       - name: Go Vet
         run: go vet ./...
 
