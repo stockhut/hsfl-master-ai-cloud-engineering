@@ -2,6 +2,7 @@ package grpc_server
 
 import (
 	"context"
+	"errors"
 	mock_repository "github.com/stockhut/hsfl-master-ai-cloud-engineering/authentication/_mocks/mock-repository"
 	"github.com/stockhut/hsfl-master-ai-cloud-engineering/authentication/accounts/model"
 	"github.com/stockhut/hsfl-master-ai-cloud-engineering/authentication/accounts/repository"
@@ -43,6 +44,13 @@ func TestGrpcServer_GetAccount(t *testing.T) {
 				accName:     "no-account-for-this-name",
 				expectedErr: auth_proto.ErrAccountNotFound,
 				repoErr:     repository.ErrAccountNotFound,
+			},
+			{
+				testName:    "some other error",
+				acc:         model.Account{},
+				accName:     "no-account-for-this-name",
+				expectedErr: auth_proto.ErrInternal,
+				repoErr:     errors.New("some error"),
 			},
 		}
 

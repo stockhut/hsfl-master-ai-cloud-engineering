@@ -9,3 +9,4 @@ import (
 // see https://jbrandhorst.com/post/grpc-errors/
 
 var ErrAccountNotFound = status.Error(codes.NotFound, "no such account")
+var ErrInternal = status.Errorf(codes.Internal, "something went wrong")

@@ -51,7 +51,7 @@ func (s *GrpcServer) GetAccount(ctx context.Context, request *auth_proto.GetAcco
 		if errors.Is(err, repository.ErrAccountNotFound) {
 			return nil, auth_proto.ErrAccountNotFound
 		}
-		return nil, err
+		return nil, auth_proto.ErrInternal
 	}
 
 	response := auth_proto.AccountResponseFromModel(acc)
