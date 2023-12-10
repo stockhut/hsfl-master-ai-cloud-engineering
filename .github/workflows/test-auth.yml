@@ -33,7 +33,14 @@ jobs:
 
       - name: Go generate mocks
         run: go generate _mocks/gen.go
-        
+
+      - name: Install protobuf dependencies
+        run: sudo apt install -y protobuf-compiler
+      - run: go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
+
+      - name: Generate protobuf code
+        run: protoc --go_out=. --go-grpc_out=. protobuf/hello.proto
+
       - name: Go Vet
         run: go vet ./...
 
