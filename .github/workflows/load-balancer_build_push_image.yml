@@ -1,9 +1,9 @@
 name: Build and push docker image for load-balancer
 
 on:
-  workflow_run:
-    workflows: [Test load-balancer]
-    types: [completed]
+  #workflow_run:
+  #  workflows: [Test load-balancer]
+  #  types: [completed]
 
   workflow_dispatch:
 
