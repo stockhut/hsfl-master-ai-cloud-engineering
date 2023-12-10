@@ -1,9 +1,9 @@
 name: Build and push docker image for reverse-proxy
 
 on:
-  workflow_run:
-    workflows: [Test reverse-proxy]
-    types: [completed]
+  #workflow_run:
+  #  workflows: [Test reverse-proxy]
+  #  types: [completed]
 
   workflow_dispatch:
 
