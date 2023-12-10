@@ -1,9 +1,9 @@
 name: Build and push docker image for web-service
 
 on:
-  workflow_run:
-    workflows: [Test web-service]
-    types: [completed]
+  #workflow_run:
+  #  workflows: [Test web-service]
+  #  types: [completed]
 
   workflow_dispatch:
 
