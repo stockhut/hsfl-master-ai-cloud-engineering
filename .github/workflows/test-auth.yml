@@ -31,9 +31,6 @@ jobs:
       - name: Install mockgen
         run: go install go.uber.org/mock/mockgen@latest
 
-      - name: Go generate mocks
-        run: go generate _mocks/gen.go
-
       - name: Install protobuf dependencies
         run: sudo apt install -y protobuf-compiler
       - run: go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
@@ -41,6 +38,9 @@ jobs:
 
       - name: Generate protobuf code
         run: go generate auth-proto/gen.go
+
+      - name: Go generate mocks
+        run: go generate _mocks/gen.go
 
       - name: Go Vet
         run: go vet ./...
