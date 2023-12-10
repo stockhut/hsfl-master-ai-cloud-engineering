@@ -1,6 +1,8 @@
 **/_mocks/*.go
 !**/_mocks/gen.go
 
+**/*.pb.go
+
 *.key
 
 

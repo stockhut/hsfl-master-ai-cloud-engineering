@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	grpc_server "github.com/stockhut/hsfl-master-ai-cloud-engineering/authentication/grpc-server"
 	"log"
 	"net/http"
 	"os"
@@ -42,7 +43,7 @@ func (repo *inMemoryAccountRepository) FindAccount(name string) (*model.Account,
 			}, nil
 		}
 	}
-	return nil, nil
+	return nil, repository.ErrAccountNotFound
 }
 
 func (repo *inMemoryAccountRepository) CheckDuplicate(acc model.Account) (repository.AccountInfoDuplicate, error) {
@@ -64,14 +65,23 @@ const JwtPrivateKeyEnvKey = "JWT_PRIVATE_KEY"
 
 func main() {
 
-	jwtPrivateKeyFile := environment.GetRequiredEnvVar(JwtPrivateKeyEnvKey)
-
 	var repo inMemoryAccountRepository = inMemoryAccountRepository{
 		accounts: make([]model.Account, 0),
 	}
 	repo.accounts = append(repo.accounts, model.Account{Name: "Nele", Email: "nele@nele.de", Password: "xyz123"})
 	repo.accounts = append(repo.accounts, model.Account{Name: "Alex", Email: "alex@nele.de", Password: "abc123"})
 	repo.accounts = append(repo.accounts, model.Account{Name: "Fabi", Email: "fabi@nele.de", Password: "def123"})
+
+	jwtPrivateKeyFile := environment.GetRequiredEnvVar(JwtPrivateKeyEnvKey)
+
+	grpcServer := grpc_server.New(&repo)
+	go func() {
+		err := grpcServer.Serve(3001)
+		if err != nil {
+			// error is already logged by the grpc server
+			log.Fatalln("GRPC server error. Exiting")
+		}
+	}()
 
 	tokenGeneratorConfig := jwt_util.JwtConfig{
 		SignKey: jwtPrivateKeyFile,

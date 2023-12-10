@@ -1,6 +1,9 @@
 package repository
 
-import "github.com/stockhut/hsfl-master-ai-cloud-engineering/authentication/accounts/model"
+import (
+	"errors"
+	"github.com/stockhut/hsfl-master-ai-cloud-engineering/authentication/accounts/model"
+)
 
 type AccountInfoDuplicate = int
 
@@ -10,6 +13,8 @@ const (
 	DUPLICATE_NAME
 	NO_DUPLICATES
 )
+
+var ErrAccountNotFound = errors.New("no such account")
 
 type AccountRepository interface {
 	CreateAccount(acc model.Account) error

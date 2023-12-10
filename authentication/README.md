@@ -1,5 +1,12 @@
 # Authentication Service
 
+## Building
+
+### Protobuf code generation
+
+```shell
+go generate proto/gen.go
+```
 ## Configuration
 
 ### Environment variables
