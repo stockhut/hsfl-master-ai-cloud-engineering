@@ -39,7 +39,7 @@ jobs:
       - run: go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
 
       - name: Generate protobuf code
-        run: protoc --go_out=. --go-grpc_out=. protobuf/hello.proto
+        run: protoc --go_out=. --go-grpc_out=. proto/authentication.proto
 
       - name: Go Vet
         run: go vet ./...
