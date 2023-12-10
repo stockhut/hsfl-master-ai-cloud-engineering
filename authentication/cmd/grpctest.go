@@ -3,7 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
-	"github.com/stockhut/hsfl-master-ai-cloud-engineering/authentication/proto"
+	auth_proto "github.com/stockhut/hsfl-master-ai-cloud-engineering/authentication/auth-proto"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 	"log"
@@ -16,8 +16,8 @@ func main() {
 	}
 	defer conn.Close()
 
-	client := proto.NewAuthenticationClient(conn)
-	request := &proto.GetAccountRequest{Name: "test"}
+	client := auth_proto.NewAuthenticationClient(conn)
+	request := &auth_proto.GetAccountRequest{Name: "test"}
 
 	res, err := client.GetAccount(context.Background(), request)
 	if err != nil {

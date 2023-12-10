@@ -1,4 +1,4 @@
-package proto
+package auth_proto
 
 import (
 	"github.com/stockhut/hsfl-master-ai-cloud-engineering/authentication/accounts/model"

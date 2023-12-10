@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"github.com/golang-jwt/jwt"
+	mock_auth_proto "github.com/stockhut/hsfl-master-ai-cloud-engineering/authentication/_mocks/mock-auth-proto"
 	"github.com/stockhut/hsfl-master-ai-cloud-engineering/authentication/middleware"
 	"net/http"
 	"net/http/httptest"
@@ -51,7 +52,8 @@ func TestGetBySelf(t *testing.T) {
 			},
 		}, nil).Times(1)
 
-		controller := NewController(mockRepo)
+		mockAuthRpc := mock_auth_proto.NewMockAuthenticationClient(gomockController)
+		controller := NewController(mockRepo, mockAuthRpc)
 
 		w := httptest.NewRecorder()
 		r := httptest.NewRequest(http.MethodGet, "/test", nil)
@@ -84,7 +86,8 @@ func TestGetBySelf(t *testing.T) {
 			Return(nil, errors.New("failed to read recipes")).
 			Times(1)
 
-		controller := NewController(mockRepo)
+		mockAuthRpc := mock_auth_proto.NewMockAuthenticationClient(gomockController)
+		controller := NewController(mockRepo, mockAuthRpc)
 
 		w := httptest.NewRecorder()
 		r := httptest.NewRequest(http.MethodGet, "/recipe", nil)
@@ -107,7 +110,8 @@ func TestGetBySelf(t *testing.T) {
 			Return([]model.Recipe{}, nil).
 			Times(1)
 
-		controller := NewController(mockRepo)
+		mockAuthRpc := mock_auth_proto.NewMockAuthenticationClient(gomockController)
+		controller := NewController(mockRepo, mockAuthRpc)
 
 		w := httptest.NewRecorder()
 		r := httptest.NewRequest(http.MethodGet, "/recipe", nil)

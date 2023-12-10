@@ -2,9 +2,10 @@ package grpc_server
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"github.com/stockhut/hsfl-master-ai-cloud-engineering/authentication/accounts/repository"
-	"github.com/stockhut/hsfl-master-ai-cloud-engineering/authentication/proto"
+	"github.com/stockhut/hsfl-master-ai-cloud-engineering/authentication/auth-proto"
 	"google.golang.org/grpc"
 	"log"
 	"net"
@@ -14,7 +15,7 @@ import (
 var logger = log.New(os.Stdout, "GRPC ", log.LstdFlags|log.Lmsgprefix)
 
 type GrpcServer struct {
-	proto.UnimplementedAuthenticationServer
+	auth_proto.UnimplementedAuthenticationServer
 	repo repository.AccountRepository
 }
 
@@ -32,7 +33,7 @@ func (s *GrpcServer) Serve(port int) error {
 	}
 
 	srv := grpc.NewServer()
-	proto.RegisterAuthenticationServer(srv, s)
+	auth_proto.RegisterAuthenticationServer(srv, s)
 
 	logger.Printf("listening on port %d\n", port)
 	err = srv.Serve(listener)
@@ -42,14 +43,17 @@ func (s *GrpcServer) Serve(port int) error {
 	return err
 }
 
-func (s *GrpcServer) GetAccount(ctx context.Context, request *proto.GetAccountRequest) (*proto.GetAccountResponse, error) {
+func (s *GrpcServer) GetAccount(ctx context.Context, request *auth_proto.GetAccountRequest) (*auth_proto.GetAccountResponse, error) {
 	name := request.GetName()
 
 	acc, err := s.repo.FindAccount(name)
 	if err != nil {
+		if errors.Is(err, repository.ErrAccountNotFound) {
+			return nil, auth_proto.ErrAccountNotFound
+		}
 		return nil, err
 	}
 
-	response := proto.AccountResponseFromModel(acc)
+	response := auth_proto.AccountResponseFromModel(acc)
 	return response, nil
 }

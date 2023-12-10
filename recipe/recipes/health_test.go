@@ -11,7 +11,7 @@ func TestController_GetHealth(t *testing.T) {
 
 	recorder := httptest.NewRecorder()
 
-	controller := NewController(nil)
+	controller := NewController(nil, nil)
 
 	controller.GetHealth(recorder, nil)
 

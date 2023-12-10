@@ -4,8 +4,11 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	"github.com/stockhut/hsfl-master-ai-cloud-engineering/authentication/auth-proto"
 	"github.com/stockhut/hsfl-master-ai-cloud-engineering/common/environment"
 	"github.com/stockhut/hsfl-master-ai-cloud-engineering/common/jwt_public_key"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 
 	requestlogger "github.com/stockhut/hsfl-master-ai-cloud-engineering/common/middleware/request-logger"
 	"log"
@@ -24,6 +27,7 @@ import (
 
 const JwtPublicKeyEnvKey = "JWT_PUBLIC_KEY"
 const SqlitePathEnvKey = "SQLITE_DB_PATH"
+const AuthRpcTarget = "AUTH_RPC_TARGET"
 
 func main() {
 
@@ -56,7 +60,16 @@ func main() {
 
 	repo := recipes.New(queries)
 
-	recipeController := recipes.NewController(&repo)
+	authRpcTarget := environment.GetRequiredEnvVar(AuthRpcTarget)
+
+	conn, err := grpc.Dial(authRpcTarget, grpc.WithTransportCredentials(insecure.NewCredentials()))
+	if err != nil {
+		log.Fatalf("could not connect: %v", err)
+	}
+	defer conn.Close()
+	authRpcClient := auth_proto.NewAuthenticationClient(conn)
+
+	recipeController := recipes.NewController(&repo, authRpcClient)
 
 	authMiddleware := middleware.ValidateJwtMiddleware(publicKey)
 

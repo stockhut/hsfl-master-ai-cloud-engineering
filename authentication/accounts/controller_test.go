@@ -9,7 +9,7 @@ import (
 	"strings"
 	"testing"
 
-	mock_accounts "github.com/stockhut/hsfl-master-ai-cloud-engineering/authentication/_mocks"
+	mock_accounts "github.com/stockhut/hsfl-master-ai-cloud-engineering/authentication/_mocks/mock-repository"
 	"github.com/stockhut/hsfl-master-ai-cloud-engineering/authentication/accounts/model"
 	"github.com/stockhut/hsfl-master-ai-cloud-engineering/authentication/accounts/repository"
 	"github.com/stockhut/hsfl-master-ai-cloud-engineering/authentication/jwt_util"
