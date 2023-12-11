@@ -28,11 +28,20 @@ jobs:
       - name: Go Format
         run: gofmt -s -w . && git diff --exit-code
 
+      - name: Install protobuf dependencies
+        run: sudo apt install -y protobuf-compiler
+      - run: go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
+      - run: go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
+
+      - name: Generate protobuf code
+        run: go generate ../authentication/auth-proto/gen.go
+
       - name: Install mockgen
         run: go install go.uber.org/mock/mockgen@latest
 
       - name: Go generate mocks
         run: go generate _mocks/gen.go
+      - run: go generate ../authentication/_mocks
 
       - name: Go Vet
         run: go vet ./...
