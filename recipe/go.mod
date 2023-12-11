@@ -3,7 +3,7 @@ module github.com/stockhut/hsfl-master-ai-cloud-engineering/recipe
 go 1.21.1
 
 require (
-	github.com/stockhut/hsfl-master-ai-cloud-engineering/authentication v0.0.0-20231018220427-ee024c3b7b14
+	github.com/stockhut/hsfl-master-ai-cloud-engineering/authentication v0.0.0-20231211172201-1ebd7fcf945d
 	github.com/stockhut/hsfl-master-ai-cloud-engineering/common v0.0.0-20231117115519-16be31557dde
 )
 
