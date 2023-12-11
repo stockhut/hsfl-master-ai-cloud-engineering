@@ -2,7 +2,7 @@ CREATE TABLE IF NOT EXISTS "Profile" (
 	"profileID"	INTEGER NOT NULL UNIQUE,
 	"username"	TEXT NOT NULL UNIQUE,
 	"password"	TEXT NOT NULL,
-	"profilePicture"	BLOB,
+	"profilePicture"	BYTEA,
 	"bio"	TEXT,
 	"friends"	INTEGER,
 	"weekplan"	INTEGER,
@@ -18,15 +18,15 @@ CREATE TABLE IF NOT EXISTS "Profile" (
 -- );
 
 CREATE TABLE IF NOT EXISTS "Recipe" (
-	"recipeID"	INTEGER PRIMARY KEY AUTOINCREMENT,
+	"recipeID"	SERIAL PRIMARY KEY,
 	"recipeName"	TEXT NOT NULL,
-	"recipePicture"	BLOB,
+	"recipePicture"	BYTEA,
 	"timeEstimate"	INTEGER,
 	"difficulty"	TEXT,
 	"feedsPeople"	INTEGER,
 	"directions"	TEXT NOT NULL,
-	"author"	TEXT NOT NULL,
-	FOREIGN KEY("author") REFERENCES "Profile"("username")
+	"author"	TEXT NOT NULL
+	--FOREIGN KEY("author") REFERENCES "Profile"("username")
 	--PRIMARY KEY("recipeID") --autoincrement
 );
 

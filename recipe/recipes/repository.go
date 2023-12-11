@@ -28,7 +28,7 @@ func (repo *SqlcRepository) CreateRecipe(recipe model.Recipe) (model.Recipe, err
 
 	params := db.CreateRecipeParams{
 		RecipeName:   recipe.Name,
-		TimeEstimate: sql.NullInt64{Int64: int64(recipe.TimeEstimate), Valid: true},
+		TimeEstimate: sql.NullInt32{Int32: int32(recipe.TimeEstimate), Valid: true},
 		Difficulty:   sql.NullString{String: recipe.Difficulty, Valid: true},
 		Directions:   recipe.Directions[0],
 		Author:       recipe.Author,
@@ -44,7 +44,7 @@ func (repo *SqlcRepository) CreateRecipe(recipe model.Recipe) (model.Recipe, err
 		i, err := repo.queries.CreateIngredient(context.TODO(), db.CreateIngredientParams{
 			RecipeID:         r.RecipeID,
 			IngredientName:   ingredient.Name,
-			IngredientAmount: int64(ingredient.Amount),
+			IngredientAmount: int32(ingredient.Amount),
 			IngredientUnit:   ingredient.Unit,
 		})
 
@@ -75,13 +75,13 @@ func (repo *SqlcRepository) GetAllByAuthor(author string) ([]model.Recipe, error
 }
 
 func (repo *SqlcRepository) GetById(id model.RecipeId) (*model.Recipe, error) {
-	recipe, err := repo.queries.GetRecipe(context.TODO(), int64(id))
+	recipe, err := repo.queries.GetRecipe(context.TODO(), int32(id))
 
 	if err != nil {
 		return nil, err
 	}
 
-	i, err := repo.queries.GetIngredientsByRecipe(context.TODO(), int64(id))
+	i, err := repo.queries.GetIngredientsByRecipe(context.TODO(), int32(id))
 
 	if err != nil {
 		return nil, err
@@ -92,5 +92,5 @@ func (repo *SqlcRepository) GetById(id model.RecipeId) (*model.Recipe, error) {
 }
 
 func (repo *SqlcRepository) DeleteRecipe(id model.RecipeId) error {
-	return repo.queries.DeleteRecipe(context.TODO(), int64(id))
+	return repo.queries.DeleteRecipe(context.TODO(), int32(id))
 }

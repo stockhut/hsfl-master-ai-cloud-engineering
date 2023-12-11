@@ -19,13 +19,13 @@ INSERT INTO
         "ingredientUnit"
     )
 VALUES
-    (?, ?, ?, ?) RETURNING ingredientName, ingredientAmount, ingredientUnit, recipeID
+    ($1, $2, $3, $4) RETURNING "ingredientName", "ingredientAmount", "ingredientUnit", "recipeID"
 `
 
 type CreateIngredientParams struct {
-	RecipeID         int64
+	RecipeID         int32
 	IngredientName   string
-	IngredientAmount int64
+	IngredientAmount int32
 	IngredientUnit   string
 }
 
@@ -55,7 +55,7 @@ INSERT INTO
         "bio"
     )
 VALUES
-    (?, ?, ?, ?) RETURNING profileID, username, password, profilePicture, bio, friends, weekplan
+    ($1, $2, $3, $4) RETURNING "profileID", username, password, "profilePicture", bio, friends, weekplan
 `
 
 type CreateProfileParams struct {
@@ -97,15 +97,15 @@ INSERT INTO
         "author"
     )
 VALUES
-    (?, ?, ?, ?, ?, ?, ?) RETURNING recipeID, recipeName, recipePicture, timeEstimate, difficulty, feedsPeople, directions, author
+    ($1, $2, $3, $4, $5, $6, $7) RETURNING "recipeID", "recipeName", "recipePicture", "timeEstimate", difficulty, "feedsPeople", directions, author
 `
 
 type CreateRecipeParams struct {
 	RecipeName    string
 	RecipePicture []byte
-	TimeEstimate  sql.NullInt64
+	TimeEstimate  sql.NullInt32
 	Difficulty    sql.NullString
-	FeedsPeople   sql.NullInt64
+	FeedsPeople   sql.NullInt32
 	Directions    string
 	Author        string
 }
@@ -141,7 +141,7 @@ INSERT INTO
         "date"
     )
 VALUES
-    (?, ?) RETURNING recipeCollectionID, recipeCollectionName, recipeID, ownerID, date, subscriberID
+    ($1, $2) RETURNING "recipeCollectionID", "recipeCollectionName", "recipeID", "ownerID", date, "subscriberID"
 `
 
 type CreateRecipeCollectionParams struct {
@@ -167,10 +167,10 @@ const deleteProfile = `-- name: DeleteProfile :exec
 DELETE FROM
     "Profile"
 WHERE
-    "profileID" = ?
+    "profileID" = $1
 `
 
-func (q *Queries) DeleteProfile(ctx context.Context, profileid int64) error {
+func (q *Queries) DeleteProfile(ctx context.Context, profileid int32) error {
 	_, err := q.db.ExecContext(ctx, deleteProfile, profileid)
 	return err
 }
@@ -179,10 +179,10 @@ const deleteRecipe = `-- name: DeleteRecipe :exec
 DELETE FROM
     "Recipe"
 WHERE
-    "recipeID" = ?
+    "recipeID" = $1
 `
 
-func (q *Queries) DeleteRecipe(ctx context.Context, recipeid int64) error {
+func (q *Queries) DeleteRecipe(ctx context.Context, recipeid int32) error {
 	_, err := q.db.ExecContext(ctx, deleteRecipe, recipeid)
 	return err
 }
@@ -191,25 +191,25 @@ const deleteRecipeCollection = `-- name: DeleteRecipeCollection :exec
 DELETE FROM
     "RecipeCollection"
 WHERE
-    "recipeCollectionID" = ?
+    "recipeCollectionID" = $1
 `
 
-func (q *Queries) DeleteRecipeCollection(ctx context.Context, recipecollectionid int64) error {
+func (q *Queries) DeleteRecipeCollection(ctx context.Context, recipecollectionid int32) error {
 	_, err := q.db.ExecContext(ctx, deleteRecipeCollection, recipecollectionid)
 	return err
 }
 
 const getIngredientsByRecipe = `-- name: GetIngredientsByRecipe :many
 SELECT
-    ingredientName, ingredientAmount, ingredientUnit, recipeID
+    "ingredientName", "ingredientAmount", "ingredientUnit", "recipeID"
 FROM 
     "Ingredient"
 WHERE 
-    "recipeID" = ?
+    "recipeID" = $1
 `
 
 // ---------INGREDIENT------------
-func (q *Queries) GetIngredientsByRecipe(ctx context.Context, recipeid int64) ([]Ingredient, error) {
+func (q *Queries) GetIngredientsByRecipe(ctx context.Context, recipeid int32) ([]Ingredient, error) {
 	rows, err := q.db.QueryContext(ctx, getIngredientsByRecipe, recipeid)
 	if err != nil {
 		return nil, err
@@ -239,17 +239,17 @@ func (q *Queries) GetIngredientsByRecipe(ctx context.Context, recipeid int64) ([
 
 const getProfile = `-- name: GetProfile :one
 SELECT
-    profileID, username, password, profilePicture, bio, friends, weekplan
+    "profileID", username, password, "profilePicture", bio, friends, weekplan
 FROM
     "Profile"
 WHERE
-    "profileID" = ?
+    "profileID" = $1
 LIMIT
     1
 `
 
 // --------PROFILE------------
-func (q *Queries) GetProfile(ctx context.Context, profileid int64) (Profile, error) {
+func (q *Queries) GetProfile(ctx context.Context, profileid int32) (Profile, error) {
 	row := q.db.QueryRowContext(ctx, getProfile, profileid)
 	var i Profile
 	err := row.Scan(
@@ -266,17 +266,17 @@ func (q *Queries) GetProfile(ctx context.Context, profileid int64) (Profile, err
 
 const getRecipe = `-- name: GetRecipe :one
 SELECT
-    recipeID, recipeName, recipePicture, timeEstimate, difficulty, feedsPeople, directions, author
+    "recipeID", "recipeName", "recipePicture", "timeEstimate", difficulty, "feedsPeople", directions, author
 FROM
     "Recipe"
 WHERE
-    "recipeID" = ?
+    "recipeID" = $1
 LIMIT
     1
 `
 
 // ---------RECIPE------------
-func (q *Queries) GetRecipe(ctx context.Context, recipeid int64) (Recipe, error) {
+func (q *Queries) GetRecipe(ctx context.Context, recipeid int32) (Recipe, error) {
 	row := q.db.QueryRowContext(ctx, getRecipe, recipeid)
 	var i Recipe
 	err := row.Scan(
@@ -294,17 +294,17 @@ func (q *Queries) GetRecipe(ctx context.Context, recipeid int64) (Recipe, error)
 
 const getRecipeCollection = `-- name: GetRecipeCollection :one
 SELECT
-    recipeCollectionID, recipeCollectionName, recipeID, ownerID, date, subscriberID
+    "recipeCollectionID", "recipeCollectionName", "recipeID", "ownerID", date, "subscriberID"
 FROM
     "RecipeCollection"
 WHERE
-    "recipeCollectionID" = ?
+    "recipeCollectionID" = $1
 LIMIT
     1
 `
 
 // -----RECIPECOLLECTION-------
-func (q *Queries) GetRecipeCollection(ctx context.Context, recipecollectionid int64) (RecipeCollection, error) {
+func (q *Queries) GetRecipeCollection(ctx context.Context, recipecollectionid int32) (RecipeCollection, error) {
 	row := q.db.QueryRowContext(ctx, getRecipeCollection, recipecollectionid)
 	var i RecipeCollection
 	err := row.Scan(
@@ -320,7 +320,7 @@ func (q *Queries) GetRecipeCollection(ctx context.Context, recipecollectionid in
 
 const listProfiles = `-- name: ListProfiles :many
 SELECT
-    profileID, username, password, profilePicture, bio, friends, weekplan
+    "profileID", username, password, "profilePicture", bio, friends, weekplan
 FROM
     "Profile"
 ORDER BY
@@ -360,7 +360,7 @@ func (q *Queries) ListProfiles(ctx context.Context) ([]Profile, error) {
 
 const listRecipeCollection = `-- name: ListRecipeCollection :many
 SELECT
-    recipeCollectionID, recipeCollectionName, recipeID, ownerID, date, subscriberID
+    "recipeCollectionID", "recipeCollectionName", "recipeID", "ownerID", date, "subscriberID"
 FROM
     "RecipeCollection"
 ORDER BY
@@ -399,11 +399,11 @@ func (q *Queries) ListRecipeCollection(ctx context.Context) ([]RecipeCollection,
 
 const listRecipes = `-- name: ListRecipes :many
 SELECT
-    recipeID, recipeName, recipePicture, timeEstimate, difficulty, feedsPeople, directions, author
+    "recipeID", "recipeName", "recipePicture", "timeEstimate", difficulty, "feedsPeople", directions, author
 FROM
     "Recipe"
 WHERE
-    "author" = ?
+    "author" = $1
 ORDER BY
     "recipeName"
 `
@@ -444,14 +444,14 @@ const updateProfile = `-- name: UpdateProfile :one
 UPDATE
     "Profile"
 set
-    "username" = ?,
-    "password" = ?,
-    "profilePicture" = ?,
-    "bio" = ?,
-    "friends" = ?,
-    "weekplan" = ?
+    "username" = $1,
+    "password" = $2,
+    "profilePicture" = $3,
+    "bio" = $4,
+    "friends" = $5,
+    "weekplan" = $6
 WHERE
-    "profileID" = ? RETURNING profileID, username, password, profilePicture, bio, friends, weekplan
+    "profileID" = $7 RETURNING "profileID", username, password, "profilePicture", bio, friends, weekplan
 `
 
 type UpdateProfileParams struct {
@@ -459,9 +459,9 @@ type UpdateProfileParams struct {
 	Password       string
 	ProfilePicture []byte
 	Bio            sql.NullString
-	Friends        sql.NullInt64
-	Weekplan       sql.NullInt64
-	ProfileID      int64
+	Friends        sql.NullInt32
+	Weekplan       sql.NullInt32
+	ProfileID      int32
 }
 
 func (q *Queries) UpdateProfile(ctx context.Context, arg UpdateProfileParams) (Profile, error) {
@@ -491,24 +491,24 @@ const updateRecipe = `-- name: UpdateRecipe :one
 UPDATE
     "Recipe"
 set
-    "recipeName" = ?,
-    "recipePicture" = ?,
-    "timeEstimate" = ?,
-    "difficulty" = ?,
-    "feedsPeople" = ?,
-    "directions" = ?
+    "recipeName" = $1,
+    "recipePicture" = $2,
+    "timeEstimate" = $3,
+    "difficulty" = $4,
+    "feedsPeople" = $5,
+    "directions" = $6
 WHERE
-    "recipeID" = ? RETURNING recipeID, recipeName, recipePicture, timeEstimate, difficulty, feedsPeople, directions, author
+    "recipeID" = $7 RETURNING "recipeID", "recipeName", "recipePicture", "timeEstimate", difficulty, "feedsPeople", directions, author
 `
 
 type UpdateRecipeParams struct {
 	RecipeName    string
 	RecipePicture []byte
-	TimeEstimate  sql.NullInt64
+	TimeEstimate  sql.NullInt32
 	Difficulty    sql.NullString
-	FeedsPeople   sql.NullInt64
+	FeedsPeople   sql.NullInt32
 	Directions    string
-	RecipeID      int64
+	RecipeID      int32
 }
 
 func (q *Queries) UpdateRecipe(ctx context.Context, arg UpdateRecipeParams) (Recipe, error) {
@@ -539,18 +539,18 @@ const updateRecipeCollection = `-- name: UpdateRecipeCollection :one
 UPDATE
     "RecipeCollection"
 set
-    "recipeCollectionName" = ?,
-    "date" = ?,
-    "subscriberID" = ?
+    "recipeCollectionName" = $1,
+    "date" = $2,
+    "subscriberID" = $3
 WHERE
-    "recipeCollectionID" = ? RETURNING recipeCollectionID, recipeCollectionName, recipeID, ownerID, date, subscriberID
+    "recipeCollectionID" = $4 RETURNING "recipeCollectionID", "recipeCollectionName", "recipeID", "ownerID", date, "subscriberID"
 `
 
 type UpdateRecipeCollectionParams struct {
 	RecipeCollectionName string
 	Date                 sql.NullString
-	SubscriberID         sql.NullInt64
-	RecipeCollectionID   int64
+	SubscriberID         sql.NullInt32
+	RecipeCollectionID   int32
 }
 
 func (q *Queries) UpdateRecipeCollection(ctx context.Context, arg UpdateRecipeCollectionParams) (RecipeCollection, error) {
