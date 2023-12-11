@@ -4,19 +4,21 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
-	"github.com/stockhut/hsfl-master-ai-cloud-engineering/authentication/auth-proto"
+
+	auth_proto "github.com/stockhut/hsfl-master-ai-cloud-engineering/authentication/auth-proto"
 	"github.com/stockhut/hsfl-master-ai-cloud-engineering/common/environment"
 	"github.com/stockhut/hsfl-master-ai-cloud-engineering/common/jwt_public_key"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 
-	requestlogger "github.com/stockhut/hsfl-master-ai-cloud-engineering/common/middleware/request-logger"
 	"log"
+
+	requestlogger "github.com/stockhut/hsfl-master-ai-cloud-engineering/common/middleware/request-logger"
 
 	"net/http"
 	"os"
 
-	_ "github.com/mattn/go-sqlite3"
+	_ "github.com/jackc/pgx/v5/stdlib"
 	dll "github.com/stockhut/hsfl-master-ai-cloud-engineering/common/db"
 	database "github.com/stockhut/hsfl-master-ai-cloud-engineering/common/db/generated"
 
@@ -26,19 +28,20 @@ import (
 )
 
 const JwtPublicKeyEnvKey = "JWT_PUBLIC_KEY"
-const SqlitePathEnvKey = "SQLITE_DB_PATH"
+const PostgresConnectionStringKey = "PG_CONN_STRING"
 const AuthRpcTarget = "AUTH_RPC_TARGET"
 
 func main() {
 
 	jwtPublicKeyFile := environment.GetRequiredEnvVar(JwtPublicKeyEnvKey)
-	sqliteFile := environment.GetRequiredEnvVar(SqlitePathEnvKey)
+	pgConnString := environment.GetRequiredEnvVar(PostgresConnectionStringKey)
 
 	fmt.Println("Hello from Recipe!")
 
 	ctx := context.Background()
 
-	db, err := sql.Open("sqlite3", sqliteFile)
+	// TODO: sslmode=disable should not be default, but it's too convenient atm
+	db, err := sql.Open("pgx", pgConnString+"?sslmode=disable")
 	if err != nil {
 		fmt.Printf("Failed to open database: %s\n", err)
 		return

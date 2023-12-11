@@ -5,7 +5,7 @@ SELECT
 FROM
     "Profile"
 WHERE
-    "profileID" = ?
+    "profileID" = $1
 LIMIT
     1;
 
@@ -26,26 +26,26 @@ INSERT INTO
         "bio"
     )
 VALUES
-    (?, ?, ?, ?) RETURNING *;
+    ($1, $2, $3, $4) RETURNING *;
 
 -- name: UpdateProfile :one
 UPDATE
     "Profile"
 set
-    "username" = ?,
-    "password" = ?,
-    "profilePicture" = ?,
-    "bio" = ?,
-    "friends" = ?,
-    "weekplan" = ?
+    "username" = $1,
+    "password" = $2,
+    "profilePicture" = $3,
+    "bio" = $4,
+    "friends" = $5,
+    "weekplan" = $6
 WHERE
-    "profileID" = ? RETURNING *;
+    "profileID" = $7 RETURNING *;
 
 -- name: DeleteProfile :exec
 DELETE FROM
     "Profile"
 WHERE
-    "profileID" = ?;
+    "profileID" = $1;
 
 -----------INGREDIENT------------
 -- name: GetIngredientsByRecipe :many
@@ -54,7 +54,7 @@ SELECT
 FROM 
     "Ingredient"
 WHERE 
-    "recipeID" = ?;
+    "recipeID" = $1;
 
 -- name: CreateIngredient :one
 INSERT INTO
@@ -65,7 +65,7 @@ INSERT INTO
         "ingredientUnit"
     )
 VALUES
-    (?, ?, ?, ?) RETURNING *;
+    ($1, $2, $3, $4) RETURNING *;
 
 
 -----------RECIPE------------
@@ -75,7 +75,7 @@ SELECT
 FROM
     "Recipe"
 WHERE
-    "recipeID" = ?
+    "recipeID" = $1
 LIMIT
     1;
 
@@ -85,7 +85,7 @@ SELECT
 FROM
     "Recipe"
 WHERE
-    "author" = ?
+    "author" = $1
 ORDER BY
     "recipeName";
 
@@ -101,26 +101,26 @@ INSERT INTO
         "author"
     )
 VALUES
-    (?, ?, ?, ?, ?, ?, ?) RETURNING *;
+    ($1, $2, $3, $4, $5, $6, $7) RETURNING *;
 
 -- name: UpdateRecipe :one
 UPDATE
     "Recipe"
 set
-    "recipeName" = ?,
-    "recipePicture" = ?,
-    "timeEstimate" = ?,
-    "difficulty" = ?,
-    "feedsPeople" = ?,
-    "directions" = ?
+    "recipeName" = $1,
+    "recipePicture" = $2,
+    "timeEstimate" = $3,
+    "difficulty" = $4,
+    "feedsPeople" = $5,
+    "directions" = $6
 WHERE
-    "recipeID" = ? RETURNING *;
+    "recipeID" = $7 RETURNING *;
 
 -- name: DeleteRecipe :exec
 DELETE FROM
     "Recipe"
 WHERE
-    "recipeID" = ?;
+    "recipeID" = $1;
 
 -------RECIPECOLLECTION-------
 -- name: GetRecipeCollection :one
@@ -129,7 +129,7 @@ SELECT
 FROM
     "RecipeCollection"
 WHERE
-    "recipeCollectionID" = ?
+    "recipeCollectionID" = $1
 LIMIT
     1;
 
@@ -148,20 +148,20 @@ INSERT INTO
         "date"
     )
 VALUES
-    (?, ?) RETURNING *;
+    ($1, $2) RETURNING *;
 
 -- name: UpdateRecipeCollection :one
 UPDATE
     "RecipeCollection"
 set
-    "recipeCollectionName" = ?,
-    "date" = ?,
-    "subscriberID" = ?
+    "recipeCollectionName" = $1,
+    "date" = $2,
+    "subscriberID" = $3
 WHERE
-    "recipeCollectionID" = ? RETURNING *;
+    "recipeCollectionID" = $4 RETURNING *;
 
 -- name: DeleteRecipeCollection :exec
 DELETE FROM
     "RecipeCollection"
 WHERE
-    "recipeCollectionID" = ?;
+    "recipeCollectionID" = $1;
