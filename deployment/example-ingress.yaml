@@ -20,3 +20,10 @@ spec:
                 name: recipe
                 port:
                   number: 3000
+          - path: /api/v1/authentication
+            pathType: Prefix
+            backend:
+              service:
+                name: authentication
+                port:
+                  number: 8080
