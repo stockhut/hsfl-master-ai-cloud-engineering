@@ -35,6 +35,10 @@ jobs:
     needs:
       - bump-version
     steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha }} # TODO: remove when testing is done
       - run: git tag --points-at HEAD | grep "recipe-"
       - uses: ./.github/workflows/recipe-build-push-image.yml
   build-auth:
@@ -43,5 +47,9 @@ jobs:
     needs:
       - bump-version
     steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha }} # TODO: remove when testing is done
       - run: git tag --points-at HEAD | grep "auth-"
       - uses: ./.github/workflows/auth-build-push-image.yml
