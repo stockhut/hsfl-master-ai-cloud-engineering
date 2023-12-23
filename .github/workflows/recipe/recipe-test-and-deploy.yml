@@ -1,0 +1,16 @@
+name: Recipe test and deploy
+
+on:
+  push:
+    paths:
+      - 'authentication/**'
+      - '.github/workflows/recipe/**'
+  workflow_dispatch:
+
+jobs:
+  test:
+    uses: ./.github/workflows/recipe/test-recipe.yml
+  docker:
+    needs:
+      - test
+    uses: ./.github/workflows/recipe/recipe_build_push_image.yml

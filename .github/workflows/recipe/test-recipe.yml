@@ -1,10 +1,7 @@
 name: Test recipe service
 
 on:
-  push:
-    paths:
-      - 'recipe/**'
-      - '.github/workflows/test-recipe.yml'
+  workflow_call:
 
   workflow_dispatch:
 
