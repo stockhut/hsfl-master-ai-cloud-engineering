@@ -2,6 +2,15 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## 0.9.0 - 2023-12-23
+### Package updates
+- auth bumped to auth-0.9.0
+### Global changes
+#### Continuous Integration
+- set gh token for gh cli - (3a47844) - TuftedDeer
+
+- - -
+
 ## 0.8.0 - 2023-12-23
 ### Package updates
 - auth bumped to auth-0.8.0
