@@ -15,4 +15,4 @@ jobs:
   docker:
     needs:
       - test
-    uses: ./.github/workflows/recipe_build_push_image.yml
+    uses: ./.github/workflows/recipe-build-push-image.yml
