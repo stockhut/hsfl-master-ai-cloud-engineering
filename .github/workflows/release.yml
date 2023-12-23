@@ -2,6 +2,7 @@ on:
   push:
     branches:
       - 'versioning-test' # TODO: change this to main
+      - 'versioning' # TODO: change this to main
   workflow_dispatch:
 
 jobs:
