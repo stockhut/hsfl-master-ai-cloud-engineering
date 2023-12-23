@@ -2,6 +2,17 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## 0.4.0 - 2023-12-23
+### Package updates
+- auth bumped to auth-0.4.0
+### Global changes
+#### Continuous Integration
+- push cog commit - (a95c069) - TuftedDeer
+#### Miscellaneous Chores
+- **(version)** 0.1.0 - (8c494ec) - TuftedDeer
+
+- - -
+
 ## 0.1.0 - 2023-12-23
 ### Package updates
 - recipe bumped to recipe-0.1.0
