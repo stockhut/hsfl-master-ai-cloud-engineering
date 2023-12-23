@@ -2,6 +2,16 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## 0.2.0 - 2023-12-23
+### Package updates
+- auth bumped to auth-0.2.0
+### Global changes
+#### Continuous Integration
+- push after cog - (d0112f6) - TuftedDeer
+- git log - (27e3f6e) - TuftedDeer
+
+- - -
+
 ## 0.1.0 - 2023-12-23
 ### Package updates
 - frontend bumped to frontend-0.1.0
