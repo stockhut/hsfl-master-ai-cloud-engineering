@@ -29,27 +29,9 @@ jobs:
         run: "echo '${{ steps.release.outputs.version }}'"
       - run: git push
       - run: git push --tags
-  build-recipe:
-    name: Build recipe if necessary
-    runs-on: ubuntu-latest
-    needs:
-      - bump-version
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-          ref: ${{ github.event.pull_request.head.sha }} # TODO: remove when testing is done
-      - run: git tag --points-at HEAD | grep "recipe-"
-      - uses: ./.github/workflows/recipe-build-push-image.yml
-  build-auth:
-    name: Build auth if necessary
-    runs-on: ubuntu-latest
-    needs:
-      - bump-version
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-          ref: ${{ github.event.pull_request.head.sha }} # TODO: remove when testing is done
-      - run: git tag --points-at HEAD | grep "auth-"
-      - uses: ./.github/workflows/auth-build-push-image.yml
+
+      - name: Trigger recipe rebuild if necessary
+        run: git tag --points-at HEAD | grep recipe && gh workflow run recipe-build-push-image.yml --ref versioning-test || true # TODO change to main
+
+      - name: Trigger auth rebuild if necessary
+        run: git tag --points-at HEAD | grep auth && gh workflow run auth-build-push-image.yml --ref versioning-test || true # TODO change to main
