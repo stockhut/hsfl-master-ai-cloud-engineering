@@ -32,6 +32,10 @@ jobs:
 
       - name: Trigger recipe rebuild if necessary
         run: git tag --points-at HEAD | grep recipe && gh workflow run recipe-build-push-image.yml --ref versioning-test || true # TODO change to main
+        env:
+          GH_TOKEN: ${{ github.token }}
 
       - name: Trigger auth rebuild if necessary
         run: git tag --points-at HEAD | grep auth && gh workflow run auth-build-push-image.yml --ref versioning-test || true # TODO change to main
+        env:
+          GH_TOKEN: ${{ github.token }}
