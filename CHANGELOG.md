@@ -2,6 +2,15 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## 0.13.0 - 2023-12-23
+### Package updates
+- auth bumped to auth-0.13.0
+### Global changes
+#### Continuous Integration
+- use versioning-test branch in docker build - (5c523bb) - TuftedDeer
+
+- - -
+
 ## 0.12.0 - 2023-12-23
 ### Package updates
 - auth bumped to auth-0.12.0
