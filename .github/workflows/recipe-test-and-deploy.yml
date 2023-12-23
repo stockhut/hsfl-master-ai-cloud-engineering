@@ -5,8 +5,8 @@ on:
     paths:
       - 'recipe/**'
       - '.github/workflows/recipe-test-and-deploy.yml'
-      - '.github/workflows/recipe_build_push_image.yml'
-      - '.github/workflows/test-recipe.yml'
+      - '.github/workflows/recipe-build-push-image.yml'
+      - '.github/workflows/recipe-test.yml'
   workflow_dispatch:
 
 jobs:
