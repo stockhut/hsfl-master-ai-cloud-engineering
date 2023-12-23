@@ -13,6 +13,8 @@ jobs:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha }} # TODO: remove when testing is done
+
       - uses: cocogitto/cocogitto-action@1f7463bd27d1c999663b1d247791cb43c758c29a
         id: release
         with:
