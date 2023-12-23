@@ -44,6 +44,7 @@ jobs:
         if: ${{ github.event_name == 'workflow_dispatch' }}
         run: echo tag=$( git tag --points-at HEAD | grep auth ) >> "$GITHUB_OUTPUT"
 
+      - run: echo ${{ steps.gittag.outputs.tag }}
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
