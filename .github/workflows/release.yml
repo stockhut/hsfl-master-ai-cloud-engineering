@@ -24,8 +24,24 @@ jobs:
           git-user-email: 'cog@example.org'
 
       - run: git log
-      # The version number is accessible as a github action output
+       #The version number is accessible as a github action output
       - name: Print version
         run: "echo '${{ steps.release.outputs.version }}'"
       - run: git push
       - run: git push --tags
+  build-recipe:
+    name: Build recipe if necessary
+    runs-on: ubuntu-latest
+    needs:
+      - bump-version
+    steps:
+      - run: git tag --points-at HEAD | grep "recipe-"
+      - uses: ./.github/workflows/recipe-build-push-image.yml
+  build-auth:
+    name: Build auth if necessary
+    runs-on: ubuntu-latest
+    needs:
+      - bump-version
+    steps:
+      - run: git tag --points-at HEAD | grep "auth-"
+      - uses: ./.github/workflows/auth-build-push-image.yml
