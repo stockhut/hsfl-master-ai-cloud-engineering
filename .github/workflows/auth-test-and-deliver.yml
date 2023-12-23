@@ -6,7 +6,7 @@ on:
       - 'authentication/**'
       - '.github/workflows/auth-test.yml'
       - '.github/workflows/auth-build-push-image'
-      - '.github/workflows/auth-test-and-deploy.yml'
+      - '.github/workflows/auth-test-and-deliver.yml'
   workflow_dispatch:
 
 jobs:

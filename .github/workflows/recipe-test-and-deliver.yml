@@ -4,7 +4,7 @@ on:
   push:
     paths:
       - 'recipe/**'
-      - '.github/workflows/recipe-test-and-deploy.yml'
+      - '.github/workflows/recipe-test-and-deliver.yml'
       - '.github/workflows/recipe-build-push-image.yml'
       - '.github/workflows/recipe-test.yml'
   workflow_dispatch:
