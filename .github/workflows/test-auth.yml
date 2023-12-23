@@ -1,12 +1,8 @@
 name: Test auth service
 
 on:
-  push:
-    paths:
-      - 'authentication/**'
-      - '.github/workflows/test-auth.yml'
-
   workflow_dispatch:
+  workflow_call:
 
 jobs:
   test:
