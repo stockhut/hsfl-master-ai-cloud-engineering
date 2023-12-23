@@ -50,5 +50,5 @@ jobs:
           context: .
           file: ./authentication/Dockerfile
           push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}, "hardcoded-tag"
+          tags: ${{ steps.meta.outputs.tags }}, $( git tag --points-at HEAD | grep auth )
+          labels: ${{ steps.meta.outputs.labels }}
