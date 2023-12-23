@@ -101,6 +101,6 @@ func main() {
 
 	r := router.New(logMw, c)
 
-	err = http.ListenAndServe("localhost:8080", r)
+	err = http.ListenAndServe(":8080", r)
 	panic(err)
 }
