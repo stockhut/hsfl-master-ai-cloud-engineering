@@ -1,0 +1,18 @@
+name: Recipe test and deploy
+
+on:
+  push:
+    paths:
+      - 'recipe/**'
+      - '.github/workflows/recipe-test-and-deploy.yml'
+      - '.github/workflows/recipe_build_push_image.yml'
+      - '.github/workflows/test-recipe.yml'
+  workflow_dispatch:
+
+jobs:
+  test:
+    uses: ./.github/workflows/test-recipe.yml
+  docker:
+    needs:
+      - test
+    uses: ./.github/workflows/recipe_build_push_image.yml
