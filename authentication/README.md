@@ -1,5 +1,4 @@
 # Authentication Service
-test
 ## Configuration
 ### Environment variables
 | Key             | Value                            |
