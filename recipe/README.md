@@ -15,10 +15,10 @@ go generate _mocks/gen.go
 ## Configuration
 
 ### Environment variables
-| Key            | Value                                 |
-|----------------|---------------------------------------|
-| JWT_PUBLIC_KEY | Path to a jwt public keyfile          |
-| PG_CONN_STRING | A PostgreSQL connection string, e.g. `postgres://postgres:password@127.0.0.1:5432` |
+| Key            | Value                                                                                            |
+|----------------|--------------------------------------------------------------------------------------------------|
+| JWT_PUBLIC_KEY | Path to a jwt public keyfile                                                                     |
+| PG_CONN_STRING | A PostgreSQL connection string, e.g. `postgres://postgres:password@127.0.0.1:5432/database-name` |
 
 ## Development
 
