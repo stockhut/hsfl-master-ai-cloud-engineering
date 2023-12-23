@@ -1,0 +1,23 @@
+on:
+  push:
+    branches:
+      - 'versioning-test' # TODO: change this to main
+jobs:
+  bump-version:
+    name: Create new release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - uses: cocogitto/cocogitto-action@1f7463bd27d1c999663b1d247791cb43c758c29a
+        id: release
+        with:
+          check: false
+          release: true
+          git-user: 'Cog Bot'
+          git-user-email: 'cog@example.org'
+
+      # The version number is accessible as a github action output
+      - name: Print version
+        run: "echo '${{ steps.release.outputs.version }}'"

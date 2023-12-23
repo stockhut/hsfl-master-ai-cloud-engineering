@@ -7,6 +7,8 @@ on:
       - '.github/workflows/auth-test.yml'
       - '.github/workflows/auth-build-push-image'
       - '.github/workflows/auth-test-and-deliver.yml'
+    tags:
+      - auth-**
   workflow_dispatch:
 
 jobs:
