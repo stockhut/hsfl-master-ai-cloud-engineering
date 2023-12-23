@@ -18,6 +18,28 @@ All notable changes to this project will be documented in this file. See [conven
 - **(web-service)** add index.html and css + fonts - (9090df8) - neki9072
 - **(web-service)** init static web server - (d74b8ba) - TuftedDeer
 #### Miscellaneous Chores
+- **(version)** 0.1.0 - (6f3f28b) - Cog
+- **(version)** 0.1.0 - (7df7597) - TuftedDeer
+- **(web-service)** Dockerfile build fix - (af1d652) - neki9072
+
+- - -
+
+## frontend-0.1.0 - 2023-12-23
+#### Bug Fixes
+- **(web-service)** COPY assets into image - (044ee89) - alex
+- **(web-service)** change port in dockerfile - (19298e5) - alex
+- **(web-service)** prefix router static - (c7ab4e8) - neki9072
+- **(web-service/docker)** Fix image build on linux (or whatever the problem caused) - (fbfeecd) - TuftedDeer
+#### Continuous Integration
+- **(web-service)** fix path to go.mod - (c341a78) - alex
+#### Features
+- **(recipe)** create and show recipes in frontend - (aa67921) - neki9072
+- **(recipes)** implement recipe list for the logged in user - (bde5834) - TuftedDeer
+- **(web-service)** add Dockerfile - (dfa8528) - alex
+- **(web-service)** remove 'static/' prefix from file server route - (08b612e) - TuftedDeer
+- **(web-service)** add index.html and css + fonts - (9090df8) - neki9072
+- **(web-service)** init static web server - (d74b8ba) - TuftedDeer
+#### Miscellaneous Chores
 - **(version)** 0.1.0 - (7df7597) - TuftedDeer
 - **(web-service)** Dockerfile build fix - (af1d652) - neki9072
 
