@@ -2,6 +2,15 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## 0.10.0 - 2023-12-23
+### Package updates
+- auth bumped to auth-0.10.0
+### Global changes
+#### Continuous Integration
+- force workflow runs - (ccc7776) - TuftedDeer
+
+- - -
+
 ## 0.9.0 - 2023-12-23
 ### Package updates
 - auth bumped to auth-0.9.0
