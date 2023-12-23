@@ -41,7 +41,7 @@ jobs:
 
       - name: Go generate mocks
         run: go generate _mocks/gen.go
-      - run: go generate ../authentication/_mocks
+      - run: go generate ../authentication/_mocks/gen.go
 
       - name: Go Vet
         run: go vet ./...
