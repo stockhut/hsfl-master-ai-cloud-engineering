@@ -23,6 +23,7 @@ jobs:
           git-user: 'Cog Bot'
           git-user-email: 'cog@example.org'
 
+      - run: git log
       # The version number is accessible as a github action output
       - name: Print version
         run: "echo '${{ steps.release.outputs.version }}'"
