@@ -2,6 +2,21 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## 0.12.0 - 2023-12-23
+### Package updates
+- auth bumped to auth-0.12.0
+### Global changes
+#### Continuous Integration
+- use git tag as docker tag - (d66a68a) - TuftedDeer
+- hardcoded output tag - (7acfb13) - TuftedDeer
+- debug echo - (246f777) - TuftedDeer
+- try to set git tag as docker tag again - (b606a50) - TuftedDeer
+- trying to set image tag from git tag - (902558e) - TuftedDeer
+- trying to set image hardcoded image tag - (82b2b8c) - TuftedDeer
+- trying to set image tag from git tag when triggered by workflow dispatch - (f836518) - TuftedDeer
+
+- - -
+
 ## 0.11.0 - 2023-12-23
 ### Package updates
 - auth bumped to auth-0.11.0
