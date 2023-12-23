@@ -30,6 +30,8 @@ jobs:
       - run: git push
       - run: git push --tags
 
+      # pushing the tag from the workflow does not trigger the run, so we check which tags where issued and use the gh cli to trigger the build workflow
+      # https://stackoverflow.com/questions/72110432/github-workflow-is-not-triggered-after-pushing-tags
       - name: Trigger recipe rebuild if necessary
         run: git tag --points-at HEAD | grep recipe && gh workflow run recipe-build-push-image.yml --ref versioning-test || true # TODO change to main
         env:
