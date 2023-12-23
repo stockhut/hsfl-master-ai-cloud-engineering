@@ -2,6 +2,16 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## 0.5.0 - 2023-12-23
+### Package updates
+- auth bumped to auth-0.5.0
+### Global changes
+#### Continuous Integration
+- use auth-** in test and deliver - (e2353f6) - TuftedDeer
+- hardcode test auth tag - (02dfbad) - TuftedDeer
+
+- - -
+
 ## 0.4.0 - 2023-12-23
 ### Package updates
 - auth bumped to auth-0.4.0
