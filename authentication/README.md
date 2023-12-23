@@ -1,6 +1,5 @@
 # Authentication Service
 ## Configuration
-change
 ### Environment variables
 | Key             | Value                            |
 |-----------------|----------------------------------|
