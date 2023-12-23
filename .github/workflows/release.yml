@@ -27,4 +27,4 @@ jobs:
       # The version number is accessible as a github action output
       - name: Print version
         run: "echo '${{ steps.release.outputs.version }}'"
-      - run: git push
+      - run: git push --tags
