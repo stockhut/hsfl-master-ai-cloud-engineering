@@ -11,7 +11,7 @@ on:
 
 jobs:
   test:
-    uses: ./.github/workflows/test-recipe.yml
+    uses: ./.github/workflows/recipe-test.yml
   docker:
     needs:
       - test
