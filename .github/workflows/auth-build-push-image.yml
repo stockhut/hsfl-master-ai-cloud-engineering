@@ -39,6 +39,11 @@ jobs:
             type=semver,pattern=auth-{{version}}
           images: ghcr.io/${{ github.repository }}/authentication
 
+      - name: Set docker tag from git tag
+        id: gittag
+        if: ${{ github.event_name == 'workflow_dispatch' }}
+        run: echo tag=$( git tag --points-at HEAD | grep auth ) >> "$GITHUB_OUTPUT"
+
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
@@ -46,4 +51,4 @@ jobs:
           file: ./authentication/Dockerfile
           push: true
           tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+          labels: ${{ steps.meta.outputs.labels }}, ${{ steps.gittag.outputs.tag }}
