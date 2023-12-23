@@ -11,8 +11,8 @@ on:
 
 jobs:
   test:
-    uses: ./.github/workflows/test-auth.yml
+    uses: ./.github/workflows/authentication/test-auth.yml
   docker:
     needs:
       - test
-    uses: ./.github/workflows/auth_build_push_image.yml
+    uses: ./.github/workflows/authentication/auth_build_push_image.yml
