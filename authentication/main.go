@@ -64,6 +64,8 @@ const JwtPrivateKeyEnvKey = "JWT_PRIVATE_KEY"
 
 func main() {
 
+	fmt.Println("breaking change")
+
 	jwtPrivateKeyFile := environment.GetRequiredEnvVar(JwtPrivateKeyEnvKey)
 
 	var repo inMemoryAccountRepository = inMemoryAccountRepository{
