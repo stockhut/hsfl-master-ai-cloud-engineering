@@ -3,7 +3,7 @@ name: Recipe test and deploy
 on:
   push:
     paths:
-      - 'authentication/**'
+      - 'recipe/**'
       - '.github/workflows/recipe/**'
   workflow_dispatch:
 
