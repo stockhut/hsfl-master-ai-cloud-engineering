@@ -41,6 +41,8 @@ jobs:
             type=semver,pattern=auth-{{version}}
           images: ghcr.io/${{ github.repository }}/authentication
 
+      - run: git log HEAD~4..HEAD
+
       - name: Set docker tag from git tag
         id: gittag
         if: ${{ github.event_name == 'workflow_dispatch' }}
