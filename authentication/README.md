@@ -1,4 +1,3 @@
-change
 # Authentication Service
 ## Configuration
 ### Environment variables
