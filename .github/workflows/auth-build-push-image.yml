@@ -57,5 +57,5 @@ jobs:
           context: .
           file: ./authentication/Dockerfile
           push: true
-          tags: ${{ steps.meta.outputs.tags }}, ${{ steps.gittag.outputs.tag }}
+          tags: ${{ steps.meta.outputs.tags }}, ghcr.io/${{ github.repository }}/authentication:${{ steps.gittag.outputs.tag }}
           labels: ${{ steps.meta.outputs.labels }}
