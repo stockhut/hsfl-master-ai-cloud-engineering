@@ -2,13 +2,13 @@ name: Auth test and docker
 
 on:
   push:
-#    paths:
-#      - 'authentication/**'
-#      - '.github/workflows/auth-test.yml'
-#      - '.github/workflows/auth-build-push-image'
-#      - '.github/workflows/auth-test-and-deliver.yml'
-    tags:
-      - auth-**
+    paths:
+      - 'authentication/**'
+      - '.github/workflows/auth-test.yml'
+      - '.github/workflows/auth-build-push-image'
+      - '.github/workflows/auth-test-and-deliver.yml'
+    tags-ignore:
+      - '**'
   workflow_dispatch:
 
 jobs:
