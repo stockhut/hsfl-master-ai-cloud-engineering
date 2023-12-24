@@ -2,6 +2,15 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## 0.16.0 - 2023-12-24
+### Package updates
+- auth bumped to auth-1.5.0
+### Global changes
+#### Continuous Integration
+- fix sed - (c5d9813) - TuftedDeer
+
+- - -
+
 ## 0.15.0 - 2023-12-24
 ### Package updates
 - auth bumped to auth-1.4.0
