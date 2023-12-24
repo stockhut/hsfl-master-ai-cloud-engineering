@@ -42,6 +42,7 @@ jobs:
           images: ghcr.io/${{ github.repository }}/authentication
 
       - run: git log
+      - run: git tag
 
       - name: Set docker tag from git tag
         id: gittag
