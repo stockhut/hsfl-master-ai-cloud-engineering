@@ -41,7 +41,7 @@ jobs:
             type=semver,pattern=auth-{{version}}
           images: ghcr.io/${{ github.repository }}/authentication
 
-      - run: git log HEAD~4..HEAD
+      - run: git log
 
       - name: Set docker tag from git tag
         id: gittag
