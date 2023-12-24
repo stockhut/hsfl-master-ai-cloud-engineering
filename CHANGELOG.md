@@ -2,6 +2,20 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## 0.14.0 - 2023-12-24
+### Package updates
+- auth bumped to auth-1.3.0
+### Global changes
+#### Continuous Integration
+- ignore tag pushes - (4a91d32) - TuftedDeer
+- fix image tag - (87ebc62) - TuftedDeer
+- fetch depth - (cad76a2) - TuftedDeer
+- git tag - (1acc6e8) - TuftedDeer
+- git log - (db94615) - TuftedDeer
+- git log - (9a21712) - TuftedDeer
+
+- - -
+
 ## 0.13.0 - 2023-12-23
 ### Package updates
 - auth bumped to auth-0.13.0
