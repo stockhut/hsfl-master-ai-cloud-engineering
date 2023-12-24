@@ -2,6 +2,15 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## 0.15.0 - 2023-12-24
+### Package updates
+- auth bumped to auth-1.4.0
+### Global changes
+#### Continuous Integration
+- strip auth- prefix from docker tag - (79e2a58) - TuftedDeer
+
+- - -
+
 ## 0.14.0 - 2023-12-24
 ### Package updates
 - auth bumped to auth-1.3.0

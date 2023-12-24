@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## auth-1.4.0 - 2023-12-24
+#### Features
+- **(authentication)** test change - (3c0f081) - TuftedDeer
+
+- - -
+
 ## auth-1.3.0 - 2023-12-24
 #### Features
 - **(authentication)** test change - (8545dab) - TuftedDeer
