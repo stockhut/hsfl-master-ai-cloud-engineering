@@ -35,7 +35,7 @@ func NewPsqlRepository(connectionString string) (*PsqlRepository, error) {
 }
 
 func (repo *PsqlRepository) CreateAccount(ctx context.Context, acc model.Account) error {
-	_, err := repo.queries.CreateAccount(ctx, sqlc.sqlc{
+	_, err := repo.queries.CreateAccount(ctx, sqlc.CreateAccountParams{
 		Name:         acc.Name,
 		Email:        acc.Email,
 		Passwordhash: acc.PasswordHash,
@@ -44,25 +44,24 @@ func (repo *PsqlRepository) CreateAccount(ctx context.Context, acc model.Account
 	return err
 }
 
-func (repo *PsqlRepository) CheckDuplicate(ctx context.Context, acc model.Account) (AccountInfoDuplicate, error) {
+func (repo *PsqlRepository) CheckDuplicate(ctx context.Context, acc model.Account) error {
 
 	_, err := repo.queries.GetAccount(ctx, acc.Name)
 	if err == nil {
-		return DUPLICATE_NAME, nil
+		return ErrDuplicateName
 	} else if errors.Is(err, sql.ErrNoRows) == false {
-		return UNDEFINED, err
+		return err
 
 	}
 
 	_, err = repo.queries.GetAccountByEmail(ctx, acc.Email)
 	if err == nil {
-		return DUPLICATE_EMAIL, nil
+		return ErrDuplicateEmail
 	} else if errors.Is(err, sql.ErrNoRows) == false {
-		return UNDEFINED, err
-
+		return err
 	}
 
-	return NO_DUPLICATES, nil
+	return nil
 }
 
 func (repo *PsqlRepository) FindAccount(ctx context.Context, name string) (*model.Account, error) {

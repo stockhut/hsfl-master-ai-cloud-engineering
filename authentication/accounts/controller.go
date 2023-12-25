@@ -2,6 +2,7 @@ package accounts
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"github.com/stockhut/hsfl-master-ai-cloud-engineering/authentication/pwhash"
 	"io"
@@ -57,31 +58,28 @@ func (ctrl *Controller) HandleCreateAccount(w http.ResponseWriter, r *http.Reque
 
 	newAcc := model.Account{Name: requestBody.Name, Email: requestBody.Email, PasswordHash: pwHash}
 
-	duplicate, err := ctrl.accountRepo.CheckDuplicate(r.Context(), newAcc)
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		log.Printf("Failed to check for account duplicate: %s\n", err)
-		return
-	}
+	err = ctrl.accountRepo.CheckDuplicate(r.Context(), newAcc)
 
-	switch duplicate {
-	case DUPLICATE_NAME:
-		w.WriteHeader(http.StatusBadRequest)
-		log.Println("DUPLICATE_NAME CASE")
-	case DUPLICATE_EMAIL:
-		w.WriteHeader(http.StatusBadRequest)
-		log.Println("DUPLICATE_EMAIL CASE")
-	case NO_DUPLICATES:
+	if err == nil {
 		err := ctrl.accountRepo.CreateAccount(r.Context(), newAcc)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 		} else {
 			w.WriteHeader(http.StatusCreated)
 		}
+		return
+	}
+
+	switch {
+	case errors.Is(err, ErrDuplicateName):
+		w.WriteHeader(http.StatusBadRequest)
+		fmt.Fprintln(w, "Username is already taken")
+	case errors.Is(err, ErrDuplicateEmail):
+		w.WriteHeader(http.StatusBadRequest)
+		fmt.Fprintln(w, "Email is already registered")
 	default:
 		w.WriteHeader(http.StatusInternalServerError)
-		panic("unexpected value")
-
+		log.Printf("Failed to check for account duplicate: %s\n", err)
 	}
 
 }
