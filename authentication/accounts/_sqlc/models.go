@@ -4,8 +4,6 @@
 
 package sqlc
 
-import ()
-
 type Account struct {
 	Name         string
 	Email        string
