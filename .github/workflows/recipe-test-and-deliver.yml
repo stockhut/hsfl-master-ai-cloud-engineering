@@ -7,6 +7,8 @@ on:
       - '.github/workflows/recipe-test-and-deliver.yml'
       - '.github/workflows/recipe-build-push-image.yml'
       - '.github/workflows/recipe-test.yml'
+    branches:
+      - '**'
     tags-ignore:
       - '**'
   workflow_dispatch:
