@@ -3,6 +3,7 @@ package accounts
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/stockhut/hsfl-master-ai-cloud-engineering/authentication/pwhash"
 	"io"
 	"log"
 	"net/http"
@@ -15,12 +16,14 @@ import (
 type Controller struct {
 	accountRepo    repository.AccountRepository
 	tokenGenerator jwt_util.JwtTokenGenerator
+	pwHasher       pwhash.PasswordHasher
 }
 
-func NewController(accountRepo repository.AccountRepository, tokenGenerator jwt_util.JwtTokenGenerator) *Controller {
+func NewController(accountRepo repository.AccountRepository, tokenGenerator jwt_util.JwtTokenGenerator, pwHaser pwhash.PasswordHasher) *Controller {
 	return &Controller{
 		accountRepo:    accountRepo,
 		tokenGenerator: tokenGenerator,
+		pwHasher:       pwHaser,
 	}
 }
 
@@ -45,7 +48,15 @@ func (ctrl *Controller) HandleCreateAccount(w http.ResponseWriter, r *http.Reque
 		log.Println("Empty RequestBody Email or name or password")
 		return
 	}
-	newAcc := model.Account{Name: requestBody.Name, Email: requestBody.Email, Password: requestBody.Password}
+
+	pwHash, err := ctrl.pwHasher.Hash(requestBody.Password)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		log.Printf("Failed to hash password: %s\n", err)
+		return
+	}
+
+	newAcc := model.Account{Name: requestBody.Name, Email: requestBody.Email, PasswordHash: pwHash}
 
 	duplicate, err := ctrl.accountRepo.CheckDuplicate(newAcc)
 	if err != nil {
@@ -106,7 +117,7 @@ func (ctrl *Controller) HandleLogin(w http.ResponseWriter, r *http.Request) {
 
 	fmt.Println(acc)
 
-	if acc.Password != password {
+	if ctrl.pwHasher.Verify(acc.PasswordHash, password) == false {
 		w.WriteHeader(http.StatusNotFound)
 		fmt.Fprintln(w, "Falsches Passwort!")
 		return

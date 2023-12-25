@@ -1,7 +1,9 @@
 package main
 
 import (
+	"bytes"
 	"fmt"
+	"github.com/stockhut/hsfl-master-ai-cloud-engineering/authentication/pwhash"
 	"log"
 	"net/http"
 	"os"
@@ -36,9 +38,9 @@ func (repo *inMemoryAccountRepository) FindAccount(name string) (*model.Account,
 			// return a pointer to a deep copy of acc, to avoid memory aliasing
 			// and giving the caller write access to the repo memory
 			return &model.Account{
-				Name:     strings.Clone(acc.Name),
-				Password: strings.Clone(acc.Password),
-				Email:    strings.Clone(acc.Email),
+				Name:         strings.Clone(acc.Name),
+				PasswordHash: bytes.Clone(acc.PasswordHash),
+				Email:        strings.Clone(acc.Email),
 			}, nil
 		}
 	}
@@ -69,9 +71,9 @@ func main() {
 	var repo inMemoryAccountRepository = inMemoryAccountRepository{
 		accounts: make([]model.Account, 0),
 	}
-	repo.accounts = append(repo.accounts, model.Account{Name: "Nele", Email: "nele@nele.de", Password: "xyz123"})
-	repo.accounts = append(repo.accounts, model.Account{Name: "Alex", Email: "alex@nele.de", Password: "abc123"})
-	repo.accounts = append(repo.accounts, model.Account{Name: "Fabi", Email: "fabi@nele.de", Password: "def123"})
+	repo.accounts = append(repo.accounts, model.Account{Name: "Nele", Email: "nele@nele.de", PasswordHash: []byte("$2y$10$jizNLzGmDsmn05gTH4qwsO8FW2T249SKrpKKeUvUsVfyJUQXbZZra")})
+	repo.accounts = append(repo.accounts, model.Account{Name: "Alex", Email: "alex@nele.de", PasswordHash: []byte("$2y$10$jizNLzGmDsmn05gTH4qwsO8FW2T249SKrpKKeUvUsVfyJUQXbZZra")})
+	repo.accounts = append(repo.accounts, model.Account{Name: "Fabi", Email: "fabi@nele.de", PasswordHash: []byte("$2y$10$jizNLzGmDsmn05gTH4qwsO8FW2T249SKrpKKeUvUsVfyJUQXbZZra")})
 
 	tokenGeneratorConfig := jwt_util.JwtConfig{
 		SignKey: jwtPrivateKeyFile,
@@ -81,7 +83,8 @@ func main() {
 		panic(err)
 	}
 
-	c := accounts.NewController(&repo, *tokenGenerator)
+	bcryptPwHasher := pwhash.BcryptPasswordHasher{}
+	c := accounts.NewController(&repo, *tokenGenerator, &bcryptPwHasher)
 
 	fmt.Println("Hello from Auth!")
 

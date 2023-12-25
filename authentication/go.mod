@@ -7,6 +7,7 @@ require (
 	github.com/stockhut/hsfl-master-ai-cloud-engineering/common v0.0.0-20231117115519-16be31557dde
 	github.com/stretchr/testify v1.8.4
 	go.uber.org/mock v0.3.0
+	golang.org/x/crypto v0.17.0
 )
 
 require (
