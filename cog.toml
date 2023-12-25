@@ -1,0 +1,5 @@
+[packages]
+recipe = { path = "recipe"}
+auth = { path = "authentication" }
+frontend = { path = "web-service" }
+

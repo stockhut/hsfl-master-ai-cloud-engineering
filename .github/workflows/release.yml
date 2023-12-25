@@ -1,0 +1,38 @@
+name: Create new version
+on:
+  workflow_dispatch:
+
+jobs:
+  bump-version:
+    name: Create new release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          #ref: ${{ github.event.pull_request.head.sha }} # when testing inside a PR, see cocogitto-action readme
+
+      - uses: cocogitto/cocogitto-action@1f7463bd27d1c999663b1d247791cb43c758c29a
+        id: release
+        with:
+          check: false
+          release: true
+          git-user: 'Cog Bot'
+          git-user-email: 'cog@example.org'
+
+      - name: Print version
+        run: "echo '${{ steps.release.outputs.version }}'"
+      - run: git push
+      - run: git push --tags
+
+      # pushing the tag from the workflow does not trigger the run, so we check which tags where issued and use the gh cli to trigger the build workflow
+      # https://stackoverflow.com/questions/72110432/github-workflow-is-not-triggered-after-pushing-tags
+      - name: Trigger recipe rebuild if necessary
+        run: git tag --points-at HEAD | grep recipe && gh workflow run recipe-build-push-image.yml --ref main || true # change the ref when testing changes in another branch
+        env:
+          GH_TOKEN: ${{ github.token }}
+
+      - name: Trigger auth rebuild if necessary
+        run: git tag --points-at HEAD | grep auth && gh workflow run auth-build-push-image.yml --ref main || true # change the ref when testing changes in another branch
+        env:
+          GH_TOKEN: ${{ github.token }}
