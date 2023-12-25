@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"github.com/stockhut/hsfl-master-ai-cloud-engineering/authentication/accounts/repository"
 	"github.com/stockhut/hsfl-master-ai-cloud-engineering/authentication/pwhash"
 	"github.com/stockhut/hsfl-master-ai-cloud-engineering/common/environment"
 	requestlogger "github.com/stockhut/hsfl-master-ai-cloud-engineering/common/middleware/request-logger"
@@ -32,7 +31,7 @@ func main() {
 		panic(err)
 	}
 
-	psqlRepo, err := repository.NewPsqlRepository(pgConnString)
+	psqlRepo, err := accounts.NewPsqlRepository(pgConnString)
 	if err != nil {
 		log.Fatalf("Failed to create psql repository: %s", err)
 	}

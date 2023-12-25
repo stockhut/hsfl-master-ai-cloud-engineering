@@ -13,7 +13,6 @@ import (
 
 	mock_accounts "github.com/stockhut/hsfl-master-ai-cloud-engineering/authentication/_mocks/repository_mocks"
 	"github.com/stockhut/hsfl-master-ai-cloud-engineering/authentication/accounts/model"
-	"github.com/stockhut/hsfl-master-ai-cloud-engineering/authentication/accounts/repository"
 	"github.com/stockhut/hsfl-master-ai-cloud-engineering/authentication/jwt_util"
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/mock/gomock"
@@ -43,7 +42,7 @@ func TestAccountController(t *testing.T) {
 			gomockController := gomock.NewController(t)
 
 			mockRepo := mock_accounts.NewMockAccountRepository(gomockController)
-			mockRepo.EXPECT().CheckDuplicate(gomock.Any(), gomock.Any()).Return(repository.DUPLICATE_EMAIL, nil).Times(1)
+			mockRepo.EXPECT().CheckDuplicate(gomock.Any(), gomock.Any()).Return(DUPLICATE_EMAIL, nil).Times(1)
 
 			mockPwHasher := mock_pwhash.NewMockPasswordHasher(gomockController)
 			mockPwHasher.EXPECT().Hash("1234").Return([]byte("passwordhash"), nil).Times(1)
@@ -67,7 +66,7 @@ func TestAccountController(t *testing.T) {
 			gomockController := gomock.NewController(t)
 
 			mockRepo := mock_accounts.NewMockAccountRepository(gomockController)
-			mockRepo.EXPECT().CheckDuplicate(gomock.Any(), modelAccount).Return(repository.NO_DUPLICATES, nil).Times(1)
+			mockRepo.EXPECT().CheckDuplicate(gomock.Any(), modelAccount).Return(NO_DUPLICATES, nil).Times(1)
 			mockRepo.EXPECT().CreateAccount(gomock.Any(), modelAccount).Return(nil).Times(1)
 
 			mockPwHasher := mock_pwhash.NewMockPasswordHasher(gomockController)

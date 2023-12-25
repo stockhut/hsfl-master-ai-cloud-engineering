@@ -1,12 +1,12 @@
-package repository
+package accounts
 
 import (
 	"context"
 	"database/sql"
 	"errors"
 	"fmt"
+	"github.com/stockhut/hsfl-master-ai-cloud-engineering/authentication/accounts/_sqlc"
 	"github.com/stockhut/hsfl-master-ai-cloud-engineering/authentication/accounts/model"
-	"github.com/stockhut/hsfl-master-ai-cloud-engineering/authentication/accounts/repository/_sqlc"
 )
 
 type PsqlRepository struct {
@@ -35,7 +35,7 @@ func NewPsqlRepository(connectionString string) (*PsqlRepository, error) {
 }
 
 func (repo *PsqlRepository) CreateAccount(ctx context.Context, acc model.Account) error {
-	_, err := repo.queries.CreateAccount(ctx, sqlc.CreateAccountParams{
+	_, err := repo.queries.CreateAccount(ctx, sqlc.sqlc{
 		Name:         acc.Name,
 		Email:        acc.Email,
 		Passwordhash: acc.PasswordHash,
