@@ -6,3 +6,12 @@ services:
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: password
+  auth:
+    image: ghcr.io/stockhut/hsfl-master-ai-cloud-engineering/auth:test
+    ports:
+      - "8080:8080"
+    environment:
+      JWT_PRIVATE_KEY: /keys/jwt_private_key.key
+      PG_CONN_STRING: postgres://postgres:password@db:5432
+    volumes:
+      - ./:/keys
