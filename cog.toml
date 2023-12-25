@@ -2,4 +2,7 @@
 recipe = { path = "recipe"}
 auth = { path = "authentication" }
 frontend = { path = "web-service" }
-
+orchestration = { path = "orchestration" }
+reverseproxy = { path = "reverse-proxy" }
+loadbalancer = { path = "load-balancer" }
+loadtest = { path = "loadtest" }
