@@ -14,12 +14,12 @@ import (
 )
 
 type Controller struct {
-	accountRepo    AccountRepository
+	accountRepo    Repository
 	tokenGenerator jwt_util.JwtTokenGenerator
 	pwHasher       pwhash.PasswordHasher
 }
 
-func NewController(accountRepo AccountRepository, tokenGenerator jwt_util.JwtTokenGenerator, pwHaser pwhash.PasswordHasher) *Controller {
+func NewController(accountRepo Repository, tokenGenerator jwt_util.JwtTokenGenerator, pwHaser pwhash.PasswordHasher) *Controller {
 	return &Controller{
 		accountRepo:    accountRepo,
 		tokenGenerator: tokenGenerator,

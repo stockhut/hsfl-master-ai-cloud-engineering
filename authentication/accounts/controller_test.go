@@ -26,7 +26,7 @@ func TestAccountController(t *testing.T) {
 		t.Run("should return 400 BAD REQUEST if payload is nil", func(t *testing.T) {
 			gomockController := gomock.NewController(t)
 
-			mockRepo := mock_accounts.NewMockAccountRepository(gomockController)
+			mockRepo := mock_accounts.NewMockRepository(gomockController)
 
 			c := Controller{accountRepo: mockRepo, tokenGenerator: *tokenGenerator}
 			w := httptest.NewRecorder()
@@ -41,7 +41,7 @@ func TestAccountController(t *testing.T) {
 			testBody := `{"name":"Bob","email": "bob@nele.de","password": "1234"}`
 			gomockController := gomock.NewController(t)
 
-			mockRepo := mock_accounts.NewMockAccountRepository(gomockController)
+			mockRepo := mock_accounts.NewMockRepository(gomockController)
 			mockRepo.EXPECT().CheckDuplicate(gomock.Any(), gomock.Any()).Return(ErrDuplicateEmail).Times(1)
 
 			mockPwHasher := mock_pwhash.NewMockPasswordHasher(gomockController)
@@ -65,7 +65,7 @@ func TestAccountController(t *testing.T) {
 			}
 			gomockController := gomock.NewController(t)
 
-			mockRepo := mock_accounts.NewMockAccountRepository(gomockController)
+			mockRepo := mock_accounts.NewMockRepository(gomockController)
 			mockRepo.EXPECT().CheckDuplicate(gomock.Any(), modelAccount).Return(nil).Times(1)
 			mockRepo.EXPECT().CreateAccount(gomock.Any(), modelAccount).Return(nil).Times(1)
 
@@ -87,7 +87,7 @@ func TestAccountController(t *testing.T) {
 
 			gomockController := gomock.NewController(t)
 
-			mockRepo := mock_accounts.NewMockAccountRepository(gomockController)
+			mockRepo := mock_accounts.NewMockRepository(gomockController)
 
 			mockPwHasher := mock_pwhash.NewMockPasswordHasher(gomockController)
 			mockPwHasher.EXPECT().Hash("1234").Return([]byte{}, errors.New("error")).Times(1)
@@ -107,7 +107,7 @@ func TestAccountController(t *testing.T) {
 		t.Run("should return 400 BAD REQUEST if payload is nil", func(t *testing.T) {
 			gomockController := gomock.NewController(t)
 
-			mockRepo := mock_accounts.NewMockAccountRepository(gomockController)
+			mockRepo := mock_accounts.NewMockRepository(gomockController)
 
 			mockPwHasher := mock_pwhash.NewMockPasswordHasher(gomockController)
 
@@ -129,7 +129,7 @@ func TestAccountController(t *testing.T) {
 				PasswordHash: []byte("storedhash"),
 			}
 
-			mockRepo := mock_accounts.NewMockAccountRepository(gomockController)
+			mockRepo := mock_accounts.NewMockRepository(gomockController)
 			mockRepo.EXPECT().FindAccount(gomock.Any(), modelAccount.Name).Return(&modelAccount, nil).Times(1)
 
 			mockPwHasher := mock_pwhash.NewMockPasswordHasher(gomockController)
@@ -147,7 +147,7 @@ func TestAccountController(t *testing.T) {
 
 		t.Run("should return 400 BAD REQUEST if username does not exist", func(t *testing.T) {
 			gomockController := gomock.NewController(t)
-			mockRepo := mock_accounts.NewMockAccountRepository(gomockController)
+			mockRepo := mock_accounts.NewMockRepository(gomockController)
 			mockRepo.EXPECT().FindAccount(gomock.Any(), "doesnotexist").Return(nil, nil).Times(1)
 
 			mockPwHasher := mock_pwhash.NewMockPasswordHasher(gomockController)
@@ -170,7 +170,7 @@ func TestAccountController(t *testing.T) {
 				PasswordHash: []byte("storedhash"),
 			}
 
-			mockRepo := mock_accounts.NewMockAccountRepository(gomockController)
+			mockRepo := mock_accounts.NewMockRepository(gomockController)
 			mockRepo.EXPECT().FindAccount(gomock.Any(), modelAccount.Name).Return(&modelAccount, nil).Times(1)
 
 			mockPwHasher := mock_pwhash.NewMockPasswordHasher(gomockController)
