@@ -1,6 +1,14 @@
 name: Test recipe service
 
 on:
+  push:
+    paths:
+      - 'recipe'
+      - '.github/workflows/recipe-test.yml'
+    branches:
+      - 'main'
+    tags-ignore:
+      - '**'
   workflow_call:
 
   workflow_dispatch:
