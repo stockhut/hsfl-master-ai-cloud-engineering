@@ -1,13 +1,18 @@
 
 
 # Taste Bud Tribe
-
 [![](https://codecov.io/gh/stockhut/hsfl-master-ai-cloud-engineering/graph/badge.svg?token=JD50FBWWAJ)](https://codecov.io/gh/stockhut/hsfl-master-ai-cloud-engineering)
 
-[![Test recipe service](https://github.com/stockhut/hsfl-master-ai-cloud-engineering/actions/workflows/test-recipe.yml/badge.svg)](https://github.com/stockhut/hsfl-master-ai-cloud-engineering/actions/workflows/test-recipe.yml)
+![GitHub tag (with filter)](https://img.shields.io/github/v/tag/stockhut/hsfl-master-ai-cloud-engineering?label=Version)
+
+![GitHub tag (with filter)](https://img.shields.io/github/v/tag/stockhut/hsfl-master-ai-cloud-engineering?filter=frontend-*&label=Version)
+
+![GitHub tag (with filter)](https://img.shields.io/github/v/tag/stockhut/hsfl-master-ai-cloud-engineering?filter=recipe-*&label=Version)
+[![Test recipe service](https://github.com/stockhut/hsfl-master-ai-cloud-engineering/actions/workflows/recipe-test.yml/badge.svg)](https://github.com/stockhut/hsfl-master-ai-cloud-engineering/actions/workflows/recipe-test.yml)
 [![Go Report Card](https://goreportcard.com/badge/github.com/stockhut/hsfl-master-ai-cloud-engineering/recipe)](https://goreportcard.com/report/github.com/stockhut/hsfl-master-ai-cloud-engineering/recipe)
 
-[![Test auth service](https://github.com/stockhut/hsfl-master-ai-cloud-engineering/actions/workflows/test-auth.yml/badge.svg)](https://github.com/stockhut/hsfl-master-ai-cloud-engineering/actions/workflows/test-auth.yml)
+![GitHub tag (with filter)](https://img.shields.io/github/v/tag/stockhut/hsfl-master-ai-cloud-engineering?filter=auth-*&label=Version)
+[![Test auth service](https://github.com/stockhut/hsfl-master-ai-cloud-engineering/actions/workflows/auth-test.yml/badge.svg)](https://github.com/stockhut/hsfl-master-ai-cloud-engineering/actions/workflows/auth-test.yml)
 [![Go Report Card](https://goreportcard.com/badge/github.com/stockhut/hsfl-master-ai-cloud-engineering/authentication)](https://goreportcard.com/report/github.com/stockhut/hsfl-master-ai-cloud-engineering/authentication)
 
 [![Test common package](https://github.com/stockhut/hsfl-master-ai-cloud-engineering/actions/workflows/test-common.yml/badge.svg)](https://github.com/stockhut/hsfl-master-ai-cloud-engineering/actions/workflows/test-common.yml)
