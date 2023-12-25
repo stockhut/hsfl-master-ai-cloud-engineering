@@ -43,7 +43,7 @@ func TestAccountController(t *testing.T) {
 			gomockController := gomock.NewController(t)
 
 			mockRepo := mock_accounts.NewMockAccountRepository(gomockController)
-			mockRepo.EXPECT().CheckDuplicate(gomock.Any()).Return(repository.DUPLICATE_EMAIL, nil).Times(1)
+			mockRepo.EXPECT().CheckDuplicate(gomock.Any(), gomock.Any()).Return(repository.DUPLICATE_EMAIL, nil).Times(1)
 
 			mockPwHasher := mock_pwhash.NewMockPasswordHasher(gomockController)
 			mockPwHasher.EXPECT().Hash("1234").Return([]byte("passwordhash"), nil).Times(1)
@@ -67,8 +67,8 @@ func TestAccountController(t *testing.T) {
 			gomockController := gomock.NewController(t)
 
 			mockRepo := mock_accounts.NewMockAccountRepository(gomockController)
-			mockRepo.EXPECT().CheckDuplicate(modelAccount).Return(repository.NO_DUPLICATES, nil).Times(1)
-			mockRepo.EXPECT().CreateAccount(modelAccount).Return(nil).Times(1)
+			mockRepo.EXPECT().CheckDuplicate(gomock.Any(), modelAccount).Return(repository.NO_DUPLICATES, nil).Times(1)
+			mockRepo.EXPECT().CreateAccount(gomock.Any(), modelAccount).Return(nil).Times(1)
 
 			mockPwHasher := mock_pwhash.NewMockPasswordHasher(gomockController)
 			mockPwHasher.EXPECT().Hash("1234").Return([]byte("passwordhash"), nil).Times(1)
@@ -131,7 +131,7 @@ func TestAccountController(t *testing.T) {
 			}
 
 			mockRepo := mock_accounts.NewMockAccountRepository(gomockController)
-			mockRepo.EXPECT().FindAccount(modelAccount.Name).Return(&modelAccount, nil).Times(1)
+			mockRepo.EXPECT().FindAccount(gomock.Any(), modelAccount.Name).Return(&modelAccount, nil).Times(1)
 
 			mockPwHasher := mock_pwhash.NewMockPasswordHasher(gomockController)
 			mockPwHasher.EXPECT().Verify([]byte("storedhash"), "wrong").Return(false).Times(1)
@@ -149,7 +149,7 @@ func TestAccountController(t *testing.T) {
 		t.Run("should return 400 BAD REQUEST if username does not exist", func(t *testing.T) {
 			gomockController := gomock.NewController(t)
 			mockRepo := mock_accounts.NewMockAccountRepository(gomockController)
-			mockRepo.EXPECT().FindAccount("doesnotexist").Return(nil, nil).Times(1)
+			mockRepo.EXPECT().FindAccount(gomock.Any(), "doesnotexist").Return(nil, nil).Times(1)
 
 			mockPwHasher := mock_pwhash.NewMockPasswordHasher(gomockController)
 
@@ -172,7 +172,7 @@ func TestAccountController(t *testing.T) {
 			}
 
 			mockRepo := mock_accounts.NewMockAccountRepository(gomockController)
-			mockRepo.EXPECT().FindAccount(modelAccount.Name).Return(&modelAccount, nil).Times(1)
+			mockRepo.EXPECT().FindAccount(gomock.Any(), modelAccount.Name).Return(&modelAccount, nil).Times(1)
 
 			mockPwHasher := mock_pwhash.NewMockPasswordHasher(gomockController)
 			mockPwHasher.EXPECT().Verify([]byte("storedhash"), "1234").Return(true).Times(1)

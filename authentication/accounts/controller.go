@@ -58,9 +58,10 @@ func (ctrl *Controller) HandleCreateAccount(w http.ResponseWriter, r *http.Reque
 
 	newAcc := model.Account{Name: requestBody.Name, Email: requestBody.Email, PasswordHash: pwHash}
 
-	duplicate, err := ctrl.accountRepo.CheckDuplicate(newAcc)
+	duplicate, err := ctrl.accountRepo.CheckDuplicate(r.Context(), newAcc)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
+		log.Printf("Failed to check for account duplicate: %s\n", err)
 		return
 	}
 
@@ -72,7 +73,7 @@ func (ctrl *Controller) HandleCreateAccount(w http.ResponseWriter, r *http.Reque
 		w.WriteHeader(http.StatusBadRequest)
 		log.Println("DUPLICATE_EMAIL CASE")
 	case repository.NO_DUPLICATES:
-		err := ctrl.accountRepo.CreateAccount(newAcc)
+		err := ctrl.accountRepo.CreateAccount(r.Context(), newAcc)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 		} else {
@@ -102,9 +103,10 @@ func (ctrl *Controller) HandleLogin(w http.ResponseWriter, r *http.Request) {
 	username := requestBody.Name
 	password := requestBody.Password
 
-	acc, err := ctrl.accountRepo.FindAccount(username)
+	acc, err := ctrl.accountRepo.FindAccount(r.Context(), username)
 
 	if err != nil {
+		log.Printf("Failed to find account %s: %s", username, err)
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}

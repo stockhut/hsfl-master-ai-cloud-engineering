@@ -1,6 +1,9 @@
 package repository
 
-import "github.com/stockhut/hsfl-master-ai-cloud-engineering/authentication/accounts/model"
+import (
+	"context"
+	"github.com/stockhut/hsfl-master-ai-cloud-engineering/authentication/accounts/model"
+)
 
 type AccountInfoDuplicate = int
 
@@ -12,7 +15,7 @@ const (
 )
 
 type AccountRepository interface {
-	CreateAccount(acc model.Account) error
-	CheckDuplicate(acc model.Account) (AccountInfoDuplicate, error)
-	FindAccount(name string) (*model.Account, error)
+	CreateAccount(ctx context.Context, acc model.Account) error
+	CheckDuplicate(ctx context.Context, acc model.Account) (AccountInfoDuplicate, error)
+	FindAccount(ctx context.Context, name string) (*model.Account, error)
 }
