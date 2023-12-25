@@ -28,7 +28,7 @@ There is a collection for the API client [Bruno](https://www.usebruno.com/) in t
 ## Versioning
 
 We use [cocogitto](https://docs.cocogitto.io/) and their [GitHub action](https://github.com/cocogitto/cocogitto-action) to automatically create new semantic version releases based on conventional commits.
-The `release.yml` workflow is executed for every change on the `main` branch and will create a new commit and new version number for each project prefixed with the name, e.g. `auth-1.2.3`.
+The `release.yml` workflow is executed manually and will create a new commit and new version number for each project prefixed with the name, e.g. `auth-1.2.3`.
 After the new commit is tagged and pushed, the action will check whether the `authentication` or `recipe` container images need a rebuild and trigger the respective workflow using the `gh` CLI client (workaround because workflows are not triggered by push events from other workflows [source](https://stackoverflow.com/questions/72110432/github-workflow-is-not-triggered-after-pushing-tags)).
 The container Image will be tagged using information from the git tags (see `auth-build-push-image.yml` for details)
 
