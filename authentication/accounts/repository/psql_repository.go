@@ -1,4 +1,4 @@
-package postgresql
+package repository
 
 import (
 	"context"
@@ -6,12 +6,11 @@ import (
 	"errors"
 	"fmt"
 	"github.com/stockhut/hsfl-master-ai-cloud-engineering/authentication/accounts/model"
-	"github.com/stockhut/hsfl-master-ai-cloud-engineering/authentication/accounts/repository"
-	postgresql "github.com/stockhut/hsfl-master-ai-cloud-engineering/authentication/accounts/repository/postgresql/generated"
+	"github.com/stockhut/hsfl-master-ai-cloud-engineering/authentication/accounts/repository/_sqlc"
 )
 
 type PsqlRepository struct {
-	queries *postgresql.Queries
+	queries *sqlc.Queries
 }
 
 func NewPsqlRepository(connectionString string) (*PsqlRepository, error) {
@@ -28,7 +27,7 @@ func NewPsqlRepository(connectionString string) (*PsqlRepository, error) {
 		return nil, err
 	}
 
-	queries := postgresql.New(db)
+	queries := sqlc.New(db)
 
 	return &PsqlRepository{
 		queries: queries,
@@ -36,7 +35,7 @@ func NewPsqlRepository(connectionString string) (*PsqlRepository, error) {
 }
 
 func (repo *PsqlRepository) CreateAccount(ctx context.Context, acc model.Account) error {
-	_, err := repo.queries.CreateAccount(ctx, postgresql.CreateAccountParams{
+	_, err := repo.queries.CreateAccount(ctx, sqlc.CreateAccountParams{
 		Name:         acc.Name,
 		Email:        acc.Email,
 		Passwordhash: acc.PasswordHash,
@@ -45,25 +44,25 @@ func (repo *PsqlRepository) CreateAccount(ctx context.Context, acc model.Account
 	return err
 }
 
-func (repo *PsqlRepository) CheckDuplicate(ctx context.Context, acc model.Account) (repository.AccountInfoDuplicate, error) {
+func (repo *PsqlRepository) CheckDuplicate(ctx context.Context, acc model.Account) (AccountInfoDuplicate, error) {
 
 	_, err := repo.queries.GetAccount(ctx, acc.Name)
 	if err == nil {
-		return repository.DUPLICATE_NAME, nil
+		return DUPLICATE_NAME, nil
 	} else if errors.Is(err, sql.ErrNoRows) == false {
-		return repository.UNDEFINED, err
+		return UNDEFINED, err
 
 	}
 
 	_, err = repo.queries.GetAccountByEmail(ctx, acc.Email)
 	if err == nil {
-		return repository.DUPLICATE_EMAIL, nil
+		return DUPLICATE_EMAIL, nil
 	} else if errors.Is(err, sql.ErrNoRows) == false {
-		return repository.UNDEFINED, err
+		return UNDEFINED, err
 
 	}
 
-	return repository.NO_DUPLICATES, nil
+	return NO_DUPLICATES, nil
 }
 
 func (repo *PsqlRepository) FindAccount(ctx context.Context, name string) (*model.Account, error) {
