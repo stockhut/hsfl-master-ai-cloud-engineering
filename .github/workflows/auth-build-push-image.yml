@@ -42,8 +42,11 @@ jobs:
       - name: Set docker tag from git tag
         id: gittag
         if: ${{ github.event_name == 'workflow_dispatch' }}
-        run: echo tag=$( git tag --points-at HEAD | grep auth | sed 's/auth-//' ) >> "$GITHUB_OUTPUT"
-
+        run: |
+          TAG=$( git tag --points-at HEAD | grep auth | sed 's/auth-//' )
+          if [[ ! -z $TAG ]]; then
+            echo tag="ghcr.io/${{ github.repository }}/authentication:$TAG" >> "$GITHUB_OUTPUT"
+          fi
       - run: echo ${{ steps.gittag.outputs.tag }}
 
       - name: Build and push Docker image
@@ -52,5 +55,5 @@ jobs:
           context: .
           file: ./authentication/Dockerfile
           push: true
-          tags: ${{ steps.meta.outputs.tags }}, ghcr.io/${{ github.repository }}/authentication:${{ steps.gittag.outputs.tag }}
+          tags: ${{ steps.meta.outputs.tags }}, ${{ steps.gittag.outputs.tag }}
           labels: ${{ steps.meta.outputs.labels }}
