@@ -4,20 +4,24 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+
+	auth_proto "github.com/stockhut/hsfl-master-ai-cloud-engineering/authentication/auth-proto"
 	"github.com/stockhut/hsfl-master-ai-cloud-engineering/common/environment"
 	"github.com/stockhut/hsfl-master-ai-cloud-engineering/common/jwt_public_key"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
+
+	"log"
 
 	requestlogger "github.com/stockhut/hsfl-master-ai-cloud-engineering/common/middleware/request-logger"
-	"log"
 
 	"net/http"
 	"os"
 
-	_ "github.com/mattn/go-sqlite3"
+	_ "github.com/jackc/pgx/v5/stdlib"
 	dll "github.com/stockhut/hsfl-master-ai-cloud-engineering/common/db"
 	database "github.com/stockhut/hsfl-master-ai-cloud-engineering/common/db/generated"
 
-	_ "github.com/jackc/pgx/v5/stdlib"
 	"github.com/stockhut/hsfl-master-ai-cloud-engineering/authentication/middleware"
 	"github.com/stockhut/hsfl-master-ai-cloud-engineering/recipe/api/router"
 	"github.com/stockhut/hsfl-master-ai-cloud-engineering/recipe/recipes"
@@ -25,6 +29,7 @@ import (
 
 const JwtPublicKeyEnvKey = "JWT_PUBLIC_KEY"
 const PostgresConnectionStringKey = "PG_CONN_STRING"
+const AuthRpcTarget = "AUTH_RPC_TARGET"
 
 func main() {
 
@@ -58,7 +63,16 @@ func main() {
 
 	repo := recipes.New(queries)
 
-	recipeController := recipes.NewController(&repo)
+	authRpcTarget := environment.GetRequiredEnvVar(AuthRpcTarget)
+
+	conn, err := grpc.Dial(authRpcTarget, grpc.WithTransportCredentials(insecure.NewCredentials()))
+	if err != nil {
+		log.Fatalf("could not connect: %v", err)
+	}
+	defer conn.Close()
+	authRpcClient := auth_proto.NewAuthenticationClient(conn)
+
+	recipeController := recipes.NewController(&repo, authRpcClient)
 
 	authMiddleware := middleware.ValidateJwtMiddleware(publicKey)
 

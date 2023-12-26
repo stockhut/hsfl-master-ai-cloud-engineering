@@ -1,7 +1,7 @@
 package model
 
 type Account struct {
-	Name     string
-	Email    string
-	Password string
+	Name         string
+	Email        string
+	PasswordHash []byte
 }

@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"github.com/golang-jwt/jwt"
+	mock_auth_proto "github.com/stockhut/hsfl-master-ai-cloud-engineering/authentication/_mocks/mock-auth-proto"
 	"github.com/stockhut/hsfl-master-ai-cloud-engineering/authentication/middleware"
 	"github.com/stockhut/hsfl-master-ai-cloud-engineering/recipe/recipes/model"
 	"github.com/stretchr/testify/assert"
@@ -27,7 +28,8 @@ func TestDeleteRecipe(t *testing.T) {
 		mockRepo := mock_recipes.NewMockRecipeRepository(gomockController)
 		mockRepo.EXPECT().DeleteRecipe(model.RecipeId(testRecipeId)).Return(nil).Times(1)
 
-		controller := NewController(mockRepo)
+		mockAuthRpc := mock_auth_proto.NewMockAuthenticationClient(gomockController)
+		controller := NewController(mockRepo, mockAuthRpc)
 
 		w := httptest.NewRecorder()
 		r := httptest.NewRequest(http.MethodDelete, "/test", nil)
@@ -53,7 +55,8 @@ func TestDeleteRecipe(t *testing.T) {
 		mockRepo := mock_recipes.NewMockRecipeRepository(gomockController)
 		mockRepo.EXPECT().DeleteRecipe(model.RecipeId(testRecipeId)).Return(errors.New("failed to delete recipe")).Times(1)
 
-		controller := NewController(mockRepo)
+		mockAuthRpc := mock_auth_proto.NewMockAuthenticationClient(gomockController)
+		controller := NewController(mockRepo, mockAuthRpc)
 
 		w := httptest.NewRecorder()
 		r := httptest.NewRequest(http.MethodDelete, "/test", nil)
