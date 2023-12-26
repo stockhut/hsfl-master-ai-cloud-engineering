@@ -8,6 +8,7 @@ import (
 	"github.com/stockhut/hsfl-master-ai-cloud-engineering/recipe/recipes/model"
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/mock/gomock"
+	"html/template"
 	"net/http"
 	"net/http/httptest"
 	"strconv"
@@ -27,7 +28,8 @@ func TestDeleteRecipe(t *testing.T) {
 		mockRepo := mock_recipes.NewMockRecipeRepository(gomockController)
 		mockRepo.EXPECT().DeleteRecipe(model.RecipeId(testRecipeId)).Return(nil).Times(1)
 
-		controller := NewController(mockRepo)
+		templates := template.Template{}
+		controller := NewController(mockRepo, &templates)
 
 		w := httptest.NewRecorder()
 		r := httptest.NewRequest(http.MethodDelete, "/test", nil)
@@ -53,7 +55,8 @@ func TestDeleteRecipe(t *testing.T) {
 		mockRepo := mock_recipes.NewMockRecipeRepository(gomockController)
 		mockRepo.EXPECT().DeleteRecipe(model.RecipeId(testRecipeId)).Return(errors.New("failed to delete recipe")).Times(1)
 
-		controller := NewController(mockRepo)
+		templates := template.Template{}
+		controller := NewController(mockRepo, &templates)
 
 		w := httptest.NewRecorder()
 		r := httptest.NewRequest(http.MethodDelete, "/test", nil)

@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"html/template"
 	"net/http"
 	"net/http/httptest"
 	"strings"
@@ -37,7 +38,8 @@ func TestCreateRecipe(t *testing.T) {
 			FeedsPeople:  0,
 		}, nil).Times(1)
 
-		controller := NewController(mockRepo)
+		templates := template.Template{}
+		controller := NewController(mockRepo, &templates)
 
 		testBody :=
 			`{
@@ -84,7 +86,8 @@ func TestCreateRecipe(t *testing.T) {
 		mockRepo := mock_recipes.NewMockRecipeRepository(gomockController)
 		mockRepo.EXPECT().CreateRecipe(gomock.Any()).Return(model.Recipe{}, errors.New("failed to save recipe")).Times(1)
 
-		controller := NewController(mockRepo)
+		templates := template.Template{}
+		controller := NewController(mockRepo, &templates)
 
 		testBody :=
 			`{

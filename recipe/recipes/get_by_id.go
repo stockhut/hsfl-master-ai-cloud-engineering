@@ -1,7 +1,7 @@
 package recipes
 
 import (
-	"html/template"
+	"github.com/stockhut/hsfl-master-ai-cloud-engineering/common/presenter/html_presenter"
 	"net/http"
 	"strconv"
 
@@ -33,17 +33,7 @@ func (ctrl *Controller) GetById(w http.ResponseWriter, r *http.Request) {
 	response := recipeToResponseModel(*recipe)
 
 	if htmx.IsHtmxRequest(r) {
-		tmplFile := "templates/displayRecipe.html"
-		tmpl, err := template.ParseFiles(tmplFile)
-		if err != nil {
-			panic(err)
-		}
-		w.WriteHeader(http.StatusOK)
-		err = tmpl.Execute(w, response)
-		if err != nil {
-			panic(err)
-		}
-
+		html_presenter.Present(w, http.StatusOK, ctrl.htmlTemplates, "displayRecipe.html", response)
 	} else {
 		json_presenter.JsonPresenter(w, http.StatusOK, response)
 	}

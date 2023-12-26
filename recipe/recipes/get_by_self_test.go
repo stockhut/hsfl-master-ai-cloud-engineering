@@ -6,6 +6,7 @@ import (
 	"errors"
 	"github.com/golang-jwt/jwt"
 	"github.com/stockhut/hsfl-master-ai-cloud-engineering/authentication/middleware"
+	"html/template"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -51,7 +52,8 @@ func TestGetBySelf(t *testing.T) {
 			},
 		}, nil).Times(1)
 
-		controller := NewController(mockRepo)
+		templates := template.Template{}
+		controller := NewController(mockRepo, &templates)
 
 		w := httptest.NewRecorder()
 		r := httptest.NewRequest(http.MethodGet, "/test", nil)
@@ -84,7 +86,8 @@ func TestGetBySelf(t *testing.T) {
 			Return(nil, errors.New("failed to read recipes")).
 			Times(1)
 
-		controller := NewController(mockRepo)
+		templates := template.Template{}
+		controller := NewController(mockRepo, &templates)
 
 		w := httptest.NewRecorder()
 		r := httptest.NewRequest(http.MethodGet, "/recipe", nil)
@@ -107,7 +110,8 @@ func TestGetBySelf(t *testing.T) {
 			Return([]model.Recipe{}, nil).
 			Times(1)
 
-		controller := NewController(mockRepo)
+		templates := template.Template{}
+		controller := NewController(mockRepo, &templates)
 
 		w := httptest.NewRecorder()
 		r := httptest.NewRequest(http.MethodGet, "/recipe", nil)

@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"github.com/stockhut/hsfl-master-ai-cloud-engineering/common/environment"
 	"github.com/stockhut/hsfl-master-ai-cloud-engineering/common/jwt_public_key"
-
 	requestlogger "github.com/stockhut/hsfl-master-ai-cloud-engineering/common/middleware/request-logger"
+	"html/template"
 	"log"
 
 	"net/http"
@@ -27,6 +27,12 @@ const JwtPublicKeyEnvKey = "JWT_PUBLIC_KEY"
 const PostgresConnectionStringKey = "PG_CONN_STRING"
 
 func main() {
+
+	templates, err := template.ParseGlob("templates/**")
+
+	if err != nil {
+		log.Fatalf("Failed to parse html templates: %s\n", err)
+	}
 
 	jwtPublicKeyFile := environment.GetRequiredEnvVar(JwtPublicKeyEnvKey)
 	pgConnString := environment.GetRequiredEnvVar(PostgresConnectionStringKey)
@@ -58,7 +64,7 @@ func main() {
 
 	repo := recipes.New(queries)
 
-	recipeController := recipes.NewController(&repo)
+	recipeController := recipes.NewController(&repo, templates)
 
 	authMiddleware := middleware.ValidateJwtMiddleware(publicKey)
 

@@ -3,7 +3,7 @@ package recipes
 import (
 	"encoding/json"
 	"fmt"
-	"html/template"
+	"github.com/stockhut/hsfl-master-ai-cloud-engineering/common/presenter/html_presenter"
 	"io"
 	"net/http"
 
@@ -51,16 +51,7 @@ func (ctrl *Controller) CreateRecipe(w http.ResponseWriter, r *http.Request) {
 	response := recipeToResponseModel(newRecipe)
 
 	if htmx.IsHtmxRequest(r) {
-		tmplFile := "templates/CreateRecipe/recipeSuccessfulCreate.html"
-		tmpl, err := template.ParseFiles(tmplFile)
-		if err != nil {
-			panic(err)
-		}
-		w.WriteHeader(http.StatusCreated)
-		err = tmpl.Execute(w, response)
-		if err != nil {
-			panic(err)
-		}
+		html_presenter.Present(w, http.StatusCreated, ctrl.htmlTemplates, "recipeSuccessfulCreate.html", response)
 	} else {
 		json_presenter.JsonPresenter(w, http.StatusCreated, response)
 	}

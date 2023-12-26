@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"html/template"
 	"net/http"
 	"net/http/httptest"
 	"strconv"
@@ -35,7 +36,8 @@ func TestGetById(t *testing.T) {
 			FeedsPeople:  0,
 		}, nil).Times(1)
 
-		controller := NewController(mockRepo)
+		templates := template.Template{}
+		controller := NewController(mockRepo, &templates)
 
 		w := httptest.NewRecorder()
 		r := httptest.NewRequest(http.MethodPost, "/test", nil)
@@ -64,7 +66,8 @@ func TestGetById(t *testing.T) {
 			Return(nil, errors.New("failed to read recipes")).
 			Times(1)
 
-		controller := NewController(mockRepo)
+		templates := template.Template{}
+		controller := NewController(mockRepo, &templates)
 
 		w := httptest.NewRecorder()
 		r := httptest.NewRequest(http.MethodPost, "/test", nil)
@@ -87,7 +90,8 @@ func TestGetById(t *testing.T) {
 			Return(nil, nil).
 			Times(1)
 
-		controller := NewController(mockRepo)
+		templates := template.Template{}
+		controller := NewController(mockRepo, &templates)
 
 		w := httptest.NewRecorder()
 		r := httptest.NewRequest(http.MethodPost, "/test", nil)

@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"html/template"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -46,7 +47,8 @@ func TestGetByAuthor(t *testing.T) {
 			},
 		}, nil).Times(1)
 
-		controller := NewController(mockRepo)
+		templates := template.Template{}
+		controller := NewController(mockRepo, &templates)
 
 		w := httptest.NewRecorder()
 		r := httptest.NewRequest(http.MethodPost, "/recipe", nil)
@@ -81,7 +83,8 @@ func TestGetByAuthor(t *testing.T) {
 			Return(nil, errors.New("failed to read recipes")).
 			Times(1)
 
-		controller := NewController(mockRepo)
+		templates := template.Template{}
+		controller := NewController(mockRepo, &templates)
 
 		w := httptest.NewRecorder()
 		r := httptest.NewRequest(http.MethodPost, "/recipe", nil)
@@ -106,7 +109,8 @@ func TestGetByAuthor(t *testing.T) {
 			Return([]model.Recipe{}, nil).
 			Times(1)
 
-		controller := NewController(mockRepo)
+		templates := template.Template{}
+		controller := NewController(mockRepo, &templates)
 
 		w := httptest.NewRecorder()
 		r := httptest.NewRequest(http.MethodPost, "/recipe", nil)
