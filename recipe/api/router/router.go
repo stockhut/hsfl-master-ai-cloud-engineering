@@ -22,7 +22,7 @@ func New(
 	logAndAuth := fun.Apply(logMiddleware, authMiddleware)
 
 	r.POST("/api/v1/recipe", logAndAuth(recipeController.CreateRecipe))
-	r.GET("/api/v1/recipe/by/:self", logAndAuth(recipeController.GetBySelf))
+	r.GET("/api/v1/recipe/by/self", logAndAuth(recipeController.GetBySelf))
 	r.GET("/api/v1/recipe/by/:author", logAndAuth(recipeController.GetByAuthor))
 	r.GET("/api/v1/recipe/:id", logAndAuth(recipeController.GetById))
 	r.DELETE("/api/v1/recipe/:id", logAndAuth(recipeController.DeleteRecipe))

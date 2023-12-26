@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+option go_package = "../auth-proto";
+
+package main;
+
+service Authentication {
+  rpc GetAccount (GetAccountRequest) returns (GetAccountResponse);
+}
+
+message GetAccountRequest {
+  string name = 1;
+}
+
+message GetAccountResponse {
+  string name = 1;
+  string email = 2;
+}

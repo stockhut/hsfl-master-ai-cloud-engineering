@@ -8,6 +8,7 @@ import (
 
 var ErrDuplicateName = errors.New("duplicate account name")
 var ErrDuplicateEmail = errors.New("duplicate email")
+var ErrAccountNotFound = errors.New("no such account")
 
 type Repository interface {
 	CreateAccount(ctx context.Context, acc model.Account) error

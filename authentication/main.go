@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	grpc_server "github.com/stockhut/hsfl-master-ai-cloud-engineering/authentication/grpc-server"
 	"github.com/stockhut/hsfl-master-ai-cloud-engineering/authentication/pwhash"
 	"github.com/stockhut/hsfl-master-ai-cloud-engineering/common/environment"
 	requestlogger "github.com/stockhut/hsfl-master-ai-cloud-engineering/common/middleware/request-logger"
@@ -35,6 +36,15 @@ func main() {
 	if err != nil {
 		log.Fatalf("Failed to create psql repository: %s", err)
 	}
+
+	grpcServer := grpc_server.New(psqlRepo)
+	go func() {
+		err := grpcServer.Serve(3001)
+		if err != nil {
+			// error is already logged by the grpc server
+			log.Fatalln("GRPC server error. Exiting")
+		}
+	}()
 
 	bcryptPwHasher := pwhash.BcryptPasswordHasher{}
 	c := accounts.NewController(psqlRepo, *tokenGenerator, &bcryptPwHasher)
