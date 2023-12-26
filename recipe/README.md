@@ -15,10 +15,10 @@ go generate _mocks/gen.go
 ## Configuration
 
 ### Environment variables
-| Key            | Value                            |
-|----------------|----------------------------------|
-| JWT_PUBLIC_KEY | Path to a jwt public keyfile     |
-| AUTH_RPC_TARGET| Address of a authentications gRPC service (_IP:HOST_) |
+| Key            | Value                                                                              |
+|----------------|------------------------------------------------------------------------------------|
+| JWT_PUBLIC_KEY | Path to a jwt public keyfile                                                       |
+| AUTH_RPC_TARGET| Address of a authentications gRPC service (_IP:PORT_)                              |
 | PG_CONN_STRING | A PostgreSQL connection string, e.g. `postgres://postgres:password@127.0.0.1:5432` |
 
 ## Development
