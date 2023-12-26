@@ -44,6 +44,7 @@ func (s *GrpcServer) Serve(port int) error {
 }
 
 func (s *GrpcServer) GetAccount(ctx context.Context, request *auth_proto.GetAccountRequest) (*auth_proto.GetAccountResponse, error) {
+	log.Printf("[GRPC] GetAccount: %s\n", request.Name)
 	name := request.GetName()
 
 	acc, err := s.repo.FindAccount(name)
