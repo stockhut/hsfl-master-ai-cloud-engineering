@@ -3,6 +3,8 @@ coverage:
     project:
       default:
         informational: true
+    patch:
+        informational: true
 flags:
   auth:
     paths:
