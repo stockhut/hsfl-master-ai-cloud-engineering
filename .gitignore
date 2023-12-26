@@ -1,4 +1,4 @@
-**/_mocks/*.go
+**/_mocks/**/**.go
 !**/_mocks/gen.go
 
 *.key

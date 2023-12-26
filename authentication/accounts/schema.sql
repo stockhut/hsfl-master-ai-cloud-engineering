@@ -1,0 +1,7 @@
+CREATE TABLE IF NOT EXISTS accounts
+(
+
+    name TEXT PRIMARY KEY  NOT NULL,
+    email  TEXT NOT NULL UNIQUE ,
+    passwordHash BYTEA NOT NULL
+);
