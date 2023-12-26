@@ -19,7 +19,7 @@ spec:
               service:
                 name: recipe
                 port:
-                  number: 3000
+                  number: 8081
           - path: /api/v1/authentication
             pathType: Prefix
             backend:
