@@ -15,6 +15,7 @@ go generate _mocks/gen.go
 ## Configuration
 
 ### Environment variables
+
 | Key            | Value                                                                              |
 |----------------|------------------------------------------------------------------------------------|
 | JWT_PUBLIC_KEY | Path to a jwt public keyfile                                                       |

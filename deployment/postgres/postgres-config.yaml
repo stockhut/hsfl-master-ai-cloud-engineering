@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: postgres-config
+  labels:
+    app: postgres
+data:
+  POSTGRES_DB: recipedb
+  POSTGRES_USER: admin # TODO: kubernetes secret
+  POSTGRES_PASSWORD: psltest # TODO: kubernetes secret
