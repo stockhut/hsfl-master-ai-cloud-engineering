@@ -2,23 +2,24 @@ coverage:
   status:
     project:
       default:
-        flags:
-          auth:
-            paths:
-              - authentication
-          recipe:
-            paths:
-              - recipe
-          common:
-            paths:
-              - common
-          loadbalancer:
-            paths:
-              - reverse-proxy
-          reverseproxy:
-            paths:
-              - load-balancer
-        
-        flag_management:
-          default_rules:
-            carryforward: true
+        informational: true
+flags:
+  auth:
+    paths:
+      - authentication
+  recipe:
+    paths:
+      - recipe
+  common:
+    paths:
+      - common
+  loadbalancer:
+    paths:
+      - reverse-proxy
+  reverseproxy:
+    paths:
+      - load-balancer
+
+flag_management:
+  default_rules:
+    carryforward: true

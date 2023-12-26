@@ -1,13 +1,18 @@
 
 
 # Taste Bud Tribe
-
 [![](https://codecov.io/gh/stockhut/hsfl-master-ai-cloud-engineering/graph/badge.svg?token=JD50FBWWAJ)](https://codecov.io/gh/stockhut/hsfl-master-ai-cloud-engineering)
 
-[![Test recipe service](https://github.com/stockhut/hsfl-master-ai-cloud-engineering/actions/workflows/test-recipe.yml/badge.svg)](https://github.com/stockhut/hsfl-master-ai-cloud-engineering/actions/workflows/test-recipe.yml)
+![GitHub tag (with filter)](https://img.shields.io/github/v/tag/stockhut/hsfl-master-ai-cloud-engineering?label=Version)
+
+![GitHub tag (with filter)](https://img.shields.io/github/v/tag/stockhut/hsfl-master-ai-cloud-engineering?filter=frontend-*&label=Version)
+
+![GitHub tag (with filter)](https://img.shields.io/github/v/tag/stockhut/hsfl-master-ai-cloud-engineering?filter=recipe-*&label=Version)
+[![Test recipe service](https://github.com/stockhut/hsfl-master-ai-cloud-engineering/actions/workflows/recipe-test.yml/badge.svg)](https://github.com/stockhut/hsfl-master-ai-cloud-engineering/actions/workflows/recipe-test.yml)
 [![Go Report Card](https://goreportcard.com/badge/github.com/stockhut/hsfl-master-ai-cloud-engineering/recipe)](https://goreportcard.com/report/github.com/stockhut/hsfl-master-ai-cloud-engineering/recipe)
 
-[![Test auth service](https://github.com/stockhut/hsfl-master-ai-cloud-engineering/actions/workflows/test-auth.yml/badge.svg)](https://github.com/stockhut/hsfl-master-ai-cloud-engineering/actions/workflows/test-auth.yml)
+![GitHub tag (with filter)](https://img.shields.io/github/v/tag/stockhut/hsfl-master-ai-cloud-engineering?filter=auth-*&label=Version)
+[![Test auth service](https://github.com/stockhut/hsfl-master-ai-cloud-engineering/actions/workflows/auth-test.yml/badge.svg)](https://github.com/stockhut/hsfl-master-ai-cloud-engineering/actions/workflows/auth-test.yml)
 [![Go Report Card](https://goreportcard.com/badge/github.com/stockhut/hsfl-master-ai-cloud-engineering/authentication)](https://goreportcard.com/report/github.com/stockhut/hsfl-master-ai-cloud-engineering/authentication)
 
 [![Test common package](https://github.com/stockhut/hsfl-master-ai-cloud-engineering/actions/workflows/test-common.yml/badge.svg)](https://github.com/stockhut/hsfl-master-ai-cloud-engineering/actions/workflows/test-common.yml)
@@ -24,6 +29,14 @@ A Food-focused social media platform for like-minded people, centered around tag
 ## API Client
 
 There is a collection for the API client [Bruno](https://www.usebruno.com/) in the `bruno` directory.
+
+## Versioning
+
+We use [cocogitto](https://docs.cocogitto.io/) and their [GitHub action](https://github.com/cocogitto/cocogitto-action) to automatically create new semantic version releases based on conventional commits.
+The `release.yml` workflow is executed manually and will create a new commit and new version number for each project prefixed with the name, e.g. `auth-1.2.3`.
+After the new commit is tagged and pushed, the action will check whether the `authentication` or `recipe` container images need a rebuild and trigger the respective workflow using the `gh` CLI client (workaround because workflows are not triggered by push events from other workflows [source](https://stackoverflow.com/questions/72110432/github-workflow-is-not-triggered-after-pushing-tags)).
+The container Image will be tagged using information from the git tags (see `auth-build-push-image.yml` for details)
+
 
 ## Authors
 Fabian Wesemann\

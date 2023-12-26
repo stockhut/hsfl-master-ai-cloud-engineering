@@ -9,6 +9,7 @@ on:
   #  types: [completed]
 
   workflow_dispatch:
+  workflow_call:
 
 jobs:
   build-and-push-image:
@@ -22,6 +23,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # to fetch tags needed for tagging the image
 
       - name: Log in to the Container registry
         uses: docker/login-action@v3
@@ -36,11 +39,25 @@ jobs:
         with:
           images: ghcr.io/${{ github.repository }}/recipe
 
+      # This workflow might be called by the release workflow (using workflow_dispath)
+      # We check if the current commit has a release tag for this project (recipe-x.y.z), strip the prefix and store it in the output
+      # to use it during the build
+      - name: Set docker tag from git tag
+        id: gittag
+        if: ${{ github.event_name == 'workflow_dispatch' }}
+        run: |
+          TAG=$( git tag --points-at HEAD | grep recipe | sed 's/recipe-//' )
+          if [[ ! -z $TAG ]]; then
+            echo tag="ghcr.io/${{ github.repository }}/recipe:$TAG" >> "$GITHUB_OUTPUT"
+          fi
+
+      - run: echo ${{ steps.gittag.outputs.tag }}
+
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
           context: .
           file: ./recipe/Dockerfile
           push: true
-          tags: ${{ steps.meta.outputs.tags }}
+          tags: ${{ steps.meta.outputs.tags }}, ${{ steps.gittag.outputs.tag }}
           labels: ${{ steps.meta.outputs.labels }}

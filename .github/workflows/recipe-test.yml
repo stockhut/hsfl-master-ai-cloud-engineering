@@ -1,20 +1,23 @@
-name: Test auth service
+name: Test recipe service
 
 on:
   push:
     paths:
-      - 'authentication/**'
-      - '.github/workflows/test-auth.yml'
+      - 'recipe'
+      - '.github/workflows/recipe-test.yml'
+    tags-ignore:
+      - '**'
+  workflow_call:
 
   workflow_dispatch:
 
 jobs:
   test:
-    name: Test auth service
+    name: Test recipe service
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: authentication
+        working-directory: recipe
 
     steps:
       - uses: actions/checkout@v4
@@ -23,13 +26,10 @@ jobs:
         uses: actions/setup-go@v4
         with:
           go-version: '1.21.1'
-          cache-dependency-path: authentication/go.sum
+          cache-dependency-path: recipe/go.sum
 
       - name: Go Format
         run: gofmt -s -w . && git diff --exit-code
-
-      - name: Install mockgen
-        run: go install go.uber.org/mock/mockgen@latest
 
       - name: Install protobuf dependencies
         run: sudo apt install -y protobuf-compiler
@@ -37,10 +37,14 @@ jobs:
       - run: go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
 
       - name: Generate protobuf code
-        run: go generate auth-proto/gen.go
+        run: go generate ../authentication/auth-proto/gen.go
+
+      - name: Install mockgen
+        run: go install go.uber.org/mock/mockgen@latest
 
       - name: Go generate mocks
         run: go generate _mocks/gen.go
+      - run: go generate ../authentication/_mocks/gen.go
 
       - name: Go Vet
         run: go vet ./...
@@ -64,5 +68,5 @@ jobs:
         uses: codecov/codecov-action@v3
         continue-on-error: true
         with:
-          flags: auth
+          flags: recipe
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}

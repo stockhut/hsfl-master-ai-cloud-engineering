@@ -1,0 +1,22 @@
+name: Auth test and docker
+
+on:
+  push:
+    paths:
+      - 'authentication/**'
+      - '.github/workflows/auth-test.yml'
+      - '.github/workflows/auth-build-push-image.yml'
+      - '.github/workflows/auth-test-and-deliver.yml'
+    branches:
+          - '**'
+    tags-ignore:
+      - '**'
+  workflow_dispatch:
+
+jobs:
+  test:
+    uses: ./.github/workflows/auth-test.yml
+  docker:
+    needs:
+      - test
+    uses: ./.github/workflows/auth-build-push-image.yml

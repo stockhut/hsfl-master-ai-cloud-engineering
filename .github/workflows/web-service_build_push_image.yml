@@ -1,10 +1,14 @@
 name: Build and push docker image for web-service
 
 on:
-  #workflow_run:
-  #  workflows: [Test web-service]
-  #  types: [completed]
-
+  push:
+    paths:
+      - 'web-service/**'
+      - '.github/workflows/web-service_build_push_image.yml'
+    branches:
+      - '**'
+    tags-ignore:
+      - '**'
   workflow_dispatch:
 
 jobs:
@@ -32,11 +36,25 @@ jobs:
         with:
           images: ghcr.io/${{ github.repository }}/web-service
 
+      # This workflow might be called by the release workflow (using workflow_dispath)
+      # We check if the current commit has a release tag for this project (frontend-x.y.z), strip the prefix and store it in the output
+      # to use it during the build
+      - name: Set docker tag from git tag
+        id: gittag
+        if: ${{ github.event_name == 'workflow_dispatch' }}
+        run: |
+          TAG=$( git tag --points-at HEAD | grep frontend | sed 's/frontend-//' )
+          if [[ ! -z $TAG ]]; then
+            echo tag="ghcr.io/${{ github.repository }}/web-service:$TAG" >> "$GITHUB_OUTPUT"
+          fi
+
+      - run: echo ${{ steps.gittag.outputs.tag }}
+
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
           context: .
           file: ./web-service/Dockerfile
           push: true
-          tags: ${{ steps.meta.outputs.tags }}
+          tags: ${{ steps.meta.outputs.tags }}, ${{ steps.gittag.outputs.tag }}
           labels: ${{ steps.meta.outputs.labels }}
