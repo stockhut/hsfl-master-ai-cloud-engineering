@@ -22,5 +22,18 @@ services:
     depends_on:
       db:
         condition: service_healthy
+  recipe:
+    image: ghcr.io/stockhut/hsfl-master-ai-cloud-engineering/recipe:test
+    ports:
+      - "8081:8081" # http
+    environment:
+      JWT_PUBLIC_KEY: /keys/jwt_public_key.key
+      PG_CONN_STRING: postgres://postgres:password@db:5432
+      AUTH_RPC_TARGET: auth:3001
+    volumes:
+      - ./:/keys
+    depends_on:
+      db:
+        condition: service_healthy
 
       
