@@ -32,7 +32,7 @@ func TestGetByAuthor(t *testing.T) {
 				Author:       testUserName,
 				Name:         "",
 				Ingredients:  nil,
-				Directions:   nil,
+				Directions:   "",
 				TimeEstimate: 0,
 				Difficulty:   "",
 				FeedsPeople:  0,
@@ -42,7 +42,7 @@ func TestGetByAuthor(t *testing.T) {
 				Author:       testUserName,
 				Name:         "",
 				Ingredients:  nil,
-				Directions:   nil,
+				Directions:   "",
 				TimeEstimate: 0,
 				Difficulty:   "",
 				FeedsPeople:  0,
@@ -130,7 +130,7 @@ func TestGetByAuthor(t *testing.T) {
 				Return(&auth_proto.GetAccountResponse{}, errors.New("something really bad happened")).
 				Times(1)
 
-		templates := template.Template{}
+			templates := template.Template{}
 			controller := NewController(mockRepo, mockAuthRpc, &templates)
 
 			w := httptest.NewRecorder()

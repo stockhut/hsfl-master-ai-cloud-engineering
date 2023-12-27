@@ -30,7 +30,7 @@ type Recipe struct {
 	Author       string
 	Name         string
 	Ingredients  []Ingredient
-	Directions   []string
+	Directions   string
 	TimeEstimate int
 	Difficulty   string
 	FeedsPeople  int
@@ -50,7 +50,7 @@ func RecipeFromDatabaseModel(recipe db.Recipe, ingredients []db.Ingredient) Reci
 		Author:       recipe.Author,
 		Name:         recipe.RecipeName,
 		Ingredients:  fun.Map(ingredients, IngredientFromDatabaseModel),
-		Directions:   []string{recipe.Directions},
+		Directions:   recipe.Directions,
 		TimeEstimate: int(recipe.TimeEstimate.Int32),
 		Difficulty:   recipe.Difficulty.String,
 		FeedsPeople:  int(recipe.FeedsPeople.Int32),

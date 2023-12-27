@@ -30,7 +30,7 @@ func TestGetById(t *testing.T) {
 			Author:       "testuser",
 			Name:         "",
 			Ingredients:  nil,
-			Directions:   nil,
+			Directions:   "",
 			TimeEstimate: 0,
 			Difficulty:   "",
 			FeedsPeople:  0,

@@ -33,7 +33,7 @@ func TestCreateRecipe(t *testing.T) {
 			Author:       "testuser",
 			Name:         "",
 			Ingredients:  nil,
-			Directions:   nil,
+			Directions:   "",
 			TimeEstimate: 0,
 			Difficulty:   "",
 			FeedsPeople:  0,
@@ -53,9 +53,7 @@ func TestCreateRecipe(t *testing.T) {
 						"amount": 1
 					}
 				],
-				"directions": [
-					"cook it"
-				],
+				"directions": "cook it",
 				"time_estimate": 60,
 				"difficulty": "easy",
 				"feeds_people": 10
@@ -102,9 +100,7 @@ func TestCreateRecipe(t *testing.T) {
 						"amount": 1
 					}
 				],
-				"directions": [
-					"cook it"
-				],
+				"directions": "cook it",
 				"time_estimate": 60,
 				"difficulty": "easy",
 				"feeds_people": 10

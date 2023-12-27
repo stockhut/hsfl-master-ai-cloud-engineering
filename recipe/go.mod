@@ -10,6 +10,7 @@ require (
 require (
 	github.com/golang-jwt/jwt v3.2.2+incompatible
 	github.com/jackc/pgx/v5 v5.5.1
+	github.com/pkg/errors v0.9.1
 	github.com/stretchr/testify v1.8.4
 	go.uber.org/mock v0.4.0
 	google.golang.org/grpc v1.60.1

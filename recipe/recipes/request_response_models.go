@@ -25,7 +25,7 @@ type createRecipeRequestBody struct {
 	IngredientNames   any                     `json:"ingredient-name"`
 	IngredientUnits   any                     `json:"ingredient-unit"`
 	IngredientAmounts any                     `json:"ingredient-amount"`
-	Directions        []string                `json:"directions"`
+	Directions        string                  `json:"directions"`
 	TimeEstimate      int                     `json:"time_estimate"`
 	Difficulty        string                  `json:"difficulty"`
 	FeedsPeople       int                     `json:"feeds_people"`
@@ -84,7 +84,7 @@ type recipeResponseModel struct {
 	Id           model.RecipeId           `json:"id"`
 	Name         string                   `json:"name"`
 	Ingredients  []ingredientResponseBody `json:"ingredients"`
-	Directions   []string                 `json:"directions"`
+	Directions   string                   `json:"directions"`
 	TimeEstimate int                      `json:"time_estimate"`
 	Difficulty   string                   `json:"difficulty"`
 	FeedsPeople  int                      `json:"feeds_people"`

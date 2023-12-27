@@ -30,7 +30,7 @@ func (repo *SqlcRepository) CreateRecipe(recipe model.Recipe) (model.Recipe, err
 		RecipeName:   recipe.Name,
 		TimeEstimate: sql.NullInt32{Int32: int32(recipe.TimeEstimate), Valid: true},
 		Difficulty:   sql.NullString{String: recipe.Difficulty, Valid: true},
-		Directions:   recipe.Directions[0],
+		Directions:   recipe.Directions,
 		Author:       recipe.Author,
 	}
 
