@@ -1,0 +1,10 @@
+services:
+  authentication:
+    route: /api/v1/authentication
+    targetHost: auth:8080
+  recipe:
+    route: /api/v1/recipe
+    targetHost: recipe:8081
+  web:
+    route: /
+    targetHost: web-service:3000
