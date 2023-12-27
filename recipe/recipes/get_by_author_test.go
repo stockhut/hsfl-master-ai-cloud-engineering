@@ -4,6 +4,8 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	mock_auth_proto "github.com/stockhut/hsfl-master-ai-cloud-engineering/authentication/_mocks/mock-auth-proto"
+	"github.com/stockhut/hsfl-master-ai-cloud-engineering/authentication/auth-proto"
 	"html/template"
 	"net/http"
 	"net/http/httptest"
@@ -48,7 +50,16 @@ func TestGetByAuthor(t *testing.T) {
 		}, nil).Times(1)
 
 		templates := template.Template{}
-		controller := NewController(mockRepo, &templates)
+		mockAuthRpc := mock_auth_proto.NewMockAuthenticationClient(gomockController)
+		mockAuthRpc.EXPECT().
+			GetAccount(gomock.Any(), &auth_proto.GetAccountRequest{Name: testUserName}).
+			Return(&auth_proto.GetAccountResponse{
+				Name:  "testuser",
+				Email: "testuser@example.org",
+			}, nil).
+			Times(1)
+
+		controller := NewController(mockRepo, mockAuthRpc, &templates)
 
 		w := httptest.NewRecorder()
 		r := httptest.NewRequest(http.MethodPost, "/recipe", nil)
@@ -70,30 +81,66 @@ func TestGetByAuthor(t *testing.T) {
 		}
 	})
 
-	t.Run("should return 500 INTERNAL SERVER ERROR when database read fails", func(t *testing.T) {
+	t.Run("should return 500 INTERNAL SERVER ERROR", func(t *testing.T) {
 
-		const testUserName = "testuser"
+		t.Run(" when database read fails", func(t *testing.T) {
 
-		gomockController := gomock.NewController(t)
+			const testUserName = "testuser"
 
-		mockRepo := mockrecipes.NewMockRecipeRepository(gomockController)
-		mockRepo.
-			EXPECT().
-			GetAllByAuthor(testUserName).
-			Return(nil, errors.New("failed to read recipes")).
-			Times(1)
+			gomockController := gomock.NewController(t)
+
+			mockRepo := mockrecipes.NewMockRecipeRepository(gomockController)
+			mockRepo.
+				EXPECT().
+				GetAllByAuthor(testUserName).
+				Return(nil, errors.New("failed to read recipes")).
+				Times(1)
+
+			mockAuthRpc := mock_auth_proto.NewMockAuthenticationClient(gomockController)
+			mockAuthRpc.EXPECT().
+				GetAccount(gomock.Any(), &auth_proto.GetAccountRequest{Name: testUserName}).
+				Return(&auth_proto.GetAccountResponse{
+					Name:  "testuser",
+					Email: "testuser@example.org",
+				}, nil).
+				Times(1)
+
+			controller := NewController(mockRepo, mockAuthRpc, nil)
+
+			w := httptest.NewRecorder()
+			r := httptest.NewRequest(http.MethodPost, "/recipe", nil)
+
+			ctx := context.WithValue(r.Context(), "author", testUserName)
+
+			controller.GetByAuthor(w, r.WithContext(ctx))
+			assert.Equal(t, http.StatusInternalServerError, w.Code)
+		})
+
+		t.Run(" when auth rpc returns a fatal error", func(t *testing.T) {
+
+			const testUserName = "testuser"
+
+			gomockController := gomock.NewController(t)
+
+			mockRepo := mockrecipes.NewMockRecipeRepository(gomockController)
+
+			mockAuthRpc := mock_auth_proto.NewMockAuthenticationClient(gomockController)
+			mockAuthRpc.EXPECT().
+				GetAccount(gomock.Any(), &auth_proto.GetAccountRequest{Name: testUserName}).
+				Return(&auth_proto.GetAccountResponse{}, errors.New("something really bad happened")).
+				Times(1)
 
 		templates := template.Template{}
-		controller := NewController(mockRepo, &templates)
+			controller := NewController(mockRepo, mockAuthRpc, &templates)
 
-		w := httptest.NewRecorder()
-		r := httptest.NewRequest(http.MethodPost, "/recipe", nil)
+			w := httptest.NewRecorder()
+			r := httptest.NewRequest(http.MethodPost, "/recipe", nil)
 
-		ctx := context.WithValue(r.Context(), "author", testUserName)
+			ctx := context.WithValue(r.Context(), "author", testUserName)
 
-		controller.GetByAuthor(w, r.WithContext(ctx))
-		assert.Equal(t, http.StatusInternalServerError, w.Code)
-
+			controller.GetByAuthor(w, r.WithContext(ctx))
+			assert.Equal(t, http.StatusInternalServerError, w.Code)
+		})
 	})
 
 	t.Run("should handle users without recipes correct", func(t *testing.T) {
@@ -109,8 +156,17 @@ func TestGetByAuthor(t *testing.T) {
 			Return([]model.Recipe{}, nil).
 			Times(1)
 
+		mockAuthRpc := mock_auth_proto.NewMockAuthenticationClient(gomockController)
+		mockAuthRpc.EXPECT().
+			GetAccount(gomock.Any(), &auth_proto.GetAccountRequest{Name: testUserName}).
+			Return(&auth_proto.GetAccountResponse{
+				Name:  "testuser",
+				Email: "testuser@example.org",
+			}, nil).
+			Times(1)
+
 		templates := template.Template{}
-		controller := NewController(mockRepo, &templates)
+		controller := NewController(mockRepo, mockAuthRpc, &templates)
 
 		w := httptest.NewRecorder()
 		r := httptest.NewRequest(http.MethodPost, "/recipe", nil)
@@ -126,5 +182,31 @@ func TestGetByAuthor(t *testing.T) {
 		assert.Nil(t, err)
 
 		assert.Len(t, responseBody, 0)
+	})
+
+	t.Run("returns 404 when user does not exist", func(t *testing.T) {
+
+		const testUserName = "testuser"
+
+		gomockController := gomock.NewController(t)
+
+		mockRepo := mockrecipes.NewMockRecipeRepository(gomockController)
+
+		mockAuthRpc := mock_auth_proto.NewMockAuthenticationClient(gomockController)
+		mockAuthRpc.EXPECT().
+			GetAccount(gomock.Any(), &auth_proto.GetAccountRequest{Name: testUserName}).
+			Return(&auth_proto.GetAccountResponse{}, auth_proto.ErrAccountNotFound).
+			Times(1)
+
+		templates := template.Template{}
+		controller := NewController(mockRepo, mockAuthRpc, &templates)
+
+		w := httptest.NewRecorder()
+		r := httptest.NewRequest(http.MethodPost, "/recipe", nil)
+
+		ctx := context.WithValue(r.Context(), "author", testUserName)
+
+		controller.GetByAuthor(w, r.WithContext(ctx))
+		assert.Equal(t, http.StatusNotFound, w.Code)
 	})
 }

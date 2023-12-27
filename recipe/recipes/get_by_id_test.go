@@ -4,7 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
-	"html/template"
+	mock_auth_proto "github.com/stockhut/hsfl-master-ai-cloud-engineering/authentication/_mocks/mock-auth-proto"
 	"net/http"
 	"net/http/httptest"
 	"strconv"
@@ -36,8 +36,8 @@ func TestGetById(t *testing.T) {
 			FeedsPeople:  0,
 		}, nil).Times(1)
 
-		templates := template.Template{}
-		controller := NewController(mockRepo, &templates)
+		mockAuthRpc := mock_auth_proto.NewMockAuthenticationClient(gomockController)
+		controller := NewController(mockRepo, mockAuthRpc, nil)
 
 		w := httptest.NewRecorder()
 		r := httptest.NewRequest(http.MethodPost, "/test", nil)
@@ -66,8 +66,8 @@ func TestGetById(t *testing.T) {
 			Return(nil, errors.New("failed to read recipes")).
 			Times(1)
 
-		templates := template.Template{}
-		controller := NewController(mockRepo, &templates)
+		mockAuthRpc := mock_auth_proto.NewMockAuthenticationClient(gomockController)
+		controller := NewController(mockRepo, mockAuthRpc, nil)
 
 		w := httptest.NewRecorder()
 		r := httptest.NewRequest(http.MethodPost, "/test", nil)
@@ -90,8 +90,8 @@ func TestGetById(t *testing.T) {
 			Return(nil, nil).
 			Times(1)
 
-		templates := template.Template{}
-		controller := NewController(mockRepo, &templates)
+		mockAuthRpc := mock_auth_proto.NewMockAuthenticationClient(gomockController)
+		controller := NewController(mockRepo, mockAuthRpc, nil)
 
 		w := httptest.NewRecorder()
 		r := httptest.NewRequest(http.MethodPost, "/test", nil)

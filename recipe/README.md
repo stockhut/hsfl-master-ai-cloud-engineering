@@ -15,9 +15,11 @@ go generate _mocks/gen.go
 ## Configuration
 
 ### Environment variables
-| Key            | Value                                 |
-|----------------|---------------------------------------|
-| JWT_PUBLIC_KEY | Path to a jwt public keyfile          |
+
+| Key            | Value                                                                              |
+|----------------|------------------------------------------------------------------------------------|
+| JWT_PUBLIC_KEY | Path to a jwt public keyfile                                                       |
+| AUTH_RPC_TARGET| Address of a authentications gRPC service (_IP:PORT_)                              |
 | PG_CONN_STRING | A PostgreSQL connection string, e.g. `postgres://postgres:password@127.0.0.1:5432` |
 
 ## Development
@@ -28,6 +30,12 @@ For development purposes, there is a docker compose file with PostgreSQL in `dev
 cd dev-db
 docker compose up -d
 ```
+
+## gRPC
+
+The authentication service exposes a gRPC service.
+gRPC and Protobuf code can be imported by other programs from `auth-proto`.
+This includes generated code as well as error definitions and converters.
 
 ## Responsibilities
 

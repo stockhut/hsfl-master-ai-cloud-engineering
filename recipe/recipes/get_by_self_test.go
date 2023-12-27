@@ -5,8 +5,8 @@ import (
 	"encoding/json"
 	"errors"
 	"github.com/golang-jwt/jwt"
+	mock_auth_proto "github.com/stockhut/hsfl-master-ai-cloud-engineering/authentication/_mocks/mock-auth-proto"
 	"github.com/stockhut/hsfl-master-ai-cloud-engineering/authentication/middleware"
-	"html/template"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -52,8 +52,8 @@ func TestGetBySelf(t *testing.T) {
 			},
 		}, nil).Times(1)
 
-		templates := template.Template{}
-		controller := NewController(mockRepo, &templates)
+		mockAuthRpc := mock_auth_proto.NewMockAuthenticationClient(gomockController)
+		controller := NewController(mockRepo, mockAuthRpc, nil)
 
 		w := httptest.NewRecorder()
 		r := httptest.NewRequest(http.MethodGet, "/test", nil)
@@ -86,8 +86,8 @@ func TestGetBySelf(t *testing.T) {
 			Return(nil, errors.New("failed to read recipes")).
 			Times(1)
 
-		templates := template.Template{}
-		controller := NewController(mockRepo, &templates)
+		mockAuthRpc := mock_auth_proto.NewMockAuthenticationClient(gomockController)
+		controller := NewController(mockRepo, mockAuthRpc, nil)
 
 		w := httptest.NewRecorder()
 		r := httptest.NewRequest(http.MethodGet, "/recipe", nil)
@@ -110,8 +110,8 @@ func TestGetBySelf(t *testing.T) {
 			Return([]model.Recipe{}, nil).
 			Times(1)
 
-		templates := template.Template{}
-		controller := NewController(mockRepo, &templates)
+		mockAuthRpc := mock_auth_proto.NewMockAuthenticationClient(gomockController)
+		controller := NewController(mockRepo, mockAuthRpc, nil)
 
 		w := httptest.NewRecorder()
 		r := httptest.NewRequest(http.MethodGet, "/recipe", nil)
