@@ -9,9 +9,9 @@ import (
 	"github.com/stockhut/hsfl-master-ai-cloud-engineering/common/environment"
 	"github.com/stockhut/hsfl-master-ai-cloud-engineering/common/jwt_public_key"
 	requestlogger "github.com/stockhut/hsfl-master-ai-cloud-engineering/common/middleware/request-logger"
-	"html/template"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
+	"html/template"
 
 	"log"
 
