@@ -21,6 +21,7 @@ FROM alpine:latest
 
 WORKDIR /app
 
+COPY --from=0 /go/src/app/recipe/templates/ ./templates
 COPY --from=0 /go/src/app/main ./
 
 EXPOSE 8081

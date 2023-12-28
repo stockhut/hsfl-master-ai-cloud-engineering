@@ -10,7 +10,7 @@ services:
       test: [ "CMD-SHELL", "pg_isready -U postgres"]
       interval: "1s"
   auth:
-    image: ghcr.io/stockhut/hsfl-master-ai-cloud-engineering/auth:test
+    image: ghcr.io/stockhut/hsfl-master-ai-cloud-engineering/authentication:main
     ports:
       - "8080:8080" # http
       - "3001:3001" # grpc
@@ -35,5 +35,17 @@ services:
     depends_on:
       db:
         condition: service_healthy
+  web-service:
+    image: ghcr.io/stockhut/hsfl-master-ai-cloud-engineering/web-service:main
+    ports:
+      - "3000:3000"
+  reverseproxy:
+    image: ghcr.io/stockhut/hsfl-master-ai-cloud-engineering/reverse-proxy:test
+    environment:
+      CONFIG_FILE: /config/reverse-proxy.yml
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./:/config
 
       
