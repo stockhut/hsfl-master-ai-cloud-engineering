@@ -2,6 +2,13 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## frontend-0.2.0 - 2023-12-28
+#### Features
+- **(recipe)** make recipe directions a single string - (192e703) - TuftedDeer
+- **(recipe)** allow more than one ingredient to be added via frontend - (b5c719a) - TuftedDeer
+
+- - -
+
 ## frontend-0.1.0 - 2023-12-25
 #### Bug Fixes
 - **(web-service)** COPY assets into image - (044ee89) - alex

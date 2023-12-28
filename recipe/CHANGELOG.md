@@ -2,6 +2,20 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## recipe-0.3.0 - 2023-12-28
+#### Bug Fixes
+- **(recipe)** Fix no iteration over Directions - (9fac4f4) - neki9072
+- **(recipe)** include html templates in docker image - (5966604) - TuftedDeer
+#### Features
+- **(recipe)** make recipe directions a single string - (192e703) - TuftedDeer
+- **(recipe)** allow more than one ingredient to be added via frontend - (b5c719a) - TuftedDeer
+#### Refactoring
+- **(recipe)** parse html templates at start, use html presenter - (2b49395) - TuftedDeer
+#### Style
+- **(recipe)** go fmt - (debecf0) - TuftedDeer
+
+- - -
+
 ## recipe-0.2.0 - 2023-12-27
 #### Bug Fixes
 - **(recipe)** self is not a path parameter - (7d26a1f) - TuftedDeer

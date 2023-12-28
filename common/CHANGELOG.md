@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## common-0.2.0 - 2023-12-28
+#### Features
+- **(common)** implement html presenter - (6ff0850) - TuftedDeer
+
+- - -
+
 ## common-0.1.0 - 2023-12-27
 #### Bug Fixes
 - **(common)** create Tabe if not exists - (b98c2bc) - neki9072

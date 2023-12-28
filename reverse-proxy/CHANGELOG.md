@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## reverseproxy-0.2.0 - 2023-12-28
+#### Features
+- **(reverse-proxy)** add required CONFIG_FILE env var - (51c4cba) - TuftedDeer
+
+- - -
+
 ## reverseproxy-0.1.0 - 2023-12-27
 #### Bug Fixes
 - **(load-balancer)** Implement basic load balancer with round robin and least connections strategies - (8c0342e) - TuftedDeer

@@ -2,6 +2,26 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## 0.3.0 - 2023-12-28
+### Package updates
+- recipe bumped to recipe-0.3.0
+- reverseproxy bumped to reverseproxy-0.2.0
+- frontend bumped to frontend-0.2.0
+- common bumped to common-0.2.0
+### Global changes
+#### Continuous Integration
+- **(recipe)** generate common mocks - (a9fcc13) - TuftedDeer
+- rebuild reverse-proxy when new version is created - (454bb23) - TuftedDeer
+#### Features
+- **(common)** implement html presenter - (6ff0850) - TuftedDeer
+- **(recipe)** make recipe directions a single string - (192e703) - TuftedDeer
+- **(recipe)** allow more than one ingredient to be added via frontend - (b5c719a) - TuftedDeer
+#### Miscellaneous Chores
+- rename dev-db directory to dev-compose - (2d3d703) - TuftedDeer
+- add frontend and reverse-proxy to compose - (2672894) - TuftedDeer
+
+- - -
+
 ## 0.2.0 - 2023-12-27
 ### Package updates
 - common bumped to common-0.1.0
