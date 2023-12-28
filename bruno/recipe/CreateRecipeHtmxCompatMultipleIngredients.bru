@@ -1,0 +1,38 @@
+meta {
+  name: CreateRecipeHtmxCompatMultipleIngredients
+  type: http
+  seq: 6
+}
+
+post {
+  url: http://localhost:8081/api/v1/recipe
+  body: json
+  auth: none
+}
+
+headers {
+  Cookie: jwt={{jwt-value}}
+  HX-Request: {{HX-Request}}
+}
+
+body:json {
+  {
+    "name": "multi-ingredient",
+    "ingredient-name": [
+      "first",
+      "second"
+    ],
+    "ingredient-unit": [
+      "first-unit",
+      "second-uinit"
+    ],
+    "ingredient-amount": [
+      "1",
+      "2"
+    ],
+    "directions": "",
+    "timeEstimate": "",
+    "difficulty": "",
+    "feedsPeople": ""
+  }
+}

@@ -35,7 +35,7 @@ func TestGetBySelf(t *testing.T) {
 				Author:       testUserName,
 				Name:         "",
 				Ingredients:  nil,
-				Directions:   nil,
+				Directions:   "",
 				TimeEstimate: 0,
 				Difficulty:   "",
 				FeedsPeople:  0,
@@ -45,7 +45,7 @@ func TestGetBySelf(t *testing.T) {
 				Author:       testUserName,
 				Name:         "",
 				Ingredients:  nil,
-				Directions:   nil,
+				Directions:   "",
 				TimeEstimate: 0,
 				Difficulty:   "",
 				FeedsPeople:  0,
@@ -53,7 +53,7 @@ func TestGetBySelf(t *testing.T) {
 		}, nil).Times(1)
 
 		mockAuthRpc := mock_auth_proto.NewMockAuthenticationClient(gomockController)
-		controller := NewController(mockRepo, mockAuthRpc)
+		controller := NewController(mockRepo, mockAuthRpc, nil)
 
 		w := httptest.NewRecorder()
 		r := httptest.NewRequest(http.MethodGet, "/test", nil)
@@ -87,7 +87,7 @@ func TestGetBySelf(t *testing.T) {
 			Times(1)
 
 		mockAuthRpc := mock_auth_proto.NewMockAuthenticationClient(gomockController)
-		controller := NewController(mockRepo, mockAuthRpc)
+		controller := NewController(mockRepo, mockAuthRpc, nil)
 
 		w := httptest.NewRecorder()
 		r := httptest.NewRequest(http.MethodGet, "/recipe", nil)
@@ -111,7 +111,7 @@ func TestGetBySelf(t *testing.T) {
 			Times(1)
 
 		mockAuthRpc := mock_auth_proto.NewMockAuthenticationClient(gomockController)
-		controller := NewController(mockRepo, mockAuthRpc)
+		controller := NewController(mockRepo, mockAuthRpc, nil)
 
 		w := httptest.NewRecorder()
 		r := httptest.NewRequest(http.MethodGet, "/recipe", nil)

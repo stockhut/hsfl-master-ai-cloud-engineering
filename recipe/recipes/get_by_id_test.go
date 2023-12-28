@@ -30,14 +30,14 @@ func TestGetById(t *testing.T) {
 			Author:       "testuser",
 			Name:         "",
 			Ingredients:  nil,
-			Directions:   nil,
+			Directions:   "",
 			TimeEstimate: 0,
 			Difficulty:   "",
 			FeedsPeople:  0,
 		}, nil).Times(1)
 
 		mockAuthRpc := mock_auth_proto.NewMockAuthenticationClient(gomockController)
-		controller := NewController(mockRepo, mockAuthRpc)
+		controller := NewController(mockRepo, mockAuthRpc, nil)
 
 		w := httptest.NewRecorder()
 		r := httptest.NewRequest(http.MethodPost, "/test", nil)
@@ -67,7 +67,7 @@ func TestGetById(t *testing.T) {
 			Times(1)
 
 		mockAuthRpc := mock_auth_proto.NewMockAuthenticationClient(gomockController)
-		controller := NewController(mockRepo, mockAuthRpc)
+		controller := NewController(mockRepo, mockAuthRpc, nil)
 
 		w := httptest.NewRecorder()
 		r := httptest.NewRequest(http.MethodPost, "/test", nil)
@@ -91,7 +91,7 @@ func TestGetById(t *testing.T) {
 			Times(1)
 
 		mockAuthRpc := mock_auth_proto.NewMockAuthenticationClient(gomockController)
-		controller := NewController(mockRepo, mockAuthRpc)
+		controller := NewController(mockRepo, mockAuthRpc, nil)
 
 		w := httptest.NewRecorder()
 		r := httptest.NewRequest(http.MethodPost, "/test", nil)

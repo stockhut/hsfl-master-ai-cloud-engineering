@@ -29,7 +29,7 @@ func TestDeleteRecipe(t *testing.T) {
 		mockRepo.EXPECT().DeleteRecipe(model.RecipeId(testRecipeId)).Return(nil).Times(1)
 
 		mockAuthRpc := mock_auth_proto.NewMockAuthenticationClient(gomockController)
-		controller := NewController(mockRepo, mockAuthRpc)
+		controller := NewController(mockRepo, mockAuthRpc, nil)
 
 		w := httptest.NewRecorder()
 		r := httptest.NewRequest(http.MethodDelete, "/test", nil)
@@ -56,7 +56,7 @@ func TestDeleteRecipe(t *testing.T) {
 		mockRepo.EXPECT().DeleteRecipe(model.RecipeId(testRecipeId)).Return(errors.New("failed to delete recipe")).Times(1)
 
 		mockAuthRpc := mock_auth_proto.NewMockAuthenticationClient(gomockController)
-		controller := NewController(mockRepo, mockAuthRpc)
+		controller := NewController(mockRepo, mockAuthRpc, nil)
 
 		w := httptest.NewRecorder()
 		r := httptest.NewRequest(http.MethodDelete, "/test", nil)

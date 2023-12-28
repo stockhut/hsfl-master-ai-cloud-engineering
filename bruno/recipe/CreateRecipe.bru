@@ -7,6 +7,7 @@ meta {
 post {
   url: http://localhost:8081/api/v1/recipe
   body: json
+  auth: none
 }
 
 headers {
@@ -19,7 +20,7 @@ body:json {
     "Author": "test",
     "Name": "my recipe",
     "Ingredients": [],
-    "Directions": ["cook"],
+    "Directions": "cook",
     "TimeEstimate": 0,
     "Difficulty": "",
     "FeedsPeople": 0

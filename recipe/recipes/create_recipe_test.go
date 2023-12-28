@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	mock_auth_proto "github.com/stockhut/hsfl-master-ai-cloud-engineering/authentication/_mocks/mock-auth-proto"
+	"html/template"
 	"net/http"
 	"net/http/httptest"
 	"strings"
@@ -32,14 +33,15 @@ func TestCreateRecipe(t *testing.T) {
 			Author:       "testuser",
 			Name:         "",
 			Ingredients:  nil,
-			Directions:   nil,
+			Directions:   "",
 			TimeEstimate: 0,
 			Difficulty:   "",
 			FeedsPeople:  0,
 		}, nil).Times(1)
 
+		templates := template.Template{}
 		mockAuthRpc := mock_auth_proto.NewMockAuthenticationClient(gomockController)
-		controller := NewController(mockRepo, mockAuthRpc)
+		controller := NewController(mockRepo, mockAuthRpc, &templates)
 
 		testBody :=
 			`{
@@ -51,9 +53,7 @@ func TestCreateRecipe(t *testing.T) {
 						"amount": 1
 					}
 				],
-				"directions": [
-					"cook it"
-				],
+				"directions": "cook it",
 				"time_estimate": 60,
 				"difficulty": "easy",
 				"feeds_people": 10
@@ -86,8 +86,9 @@ func TestCreateRecipe(t *testing.T) {
 		mockRepo := mock_recipes.NewMockRecipeRepository(gomockController)
 		mockRepo.EXPECT().CreateRecipe(gomock.Any()).Return(model.Recipe{}, errors.New("failed to save recipe")).Times(1)
 
+		templates := template.Template{}
 		mockAuthRpc := mock_auth_proto.NewMockAuthenticationClient(gomockController)
-		controller := NewController(mockRepo, mockAuthRpc)
+		controller := NewController(mockRepo, mockAuthRpc, &templates)
 
 		testBody :=
 			`{
@@ -99,9 +100,7 @@ func TestCreateRecipe(t *testing.T) {
 						"amount": 1
 					}
 				],
-				"directions": [
-					"cook it"
-				],
+				"directions": "cook it",
 				"time_estimate": 60,
 				"difficulty": "easy",
 				"feeds_people": 10

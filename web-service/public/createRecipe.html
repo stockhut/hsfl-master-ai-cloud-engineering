@@ -6,35 +6,42 @@
       <input id="recipeName" type="text" name="name" value="" />
     </div>
     <div>
-      <label for="ingredients"><p>Zutaten:</p></label>
-      <div id="ingredients">
-        <input
-          id="ingredientName"
-          type="text"
-          name="ingredient-name"
-          placeholder="Zutat"
-          value=""
-        />
-        <input
-          id="ingredientUnit"
-          type="text"
-          name="ingredient-unit"
-          placeholder="Einheit"
-          value=""
-        />
-        <input
-          id="ingredientAmount"
-          type="number"
-          name="ingredient-amount"
-          placeholder="Menge"
-          value=""
-        />
+      <p>Zutaten:</p>
+      <div id="ingredient-list">
+        <div id="ingredient">
+          <input
+                  id="ingredientName"
+                  type="text"
+                  name="ingredient-name"
+                  placeholder="Zutat"
+                  value=""
+          />
+          <input
+                  id="ingredientUnit"
+                  type="text"
+                  name="ingredient-unit"
+                  placeholder="Einheit"
+                  value=""
+          />
+          <input
+                  id="ingredientAmount"
+                  type="number"
+                  name="ingredient-amount"
+                  placeholder="Menge"
+                  value=""
+          />
+        </div>
+
+        <!-- clone the ingredient inputs to allow more than one ingredient - this is https://hyperscript.org/ -->
+        <button type="button" _="on click put #ingredient.outerHTML before me">
+          Add more
+        </button>
       </div>
+
     </div>
 
     <div>
       <label for="directions"><p>Arbeitsschritte:</p></label>
-      <input id="directions" type="text" name="directions" value="" />
       <input id="directions" type="text" name="directions" value="" />
     </div>
     

@@ -8,12 +8,12 @@ import (
 	auth_proto "github.com/stockhut/hsfl-master-ai-cloud-engineering/authentication/auth-proto"
 	"github.com/stockhut/hsfl-master-ai-cloud-engineering/common/environment"
 	"github.com/stockhut/hsfl-master-ai-cloud-engineering/common/jwt_public_key"
+	requestlogger "github.com/stockhut/hsfl-master-ai-cloud-engineering/common/middleware/request-logger"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
+	"html/template"
 
 	"log"
-
-	requestlogger "github.com/stockhut/hsfl-master-ai-cloud-engineering/common/middleware/request-logger"
 
 	"net/http"
 	"os"
@@ -32,6 +32,12 @@ const PostgresConnectionStringKey = "PG_CONN_STRING"
 const AuthRpcTarget = "AUTH_RPC_TARGET"
 
 func main() {
+
+	templates, err := template.ParseGlob("templates/**")
+
+	if err != nil {
+		log.Fatalf("Failed to parse html templates: %s\n", err)
+	}
 
 	jwtPublicKeyFile := environment.GetRequiredEnvVar(JwtPublicKeyEnvKey)
 	pgConnString := environment.GetRequiredEnvVar(PostgresConnectionStringKey)
@@ -72,7 +78,7 @@ func main() {
 	defer conn.Close()
 	authRpcClient := auth_proto.NewAuthenticationClient(conn)
 
-	recipeController := recipes.NewController(&repo, authRpcClient)
+	recipeController := recipes.NewController(&repo, authRpcClient, templates)
 
 	authMiddleware := middleware.ValidateJwtMiddleware(publicKey)
 

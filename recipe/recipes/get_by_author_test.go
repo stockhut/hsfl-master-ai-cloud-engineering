@@ -6,6 +6,7 @@ import (
 	"errors"
 	mock_auth_proto "github.com/stockhut/hsfl-master-ai-cloud-engineering/authentication/_mocks/mock-auth-proto"
 	"github.com/stockhut/hsfl-master-ai-cloud-engineering/authentication/auth-proto"
+	"html/template"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -31,7 +32,7 @@ func TestGetByAuthor(t *testing.T) {
 				Author:       testUserName,
 				Name:         "",
 				Ingredients:  nil,
-				Directions:   nil,
+				Directions:   "",
 				TimeEstimate: 0,
 				Difficulty:   "",
 				FeedsPeople:  0,
@@ -41,15 +42,15 @@ func TestGetByAuthor(t *testing.T) {
 				Author:       testUserName,
 				Name:         "",
 				Ingredients:  nil,
-				Directions:   nil,
+				Directions:   "",
 				TimeEstimate: 0,
 				Difficulty:   "",
 				FeedsPeople:  0,
 			},
 		}, nil).Times(1)
 
+		templates := template.Template{}
 		mockAuthRpc := mock_auth_proto.NewMockAuthenticationClient(gomockController)
-
 		mockAuthRpc.EXPECT().
 			GetAccount(gomock.Any(), &auth_proto.GetAccountRequest{Name: testUserName}).
 			Return(&auth_proto.GetAccountResponse{
@@ -58,7 +59,7 @@ func TestGetByAuthor(t *testing.T) {
 			}, nil).
 			Times(1)
 
-		controller := NewController(mockRepo, mockAuthRpc)
+		controller := NewController(mockRepo, mockAuthRpc, &templates)
 
 		w := httptest.NewRecorder()
 		r := httptest.NewRequest(http.MethodPost, "/recipe", nil)
@@ -104,7 +105,7 @@ func TestGetByAuthor(t *testing.T) {
 				}, nil).
 				Times(1)
 
-			controller := NewController(mockRepo, mockAuthRpc)
+			controller := NewController(mockRepo, mockAuthRpc, nil)
 
 			w := httptest.NewRecorder()
 			r := httptest.NewRequest(http.MethodPost, "/recipe", nil)
@@ -129,7 +130,8 @@ func TestGetByAuthor(t *testing.T) {
 				Return(&auth_proto.GetAccountResponse{}, errors.New("something really bad happened")).
 				Times(1)
 
-			controller := NewController(mockRepo, mockAuthRpc)
+			templates := template.Template{}
+			controller := NewController(mockRepo, mockAuthRpc, &templates)
 
 			w := httptest.NewRecorder()
 			r := httptest.NewRequest(http.MethodPost, "/recipe", nil)
@@ -163,7 +165,8 @@ func TestGetByAuthor(t *testing.T) {
 			}, nil).
 			Times(1)
 
-		controller := NewController(mockRepo, mockAuthRpc)
+		templates := template.Template{}
+		controller := NewController(mockRepo, mockAuthRpc, &templates)
 
 		w := httptest.NewRecorder()
 		r := httptest.NewRequest(http.MethodPost, "/recipe", nil)
@@ -195,7 +198,8 @@ func TestGetByAuthor(t *testing.T) {
 			Return(&auth_proto.GetAccountResponse{}, auth_proto.ErrAccountNotFound).
 			Times(1)
 
-		controller := NewController(mockRepo, mockAuthRpc)
+		templates := template.Template{}
+		controller := NewController(mockRepo, mockAuthRpc, &templates)
 
 		w := httptest.NewRecorder()
 		r := httptest.NewRequest(http.MethodPost, "/recipe", nil)
