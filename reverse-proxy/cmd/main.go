@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/stockhut/hsfl-master-ai-cloud-engineering/common/environment"
 	"github.com/stockhut/hsfl-master-ai-cloud-engineering/reverse-proxy"
 	"github.com/stockhut/hsfl-master-ai-cloud-engineering/reverse-proxy/config"
 	"log"
@@ -10,13 +11,16 @@ import (
 )
 
 const Port int = 5000
-const Host string = "localhost"
+const Host string = ""
+
+const ConfigFileEnvKey = "CONFIG_FILE"
 
 func main() {
 
 	logger := log.New(os.Stdout, "", 0)
 
-	configPath := "config.yml"
+	configPath := environment.GetRequiredEnvVar(ConfigFileEnvKey)
+
 	c, err := config.FromFile(configPath)
 	if err != nil {
 		log.Fatalf("Failed to load configuration file '%s': %s", configPath, err)

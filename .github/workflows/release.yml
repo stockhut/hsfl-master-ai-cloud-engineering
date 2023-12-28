@@ -41,3 +41,8 @@ jobs:
         run: git tag --points-at HEAD | grep frontend && gh workflow run web-build-push-image.yml --ref main || true # change the ref when testing changes in another branch
         env:
           GH_TOKEN: ${{ github.token }}
+
+      - name: Trigger reverse-proxy rebuild if necessary
+        run: git tag --points-at HEAD | grep reverseproxy && gh workflow run reverse_proxy_build_push_image.yml --ref main || true # change the ref when testing changes in another branch
+        env:
+          GH_TOKEN: ${{ github.token }}

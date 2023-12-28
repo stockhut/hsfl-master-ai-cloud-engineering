@@ -2,6 +2,51 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## 0.2.0 - 2023-12-27
+### Package updates
+- common bumped to common-0.1.0
+- loadtest bumped to loadtest-0.1.0
+- recipe bumped to recipe-0.2.0
+- auth bumped to auth-0.2.0
+- orchestration bumped to orchestration-0.1.0
+- loadbalancer bumped to loadbalancer-0.1.0
+- reverseproxy bumped to reverseproxy-0.1.0
+### Global changes
+#### Continuous Integration
+- **(authentication)** generate mocks after protobuf - (9278d4c) - TuftedDeer
+- **(authentication)** use go generate for protobuf generation - (954c10d) - TuftedDeer
+- **(authentication)** install protoc-gen-go-grpc - (b943734) - TuftedDeer
+- **(authentication)** fix protoc args - (cb622a8) - TuftedDeer
+- **(authentication)** Generate protobuf code - (b127433) - TuftedDeer
+- **(recipe)** Generate authentication mocks - (781416f) - TuftedDeer
+- fix  image tags when no git tag exists, build images on all branches - (ba13356) - Fabi
+- add remaining projects to cog.toml - (aca9105) - TuftedDeer
+- add remaining projects to cog.toml - (dc30d2a) - TuftedDeer
+- don't run auth and recipe test on every main push - (e35477f) - TuftedDeer
+- build frontend image when creating a new release - (297feac) - TuftedDeer
+- always run auth and recipe tests on:push:main when changed - (3c3061e) - TuftedDeer
+- fix authentication rpc mock generation - (666a05e) - TuftedDeer
+#### Documentation
+- fix test badges, add version badges - (799ad1b) - TuftedDeer
+#### Features
+- **(authentication)** use bcrypt to store passwords - (33453e8) - TuftedDeer
+- **(authentication)** Add GRPC service - (abe1c70) - TuftedDeer
+- **(recipe)** Verify account existence in GetByAuthor endpoint - (b8aaa67) - TuftedDeer
+#### Miscellaneous Chores
+- **(bruno)** automatically extract jwt after login, mark jwt as secret - (9036fa3) - TuftedDeer
+- **(codecov)** informational mode for patches - (d92ab74) - TuftedDeer
+- **(recipe)** Postgres deployment - (be579d0) - TuftedDeer
+- go mod tidy - (6b991ca) - TuftedDeer
+- add recipe service to compose setup - (f854d40) - TuftedDeer
+- put codecov in informational mode - (7c6e388) - TuftedDeer
+- fix invalid codecov yaml - (86e8d8f) - TuftedDeer
+- add auth service to compose setup - (a6ae6a1) - TuftedDeer
+- explicitly set postgres user in compose - (8648802) - TuftedDeer
+#### Refactoring
+- **(authentication)** move psql repo out of subdirectory - (cc6f54d) - TuftedDeer
+
+- - -
+
 ## 0.1.0 - 2023-12-25
 ### Package updates
 - frontend bumped to frontend-0.1.0

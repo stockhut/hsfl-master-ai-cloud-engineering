@@ -2,6 +2,30 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## auth-0.2.0 - 2023-12-27
+#### Features
+- **(authentication)** use postgres db - (d78afaa) - TuftedDeer
+- **(authentication)** use bcrypt to store passwords - (33453e8) - TuftedDeer
+- **(authentication)** Handle account repo errors with ErrInternal gRPC status - (c2bdfec) - TuftedDeer
+- **(authentication)** Add GRPC service - (abe1c70) - TuftedDeer
+- **(recipe)** log rpc requests - (e8d54c2) - TuftedDeer
+- **(recipe)** Verify account existence in GetByAuthor endpoint - (b8aaa67) - TuftedDeer
+#### Miscellaneous Chores
+- **(recipe)** Postgres deployment - (be579d0) - TuftedDeer
+- generate protobuf code in Docker builds - (a59bace) - TuftedDeer
+#### Refactoring
+- **(authentication)** AccountRepository -> Repository - (56d65e0) - TuftedDeer
+- **(authentication)** Use custom errors for account duplication check - (584f252) - TuftedDeer
+- **(authentication)** remove repository subdirectory - (bfcc5c9) - TuftedDeer
+- **(authentication)** add sqlc output because using sqlc with cgo in alpine container images is complicated - (0055fed) - TuftedDeer
+- **(authentication)** move psql repo out of subdirectory - (cc6f54d) - TuftedDeer
+#### Style
+- **(authentication)** go fmt - (70254a8) - TuftedDeer
+#### Tests
+- **(authentication)** fix import path - (7d8f942) - TuftedDeer
+
+- - -
+
 ## auth-0.1.0 - 2023-12-25
 #### Bug Fixes
 - **(authentication)** listen on all interfaces - (74c7b09) - TuftedDeer

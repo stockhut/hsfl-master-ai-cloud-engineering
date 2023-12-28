@@ -2,6 +2,23 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## recipe-0.2.0 - 2023-12-27
+#### Bug Fixes
+- **(recipe)** self is not a path parameter - (7d26a1f) - TuftedDeer
+#### Documentation
+- **(recipe)** fix rpc description - (b138891) - TuftedDeer
+#### Features
+- **(recipe)** Verify account existence in GetByAuthor endpoint - (b8aaa67) - TuftedDeer
+#### Miscellaneous Chores
+- **(recipe)** go mod tidy - (650ccab) - TuftedDeer
+- **(recipe)** Postgres deployment - (be579d0) - TuftedDeer
+- **(recipe)** Bump authentication dependency, trying to fix go vet in ci - (c7e9522) - TuftedDeer
+- generate protobuf code in Docker builds - (a59bace) - TuftedDeer
+- go mod tidy - (6b991ca) - TuftedDeer
+- go mod tidy - (b0b351e) - TuftedDeer
+
+- - -
+
 ## recipe-0.1.0 - 2023-12-25
 #### Bug Fixes
 - **(recipe)** Return correct status code after recipe creation - (6376d10) - TuftedDeer
