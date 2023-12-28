@@ -1,0 +1,25 @@
+<h1>Login
+</h1>
+<form hx-post="/api/v1/authentication/login" hx-ext="json-enc">
+
+<div>
+        <h2>Username</h2>
+        <input
+                id="name"
+                type="text"
+                name="name"
+                placeholder="Username"
+                value=""
+        />
+        <input
+                id="password"
+                type="password"
+                name="password"
+                placeholder="Password"
+                value=""
+        />
+        <button type="submit">Login</button>
+</div>
+
+
+</form>
