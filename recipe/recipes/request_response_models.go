@@ -2,7 +2,7 @@ package recipes
 
 import (
 	"encoding/json"
-	"github.com/pkg/errors"
+	"fmt"
 	"github.com/stockhut/hsfl-master-ai-cloud-engineering/recipe/recipes/model"
 	"strconv"
 )
@@ -101,7 +101,7 @@ type ingredientResponseBody struct {
 func ingredientRequestToModel(i ingredientRequestBody) (model.Ingredient, error) {
 	amount, err := strconv.ParseFloat(i.Amount, 64)
 	if err != nil {
-		return model.Ingredient{}, errors.Wrapf(err, "Failed to convert amount to float64")
+		return model.Ingredient{}, fmt.Errorf("failed to convert amount to float64: %w", err)
 	}
 	return model.Ingredient{
 		Name:   i.Name,
