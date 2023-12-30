@@ -26,4 +26,5 @@ func TestJsonPresenter(t *testing.T) {
 	assert.Nil(t, err)
 
 	assert.Equal(t, "bar", body["foo"])
+	assert.Equal(t, "application/json", recorder.Header().Get("content-type"))
 }

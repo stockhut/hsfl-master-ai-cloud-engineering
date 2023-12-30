@@ -12,6 +12,8 @@ func JsonPresenter[T any](w http.ResponseWriter, status int, content T) {
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 	}
+
+	w.Header().Add("content-type", "application/json")
 	w.WriteHeader(status)
 	_, err = w.Write(body)
 
