@@ -50,7 +50,7 @@ func TestCreateRecipe(t *testing.T) {
 					{
 						"name": "rat",
 						"unit": "pcs",
-						"amount": 1
+						"amount": "1"
 					}
 				],
 				"directions": "cook it",
@@ -97,7 +97,7 @@ func TestCreateRecipe(t *testing.T) {
 					{
 						"name": "rat",
 						"unit": "pcs",
-						"amount": 1
+						"amount": "1"
 					}
 				],
 				"directions": "cook it",

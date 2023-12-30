@@ -45,7 +45,7 @@ CREATE TABLE IF NOT EXISTS "RecipeCollection" (
 
 CREATE TABLE IF NOT EXISTS "Ingredient" (
 	"ingredientName" TEXT NOT NULL,
-	"ingredientAmount" INTEGER NOT NULL,
+	"ingredientAmount" FLOAT NOT NULL,
 	"ingredientUnit" TEXT NOT NULL,
 	"recipeID" INTEGER NOT NULL,
 	FOREIGN KEY("recipeID") REFERENCES "Recipe"("recipeID")

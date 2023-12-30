@@ -44,7 +44,7 @@ func (repo *SqlcRepository) CreateRecipe(recipe model.Recipe) (model.Recipe, err
 		i, err := repo.queries.CreateIngredient(context.TODO(), db.CreateIngredientParams{
 			RecipeID:         r.RecipeID,
 			IngredientName:   ingredient.Name,
-			IngredientAmount: int32(ingredient.Amount),
+			IngredientAmount: ingredient.Amount,
 			IngredientUnit:   ingredient.Unit,
 		})
 

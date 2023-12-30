@@ -9,7 +9,7 @@ import (
 
 type Ingredient struct {
 	Name   string
-	Amount int
+	Amount float64
 	Unit   string
 }
 
@@ -39,7 +39,7 @@ type Recipe struct {
 func IngredientFromDatabaseModel(ingredient db.Ingredient) Ingredient {
 	return Ingredient{
 		Name:   ingredient.IngredientName,
-		Amount: int(ingredient.IngredientAmount),
+		Amount: ingredient.IngredientAmount,
 		Unit:   ingredient.IngredientUnit,
 	}
 }
