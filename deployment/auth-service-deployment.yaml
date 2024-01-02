@@ -21,6 +21,8 @@ spec:
           env:
             - name: JWT_PRIVATE_KEY
               value: "/secret-volume/jwt_private_key.key"
+            - name: PG_CONN_STRING
+              value: "postgres://admin:psltest@postgres:5432/recipedb"
           volumeMounts:
             # name must match the volume name below
             - name: secret-volume
