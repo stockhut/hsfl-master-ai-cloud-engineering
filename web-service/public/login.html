@@ -3,7 +3,7 @@
 <form hx-post="/api/v1/authentication/login" hx-ext="json-enc">
 
 <div>
-        <h2>Username</h2>
+        <label for="name">Username</label>
         <input
                 id="name"
                 type="text"
@@ -11,6 +11,7 @@
                 placeholder="Username"
                 value=""
         />
+        <label for="password">Passwort</label>
         <input
                 id="password"
                 type="password"
@@ -20,6 +21,44 @@
         />
         <button type="submit">Login</button>
 </div>
+
+
+
+
+</form>
+
+<form hx-post="/api/v1/authentication/account" hx-ext="json-enc">
+
+<div>
+        
+        <label for="name">Username</label>
+        <input
+                id="name"
+                type="text"
+                name="name"
+                placeholder="Username"
+                value=""
+        />
+        <label for="email">Email-Adresse</label>
+        <input
+                id="email"
+                type="text"
+                name="email"
+                placeholder="Email"
+                value=""
+        />
+        <label for="password">Passwort</label>
+        <input
+                id="password"
+                type="password"
+                name="password"
+                placeholder="Password"
+                value=""
+        />
+        <button type="submit">Registrieren</button>
+</div>
+
+
 
 
 </form>
