@@ -15,10 +15,10 @@ func New(
 	logMiddleware func(http.HandlerFunc) http.HandlerFunc,
 	accountController *accounts.Controller,
 ) *Router {
-	r := router.New()
+	r := router.New(logMiddleware)
 
-	r.POST("/api/v1/authentication/account", logMiddleware(accountController.HandleCreateAccount))
-	r.POST("/api/v1/authentication/login", logMiddleware(accountController.HandleLogin))
+	r.POST("/api/v1/authentication/account", accountController.HandleCreateAccount)
+	r.POST("/api/v1/authentication/login", accountController.HandleLogin)
 
 	return &Router{r}
 }

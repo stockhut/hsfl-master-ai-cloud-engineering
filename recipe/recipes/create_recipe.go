@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/stockhut/hsfl-master-ai-cloud-engineering/common/presenter/html_presenter"
 	"io"
+	"log"
 	"net/http"
 
 	"github.com/golang-jwt/jwt"
@@ -39,7 +40,12 @@ func (ctrl *Controller) CreateRecipe(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	recipe := recipeRequestToModel(requestBody, username.(string))
+	recipe, err := recipeRequestToModel(requestBody, username.(string))
+	if err != nil {
+		log.Printf("Failed to convert request body to model: %s\n", err)
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
 
 	newRecipe, err := ctrl.repo.CreateRecipe(recipe)
 	if err != nil {

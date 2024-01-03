@@ -10,7 +10,7 @@ import (
 
 type Ingredient struct {
 	IngredientName   string
-	IngredientAmount int32
+	IngredientAmount float64
 	IngredientUnit   string
 	RecipeID         int32
 }
