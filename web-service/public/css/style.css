@@ -42,6 +42,7 @@
   
   
   
+  
   span {
     font-weight: bolder;
   }
@@ -121,6 +122,17 @@
   #ingredient {
     padding: 10px;
   }
+
+  .hidden {
+    display: none;
+  }
+
+  .error {
+ 
+      color: #c90000;
+
+  }
+
 
   
   
