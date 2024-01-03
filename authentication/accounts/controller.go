@@ -4,11 +4,12 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/stockhut/hsfl-master-ai-cloud-engineering/authentication/pwhash"
 	"io"
 	"log"
 	"net/http"
 	"time"
+
+	"github.com/stockhut/hsfl-master-ai-cloud-engineering/authentication/pwhash"
 
 	"github.com/stockhut/hsfl-master-ai-cloud-engineering/authentication/accounts/model"
 	"github.com/stockhut/hsfl-master-ai-cloud-engineering/authentication/jwt_util"
@@ -137,6 +138,7 @@ func (ctrl *Controller) HandleLogin(w http.ResponseWriter, r *http.Request) {
 		Name:    "jwt",
 		Value:   jwtToken,
 		Expires: time.Now().AddDate(0, 0, 7),
+		Path:    "/",
 	}
 	http.SetCookie(w, &cookie)
 	w.WriteHeader(http.StatusOK)
