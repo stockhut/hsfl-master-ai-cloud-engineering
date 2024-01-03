@@ -38,7 +38,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
 
       - name: Trigger frontend rebuild if necessary
-        run: git tag --points-at HEAD | grep frontend && gh workflow run web-build-push-image.yml --ref main || true # change the ref when testing changes in another branch
+        run: git tag --points-at HEAD | grep frontend && gh workflow run web-service_build_push_image.yml --ref main || true # change the ref when testing changes in another branch
         env:
           GH_TOKEN: ${{ github.token }}
 

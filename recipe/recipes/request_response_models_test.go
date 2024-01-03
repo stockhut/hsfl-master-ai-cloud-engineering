@@ -22,7 +22,7 @@ func Test_ingredientModelToResponse(t *testing.T) {
 		assert.Equal(t, ingredientResponseBody{
 			Name:   "someName",
 			Unit:   "someUnit",
-			Amount: 1,
+			Amount: "1.00",
 		}, resp)
 	})
 }
@@ -32,15 +32,15 @@ func Test_ingredientRequestToModel(t *testing.T) {
 
 		i := ingredientRequestBody{
 			Name:   "someName",
-			Amount: 1,
+			Amount: "1.00",
 			Unit:   "someUnit",
 		}
-		resp := ingredientRequestToModel(i)
+		resp, _ := ingredientRequestToModel(i)
 
 		assert.Equal(t, model.Ingredient{
 			Name:   "someName",
 			Unit:   "someUnit",
-			Amount: 1,
+			Amount: 1.00,
 		}, resp)
 	})
 }
@@ -77,7 +77,7 @@ func Test_recipeToResponseModel(t *testing.T) {
 			{
 
 				Name:   "i",
-				Amount: 1,
+				Amount: "1.00",
 				Unit:   "unit",
 			},
 		},
@@ -96,7 +96,7 @@ func Test_recipeRequestToModel(t *testing.T) {
 			{
 
 				Name:   "i",
-				Amount: 1,
+				Amount: "1",
 				Unit:   "unit",
 			},
 		},
@@ -106,7 +106,7 @@ func Test_recipeRequestToModel(t *testing.T) {
 		FeedsPeople:  10,
 	}
 
-	recipe := recipeRequestToModel(req, "someuser")
+	recipe, _ := recipeRequestToModel(req, "someuser")
 
 	assert.Equal(t, model.Recipe{
 		Id:     0,
@@ -149,12 +149,12 @@ func Test_createRecipeRequestBody_UnmarshalJSON(t *testing.T) {
 						{
 							Name:   "first",
 							Unit:   "u1",
-							Amount: 1,
+							Amount: "1",
 						},
 						{
 							Name:   "second",
 							Unit:   "u2",
-							Amount: 2,
+							Amount: "2",
 						},
 					},
 				},
@@ -170,7 +170,7 @@ func Test_createRecipeRequestBody_UnmarshalJSON(t *testing.T) {
 						{
 							Name:   "first",
 							Unit:   "u1",
-							Amount: 1,
+							Amount: "1",
 						},
 					},
 				},

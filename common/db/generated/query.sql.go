@@ -25,7 +25,7 @@ VALUES
 type CreateIngredientParams struct {
 	RecipeID         int32
 	IngredientName   string
-	IngredientAmount int32
+	IngredientAmount float64
 	IngredientUnit   string
 }
 
