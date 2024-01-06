@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/stretchr/testify/assert"
+	"net/http"
 	"testing"
 	"time"
 )
@@ -68,4 +69,35 @@ func Test_lerp(t *testing.T) {
 	elapsed := 5 * time.Second
 
 	assert.Equal(t, 50.0, lerp(start, end, elapsed, totalTime))
+}
+
+func Test_httpStatusIsError(t *testing.T) {
+	testCases := []struct {
+		code    int
+		isError bool
+	}{
+		{
+			http.StatusOK, false,
+		},
+		{
+			http.StatusAccepted, false,
+		},
+		{
+			http.StatusBadRequest, true,
+		},
+		{
+			http.StatusUnauthorized, true,
+		},
+		{
+			http.StatusInternalServerError, true,
+		},
+		{
+			http.StatusBadGateway, true,
+		},
+	}
+
+	for _, tc := range testCases {
+		assert.Equal(t, httpStatusIsError(tc.code), tc.isError)
+	}
+
 }

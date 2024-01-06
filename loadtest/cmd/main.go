@@ -1,9 +1,14 @@
 package main
 
 import (
+	"errors"
 	"fmt"
+	"github.com/stockhut/hsfl-master-ai-cloud-engineering/common/fun"
+	"log"
 	"net"
-	"net/http"
+	"regexp"
+	"strconv"
+	"sync"
 	"sync/atomic"
 	"time"
 )
@@ -16,23 +21,23 @@ type loadPhase struct {
 
 func rpsAfterTime(phases []loadPhase, t time.Duration) float64 {
 
-	fmt.Printf("Finding RPS after %s\n", t)
+	//fmt.Printf("Finding RPS after %s\n", t)
 	totalT := 0 * time.Second
 	lastRps := 0.0
 
-	for i, phase := range phases {
+	for _, phase := range phases {
 
-		fmt.Printf("looking at phase %d. Duration so far: %s\n", i, totalT)
+		//fmt.Printf("looking at phase %d. Duration so far: %s\n", i, totalT)
 
 		if t <= totalT+phase.Rampup {
-			fmt.Printf("i am in rampup for phase %d\n", i)
+			//fmt.Printf("i am in rampup for phase %d\n", i)
 			return lerp(lastRps, phase.Rps, t-totalT, phase.Rampup)
 		}
 		totalT += phase.Rampup
 
 		totalT += phase.Duration
 		if t < totalT {
-			fmt.Printf("i am in phase %d\n", i)
+			//fmt.Printf("i am in phase %d\n", i)
 			return phase.Rps
 		}
 
@@ -43,21 +48,37 @@ func rpsAfterTime(phases []loadPhase, t time.Duration) float64 {
 }
 
 func lerp(start float64, end float64, elapsed time.Duration, totalDuration time.Duration) float64 {
-	fmt.Println("start", start, "end", end, "elapsed", elapsed, "totalDuration", totalDuration)
+	//fmt.Println("start", start, "end", end, "elapsed", elapsed, "totalDuration", totalDuration)
 	percent := float64(elapsed) / float64(totalDuration)
 
-	fmt.Printf("lerp between %f, %f at %f\n", start, end, percent)
+	//fmt.Printf("lerp between %f, %f at %f\n", start, end, percent)
 
 	return start + (end-start)*percent
 }
 
+func httpStatus(re *regexp.Regexp, buff []byte) (int, error) {
+
+	matches := re.FindStringSubmatch(string(buff))
+	if len(matches) < 2 {
+		return 0, errors.New("not enough matches")
+	}
+
+	return strconv.Atoi(matches[1])
+}
+
+func httpStatusIsError(code int) bool {
+	return code/100 != 2 && code/100 != 3
+}
+
 func main() {
+
+	gatherResponseStats := false
 
 	phases := []loadPhase{
 		{
-			Rps:      500,
+			Rps:      2500,
 			Duration: 40 * time.Second,
-			Rampup:   60 * time.Second,
+			Rampup:   10 * time.Second,
 		},
 		{
 			Rps:      2000,
@@ -83,39 +104,98 @@ func main() {
 
 	totalRequests := atomic.Uint32{}
 
+	httpStatusRegex, err := regexp.Compile(`HTTP/\S+ ([[:digit:]]+)`)
+	if err != nil {
+		log.Printf("Failed to compile status code regex: %s\n", err)
+	}
+
 	running := true
 	for running {
 
 		select {
 		case <-quitChan:
-			fmt.Println("Test finished")
+			log.Println("Test finished")
 			running = false
 		case <-time.After(time.Second):
-			rps := int(rpsAfterTime(phases, time.Since(testStartTime)))
-			fmt.Printf("Current RPS: %d\n", rps)
-			for n := 0; n < rps; n++ {
-				go func() {
-					totalRequests.Add(1)
+			go func() {
+				batchStartTime := time.Since(testStartTime)
+				rps := int(rpsAfterTime(phases, batchStartTime))
 
-					jwt := "XXX"
+				wg := sync.WaitGroup{}
 
-					req, err := http.NewRequest("GET", "http://127.0.0.1:80/api/v1/recipe/by/test", nil)
-					if err != nil {
-						fmt.Println(err)
-					}
+				var responseStatusCodes []int
+				if gatherResponseStats {
+					responseStatusCodes = make([]int, rps)
+				}
 
-					req.Header.Add("Cookie", fmt.Sprintf("jwt=%s", jwt))
+				requests := atomic.Uint32{}
+				responseTimes := atomic.Uint64{}
 
-					conn, err := net.Dial("tcp", "127.0.0.1:80")
-					if err != nil {
-						fmt.Println(err)
-					}
+				for n := 0; n < rps; n++ {
 
-					fmt.Fprintf(conn, "GET /api/v1/recipe/by/test HTTP/1.1\nHost: 127.0.0.1:80\nCookie: jwt=%s\n\n", jwt)
-					conn.Close()
-				}()
+					go func(idx int, stats []int) {
+						requests.Add(1)
+						wg.Add(1)
 
-			}
+						jwt := "XX"
+
+						req := []byte(fmt.Sprintf("GET /api/v1/recipe/by/test HTTP/1.1\nHost: 127.0.0.1:80\nCookie: jwt=%s\n\n", jwt))
+
+						var responseBuff []byte
+						var requestStartTime time.Time
+						if gatherResponseStats {
+							responseBuff = make([]byte, 16)
+							requestStartTime = time.Now()
+						}
+
+						conn, err := net.Dial("tcp", "127.0.0.1:80")
+						if err != nil {
+							log.Println(err)
+							return
+						}
+						_, err = conn.Write(req)
+						if err != nil {
+							log.Println(err)
+						}
+
+						if gatherResponseStats {
+							_, err = conn.Read(responseBuff)
+							if err != nil {
+								log.Println(err)
+							}
+							err = conn.Close()
+							if err != nil {
+								log.Println(err)
+							}
+							rt := uint64(time.Since(requestStartTime).Milliseconds())
+							responseTimes.Add(rt)
+
+							status, err := httpStatus(httpStatusRegex, responseBuff)
+							if err != nil {
+								log.Println(err)
+							}
+
+							stats[idx] = status
+						}
+
+						wg.Done()
+					}(n, responseStatusCodes)
+
+				}
+
+				if gatherResponseStats {
+					wg.Wait()
+					r := requests.Load()
+					totalRequests.Add(r)
+
+					numErrorCodes := fun.Count(responseStatusCodes, httpStatusIsError)
+
+					avgResponseTime := float64(responseTimes.Load()) / float64(r)
+					log.Printf("%s: %d RPS %d Errors %0.2fms avg", batchStartTime.Round(time.Second), rps, numErrorCodes, avgResponseTime)
+				} else {
+					log.Printf("%s: %d RPS", batchStartTime.Round(time.Second), rps)
+				}
+			}()
 
 		}
 
