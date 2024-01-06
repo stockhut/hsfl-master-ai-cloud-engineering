@@ -1,0 +1,71 @@
+<h1>Login
+</h1>
+<form hx-post="/api/v1/authentication/login" hx-ext="json-enc" hx-on:htmx:response-error="htmx.removeClass('#loginError', 'hidden')">
+
+<div>
+        <label for="name">Username</label>
+        <input
+                id="name"
+                type="text"
+                name="name"
+                placeholder="Username"
+                value=""
+        />
+        <label for="password">Passwort</label>
+        <input
+                id="password"
+                type="password"
+                name="password"
+                placeholder="Password"
+                value=""
+        />
+        <button type="submit">Login</button>
+        <div id="loginError" class="hidden error">
+        Es ist ein Fehler beim Login aufgetreten!
+        </div>
+</div>
+
+
+
+
+</form>
+
+<form hx-post="/api/v1/authentication/account" hx-ext="json-enc" hx-on:htmx:response-error="htmx.removeClass('#regError', 'hidden')">
+
+<div>
+        
+        <label for="name">Username</label>
+        <input
+                id="name"
+                type="text"
+                name="name"
+                placeholder="Username"
+                value=""
+        />
+        <label for="email">Email-Adresse</label>
+        <input
+                id="email"
+                type="text"
+                name="email"
+                placeholder="Email"
+                value=""
+        />
+        <label for="password">Passwort</label>
+        <input
+                id="password"
+                type="password"
+                name="password"
+                placeholder="Password"
+                value=""
+        />
+        <button type="submit">Registrieren </button> 
+        <div id="regError" class="hidden error">
+        Es ist ein Fehler bei der Registrierung aufgetreten!
+    </div>
+</div>
+
+
+  
+
+
+</form>
