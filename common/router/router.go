@@ -2,6 +2,7 @@ package router
 
 import (
 	"context"
+	"github.com/stockhut/hsfl-master-ai-cloud-engineering/common/fun"
 	"net/http"
 	"regexp"
 )
@@ -14,28 +15,34 @@ type route struct {
 }
 
 type Router struct {
-	routes []route
+	middleware func(next http.HandlerFunc) http.HandlerFunc
+	routes     []route
 }
 
-func New() *Router {
-	return &Router{}
+func New(mw ...func(next http.HandlerFunc) http.HandlerFunc) *Router {
+	allMiddleware := fun.Apply(mw...)
+	return &Router{
+		middleware: allMiddleware,
+	}
 }
 
 func (router *Router) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	for _, route := range router.routes {
-		if r.Method != route.method {
-			continue
-		}
-		matches := route.pattern.FindStringSubmatch(r.URL.Path)
+	router.middleware(func(w http.ResponseWriter, r *http.Request) {
+		for _, route := range router.routes {
+			if r.Method != route.method {
+				continue
+			}
+			matches := route.pattern.FindStringSubmatch(r.URL.Path)
 
-		if len(matches) > 0 {
-			r = createRequestContext(r, route.params, matches[1:])
-			route.handler(w, r)
-			return
+			if len(matches) > 0 {
+				r = createRequestContext(r, route.params, matches[1:])
+				route.handler(w, r)
+				return
 
+			}
 		}
-	}
-	w.WriteHeader(http.StatusNotFound)
+		w.WriteHeader(http.StatusNotFound)
+	})(w, r)
 
 }
 

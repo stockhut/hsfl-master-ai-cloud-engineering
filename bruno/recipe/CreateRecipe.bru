@@ -17,12 +17,17 @@ headers {
 
 body:json {
   {
-    "Author": "test",
-    "Name": "my recipe",
-    "Ingredients": [],
-    "Directions": "cook",
-    "TimeEstimate": 0,
-    "Difficulty": "",
-    "FeedsPeople": 0
+    "name": "my recipe",
+    "ingredients": [
+      {
+        "name": "water",
+        "amount": "0.5",
+        "unit": "l"
+      }
+    ],
+    "directions": "cook",
+    "time_estimate": 40,
+    "difficulty": "easy",
+    "feeds_people": 2
   }
 }

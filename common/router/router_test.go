@@ -25,6 +25,26 @@ func TestRouter(t *testing.T) {
 		assert.Equal(t, http.StatusNotFound, w.Code)
 	})
 
+	t.Run("should use middleware", func(t *testing.T) {
+		called := false
+		// given
+		router := New(func(next http.HandlerFunc) http.HandlerFunc {
+			return func(w http.ResponseWriter, r *http.Request) {
+				called = true
+				next(w, r)
+			}
+		})
+
+		w := httptest.NewRecorder()
+		r := httptest.NewRequest("GET", "/", nil)
+
+		// when
+		router.ServeHTTP(w, r)
+
+		// then
+		assert.True(t, called)
+	})
+
 	t.Run("should route to correct handler without params", func(t *testing.T) {
 		// given
 		router := New()

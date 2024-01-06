@@ -2,7 +2,7 @@ package recipes
 
 import (
 	"encoding/json"
-	"github.com/pkg/errors"
+	"fmt"
 	"github.com/stockhut/hsfl-master-ai-cloud-engineering/recipe/recipes/model"
 	"strconv"
 )
@@ -50,14 +50,10 @@ func (body *createRecipeRequestBody) UnmarshalJSON(data []byte) error {
 	units := asStringSlice(unmarshalTarget.IngredientUnits)
 
 	for i := 0; i < max(len(names), len(amounts), len(units)); i++ {
-		amount, err := strconv.Atoi(amounts[i])
-		if err != nil {
-			return errors.Wrapf(err, "Failed to convert %s to int", amounts[i])
-		}
 		body.Ingredients = append(body.Ingredients, ingredientRequestBody{
 			Name:   names[i],
 			Unit:   units[i],
-			Amount: amount,
+			Amount: amounts[i],
 		})
 	}
 
@@ -93,28 +89,32 @@ type recipeResponseModel struct {
 type ingredientRequestBody struct {
 	Name   string `json:"name"`
 	Unit   string `json:"unit"`
-	Amount int    `json:"amount"`
+	Amount string `json:"amount"`
 }
 
 type ingredientResponseBody struct {
 	Name   string `json:"name"`
 	Unit   string `json:"unit"`
-	Amount int    `json:"amount"`
+	Amount string `json:"amount"`
 }
 
-func ingredientRequestToModel(i ingredientRequestBody) model.Ingredient {
+func ingredientRequestToModel(i ingredientRequestBody) (model.Ingredient, error) {
+	amount, err := strconv.ParseFloat(i.Amount, 64)
+	if err != nil {
+		return model.Ingredient{}, fmt.Errorf("failed to convert amount to float64: %w", err)
+	}
 	return model.Ingredient{
 		Name:   i.Name,
 		Unit:   i.Unit,
-		Amount: i.Amount,
-	}
+		Amount: amount,
+	}, nil
 }
 
 func ingredientModelToResponse(i model.Ingredient) ingredientResponseBody {
 	return ingredientResponseBody{
 		Name:   i.Name,
 		Unit:   i.Unit,
-		Amount: i.Amount,
+		Amount: strconv.FormatFloat(i.Amount, 'f', 2, 64),
 	}
 }
 
@@ -131,14 +131,18 @@ func recipeToResponseModel(recipe model.Recipe) recipeResponseModel {
 	}
 }
 
-func recipeRequestToModel(request createRecipeRequestBody, author string) model.Recipe {
+func recipeRequestToModel(request createRecipeRequestBody, author string) (model.Recipe, error) {
+	ingredients, err := fun.MapOrErr(request.Ingredients, ingredientRequestToModel)
+	if err != nil {
+		return model.Recipe{}, err
+	}
 	return model.Recipe{
 		Author:       author,
 		Name:         request.Name,
-		Ingredients:  fun.Map(request.Ingredients, ingredientRequestToModel),
+		Ingredients:  ingredients,
 		Directions:   request.Directions,
 		TimeEstimate: request.TimeEstimate,
 		Difficulty:   request.Difficulty,
 		FeedsPeople:  request.FeedsPeople,
-	}
+	}, nil
 }
