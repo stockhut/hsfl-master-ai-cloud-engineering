@@ -4,57 +4,17 @@ import (
 	"errors"
 	"fmt"
 	"github.com/stockhut/hsfl-master-ai-cloud-engineering/common/fun"
+	"github.com/stockhut/hsfl-master-ai-cloud-engineering/loadtest"
+	"github.com/stockhut/hsfl-master-ai-cloud-engineering/loadtest/config"
 	"log"
 	"net"
 	"regexp"
 	"strconv"
+	"strings"
 	"sync"
 	"sync/atomic"
 	"time"
 )
-
-type loadPhase struct {
-	Rps      float64
-	Duration time.Duration
-	Rampup   time.Duration
-}
-
-func rpsAfterTime(phases []loadPhase, t time.Duration) float64 {
-
-	//fmt.Printf("Finding RPS after %s\n", t)
-	totalT := 0 * time.Second
-	lastRps := 0.0
-
-	for _, phase := range phases {
-
-		//fmt.Printf("looking at phase %d. Duration so far: %s\n", i, totalT)
-
-		if t <= totalT+phase.Rampup {
-			//fmt.Printf("i am in rampup for phase %d\n", i)
-			return lerp(lastRps, phase.Rps, t-totalT, phase.Rampup)
-		}
-		totalT += phase.Rampup
-
-		totalT += phase.Duration
-		if t < totalT {
-			//fmt.Printf("i am in phase %d\n", i)
-			return phase.Rps
-		}
-
-		lastRps = phase.Rps
-	}
-
-	return -1
-}
-
-func lerp(start float64, end float64, elapsed time.Duration, totalDuration time.Duration) float64 {
-	//fmt.Println("start", start, "end", end, "elapsed", elapsed, "totalDuration", totalDuration)
-	percent := float64(elapsed) / float64(totalDuration)
-
-	//fmt.Printf("lerp between %f, %f at %f\n", start, end, percent)
-
-	return start + (end-start)*percent
-}
 
 func httpStatus(re *regexp.Regexp, buff []byte) (int, error) {
 
@@ -72,20 +32,21 @@ func httpStatusIsError(code int) bool {
 
 func main() {
 
-	gatherResponseStats := false
-
-	phases := []loadPhase{
-		{
-			Rps:      2500,
-			Duration: 40 * time.Second,
-			Rampup:   10 * time.Second,
-		},
-		{
-			Rps:      2000,
-			Duration: 60 * time.Second,
-			Rampup:   20 * time.Second,
-		},
+	configFilePath := "loadtest.yaml"
+	cfg, err := config.FromFile("loadtest.yaml")
+	if err != nil {
+		log.Fatalf("Failed to load config file %s: %s\n", configFilePath, err)
 	}
+
+	gatherResponseStats := cfg.ResponseStats
+
+	phases := fun.Map(cfg.Phases, func(p config.Phase) loadtest.Phase {
+		return loadtest.Phase{
+			Rps:      float64(p.Rps),
+			Rampup:   p.Rampup,
+			Duration: p.Duration,
+		}
+	})
 
 	var totalTestDuration time.Duration
 	for _, p := range phases {
@@ -119,7 +80,7 @@ func main() {
 		case <-time.After(time.Second):
 			go func() {
 				batchStartTime := time.Since(testStartTime)
-				rps := int(rpsAfterTime(phases, batchStartTime))
+				rps := int(loadtest.RpsAfterTime(phases, batchStartTime))
 
 				wg := sync.WaitGroup{}
 
@@ -137,9 +98,14 @@ func main() {
 						requests.Add(1)
 						wg.Add(1)
 
-						jwt := "XX"
+						headers := cfg.Headers
+						headersStrings := fun.MapToSlice(headers, func(name string, value string) string {
+							return name + ": " + value
+						})
 
-						req := []byte(fmt.Sprintf("GET /api/v1/recipe/by/test HTTP/1.1\nHost: 127.0.0.1:80\nCookie: jwt=%s\n\n", jwt))
+						allHeadersString := strings.Join(headersStrings, "\n")
+						fmt.Println(allHeadersString)
+						req := []byte(fmt.Sprintf("GET /api/v1/recipe/by/test HTTP/1.1\n%s\n\n", allHeadersString))
 
 						var responseBuff []byte
 						var requestStartTime time.Time
@@ -148,7 +114,7 @@ func main() {
 							requestStartTime = time.Now()
 						}
 
-						conn, err := net.Dial("tcp", "127.0.0.1:80")
+						conn, err := net.Dial("tcp", cfg.Host)
 						if err != nil {
 							log.Println(err)
 							return

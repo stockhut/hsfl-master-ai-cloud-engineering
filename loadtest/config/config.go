@@ -1,26 +1,44 @@
 package config
 
 import (
-	"encoding/json"
+	"gopkg.in/yaml.v3"
 	"os"
+	"time"
 )
 
-type LoadTestConfig struct {
-	Users    int      `json:"users"`
-	Rampup   int      `json:"rampup"`
-	Duration int      `json:"duration"`
-	Targets  []string `json:"targets"`
+type LoadTest struct {
+	ResponseStats bool     `yaml:"responseStats"`
+	Host          string   `yaml:"host"`
+	Targets       []string `yaml:"targets"`
+	Headers       Headers  `yaml:"headers"`
+	Phases        []Phase  `yaml:"phases"`
 }
 
-func FromFS(path string) (LoadTestConfig, error) {
-	var config LoadTestConfig
+type Phase struct {
+	Rps      int           `yaml:"rps"`
+	Rampup   time.Duration `yaml:"rampup"`
+	Duration time.Duration `yaml:"duration"`
+}
 
-	f, err := os.Open(path)
+type Headers map[string]string
+
+func FromFile(path string) (LoadTest, error) {
+
+	content, err := os.ReadFile(path)
 	if err != nil {
-		return config, err
+		return LoadTest{}, err
 	}
-	defer f.Close()
 
-	err = json.NewDecoder(f).Decode(&config)
+	return fromBytes(content)
+}
+
+func fromBytes(input []byte) (LoadTest, error) {
+	var config LoadTest
+	err := yaml.Unmarshal(input, &config)
+
+	if err != nil {
+		return LoadTest{}, err
+	}
+
 	return config, err
 }
