@@ -1,6 +1,11 @@
 package loadtest
 
-import "time"
+import (
+	"github.com/stockhut/hsfl-master-ai-cloud-engineering/common/fun"
+	"math/rand"
+	"strings"
+	"time"
+)
 
 type Phase struct {
 	Rps      float64
@@ -43,4 +48,17 @@ func lerp(start float64, end float64, elapsed time.Duration, totalDuration time.
 	//fmt.Printf("lerp between %f, %f at %f\n", start, end, percent)
 
 	return start + (end-start)*percent
+}
+
+func HeadersToString(headers map[string]string) string {
+	headersStrings := fun.MapToSlice(headers, func(name string, value string) string {
+		return name + ": " + value
+	})
+
+	return strings.Join(headersStrings, "\n")
+}
+
+func RandomItemFromSlice[T any](ts []T) T {
+	i := rand.Intn(len(ts))
+	return ts[i]
 }

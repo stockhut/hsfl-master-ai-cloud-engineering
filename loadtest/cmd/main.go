@@ -10,7 +10,6 @@ import (
 	"net"
 	"regexp"
 	"strconv"
-	"strings"
 	"sync"
 	"sync/atomic"
 	"time"
@@ -47,6 +46,14 @@ func main() {
 			Duration: p.Duration,
 		}
 	})
+
+	headersMap := cfg.Headers
+	_, hasHostHeader := headersMap["Host"]
+	if !hasHostHeader {
+		headersMap["Host"] = cfg.Host
+	}
+
+	headers := loadtest.HeadersToString(headersMap)
 
 	var totalTestDuration time.Duration
 	for _, p := range phases {
@@ -98,14 +105,8 @@ func main() {
 						requests.Add(1)
 						wg.Add(1)
 
-						headers := cfg.Headers
-						headersStrings := fun.MapToSlice(headers, func(name string, value string) string {
-							return name + ": " + value
-						})
-
-						allHeadersString := strings.Join(headersStrings, "\n")
-						fmt.Println(allHeadersString)
-						req := []byte(fmt.Sprintf("GET /api/v1/recipe/by/test HTTP/1.1\n%s\n\n", allHeadersString))
+						path := loadtest.RandomItemFromSlice(cfg.Targets)
+						req := []byte(fmt.Sprintf("GET %s HTTP/1.1\n%s\n\n", path, headers))
 
 						var responseBuff []byte
 						var requestStartTime time.Time
@@ -200,8 +201,3 @@ func main() {
 	//p.Stop()
 
 }
-
-//func randomItemFromSlice[T any](ts []T) T {
-//	i := rand.Intn(len(ts))
-//	return ts[i]
-//}
