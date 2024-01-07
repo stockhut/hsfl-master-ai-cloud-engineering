@@ -26,7 +26,7 @@ Create kubernetes secrets consumed by the services:
 ## Creating
 
 ```shell
-kubectl create -f .
+kubectl create -f . --recursive
 ```
 
 ## Accessing via minikube:
