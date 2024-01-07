@@ -8,11 +8,6 @@ in
       ./common.nix
     ];
 
-  environment.etc = {
-    "nixos/configuration.nix".source = ./node.nix;
-    "nixos/common.nix".source = ./common.nix;
-  };
-
   networking.hostName = "node";
 
   virtualbox = {
