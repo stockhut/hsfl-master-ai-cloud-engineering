@@ -7,8 +7,8 @@ on:
       - '.github/workflows/web-service_build_push_image.yml'
     branches:
       - '**'
-    tags-ignore:
-      - '**'
+    # tags-ignore:
+    #   - '**'
   workflow_dispatch:
 
 jobs:
