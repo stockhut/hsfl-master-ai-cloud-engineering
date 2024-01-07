@@ -5,7 +5,7 @@
 ### Protobuf code generation
 
 ```shell
-go generate proto/gen.go
+go generate auth-proto/gen.go
 ```
 ## Configuration
 
