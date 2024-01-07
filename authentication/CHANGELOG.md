@@ -2,6 +2,15 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## auth-0.3.0 - 2024-01-07
+#### Bug Fixes
+- **(authentication)** jwt Cookie Path - (9f0d3ce) - neki9072
+- **(authentication)** set jwt cookie expiration so it's not a session cookie - (2c8b06c) - TuftedDeer
+#### Features
+- add middleware capabilities to common router - (3526598) - TuftedDeer
+
+- - -
+
 ## auth-0.2.0 - 2023-12-27
 #### Features
 - **(authentication)** use postgres db - (d78afaa) - TuftedDeer

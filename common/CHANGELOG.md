@@ -2,6 +2,14 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## common-0.3.0 - 2024-01-07
+#### Features
+- **(authentication)** make ingredient amount float - (a8707f6) - TuftedDeer
+- **(common)** set content-type header in json presenter - (fa582b0) - TuftedDeer
+- add middleware capabilities to common router - (3526598) - TuftedDeer
+
+- - -
+
 ## common-0.2.0 - 2023-12-28
 #### Features
 - **(common)** implement html presenter - (6ff0850) - TuftedDeer

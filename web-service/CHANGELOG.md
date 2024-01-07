@@ -2,6 +2,15 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## frontend-0.3.0 - 2024-01-07
+#### Features
+- **(authentication)** make ingredient amount float - (a8707f6) - TuftedDeer
+- **(web-service)** error notification login/registration and styling - (5b5d518) - neki9072
+- **(web-service)** registration form - (e06eab6) - neki9072
+- **(web-service)** login frontend html - (d783d4a) - neki9072
+
+- - -
+
 ## frontend-0.2.0 - 2023-12-28
 #### Features
 - **(recipe)** make recipe directions a single string - (192e703) - TuftedDeer

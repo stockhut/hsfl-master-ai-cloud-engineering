@@ -2,6 +2,15 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## recipe-0.4.0 - 2024-01-07
+#### Features
+- **(authentication)** make ingredient amount float - (a8707f6) - TuftedDeer
+- add middleware capabilities to common router - (3526598) - TuftedDeer
+#### Refactoring
+- **(recipe)** remove third party pkg dependency - (46ec39e) - TuftedDeer
+
+- - -
+
 ## recipe-0.3.0 - 2023-12-28
 #### Bug Fixes
 - **(recipe)** Fix no iteration over Directions - (9fac4f4) - neki9072

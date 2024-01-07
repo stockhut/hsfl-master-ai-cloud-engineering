@@ -2,6 +2,29 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## 0.4.0 - 2024-01-07
+### Package updates
+- frontend bumped to frontend-0.3.0
+- auth bumped to auth-0.3.0
+- common bumped to common-0.3.0
+- recipe bumped to recipe-0.4.0
+### Global changes
+#### Bug Fixes
+- **(monitoring)** use correct port for grafana service - (413adeb) - TuftedDeer
+#### Continuous Integration
+- **(release)** fix web-service build workflow path - (d2f1631) - Fabi
+#### Documentation
+- kubernetes + compose docs - (39559f1) - TuftedDeer
+#### Miscellaneous Chores
+- **(codecov)** informational mode for patches - (e0685d2) - TuftedDeer
+- **(deployment)** add auth pg connection string, rpc connection config - (31f1536) - TuftedDeer
+- **(monitoring)** update rate calculation and graph legends - (237ce46) - --local
+- **(monitoring)** add custom dashboard to grafana - (8d28151) - --local
+- **(monitoring)** add config files - (b93ba41) - --local
+- update bruno requests - (3e4fafc) - TuftedDeer
+
+- - -
+
 ## 0.3.0 - 2023-12-28
 ### Package updates
 - recipe bumped to recipe-0.3.0
