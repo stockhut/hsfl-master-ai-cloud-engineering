@@ -14,8 +14,10 @@ in
     vmDerivationName = name;
     vmFileName = "${name}.ova";
     vmName = name;
+    params = {
+      cpus = 2;
+    };
   };
-
   services.k3s = {
     enable = true;
     role = "server";
