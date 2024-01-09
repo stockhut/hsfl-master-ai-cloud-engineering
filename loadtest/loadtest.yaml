@@ -1,0 +1,14 @@
+host: 127.0.0.1:80
+responseStats: true
+targets:
+  - /api/v1/recipe/by/test
+  - /api/v1/recipe/1
+headers:
+  Cookie: jwt=XXX
+phases:
+  - rps: 20
+    rampup: 10s
+    duration: 60s
+  - rps: 200
+    rampup: 20s
+    duration: 160s
