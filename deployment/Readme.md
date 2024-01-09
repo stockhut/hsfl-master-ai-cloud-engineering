@@ -2,7 +2,13 @@
 
 ## Prerequisites
 
-### Prepare minikube
+You need a working kubernetes cluster.
+We used [minikube](https://minikube.sigs.k8s.io/docs/) and [k3s](https://k3s.io/).
+Our k3s VM configuration and build instructions for can be found in [../k8s-vm](https://github.com/stockhut/hsfl-master-ai-cloud-engineering/blob/main/k8s-vm)
+
+We expect a working ingress-controller in the cluster.
+
+### With minikube
 
 ```shell
 minikube addons enable ingress
