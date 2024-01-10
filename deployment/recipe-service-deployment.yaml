@@ -25,12 +25,13 @@ spec:
           env:
           - name: JWT_PUBLIC_KEY
             value: "/jwt-pub-key-volume/jwt_public_key.key"
-          - name: PG_CONN_STRING
-            value: "postgres://admin:psltest@postgres:5432/recipedb"
           - name: AUTH_RPC_TARGET
             value: "authentication:3001"
+          envFrom:
+          - secretRef:
+              name: recipe-db-secret
           imagePullPolicy: Always
-          image: ghcr.io/stockhut/hsfl-master-ai-cloud-engineering/recipe:main
+          image: ghcr.io/stockhut/hsfl-master-ai-cloud-engineering/recipe:0.4.0
           volumeMounts:
             # name must match the volume name below
             - name: jwt-pub-key-volume

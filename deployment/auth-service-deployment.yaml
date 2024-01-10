@@ -16,13 +16,14 @@ spec:
     spec:
       containers:
         - name: authentication-service
-          image: ghcr.io/stockhut/hsfl-master-ai-cloud-engineering/authentication:main
+          image: ghcr.io/stockhut/hsfl-master-ai-cloud-engineering/authentication:0.3.0
           imagePullPolicy: Always
           env:
             - name: JWT_PRIVATE_KEY
               value: "/secret-volume/jwt_private_key.key"
-            - name: PG_CONN_STRING
-              value: "postgres://admin:psltest@postgres:5432/recipedb"
+          envFrom:
+          - secretRef:
+              name: auth-db-secret
           volumeMounts:
             # name must match the volume name below
             - name: secret-volume
