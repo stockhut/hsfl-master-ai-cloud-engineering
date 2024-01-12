@@ -27,7 +27,14 @@ Create kubernetes secrets consumed by the services:
  kubectl create secret generic jwt-private-key --from-file jwt_private_key.key
 
  kubectl create secret generic jwt-public-key --from-file jwt_public_key.key
+
+ kubectl create secret generic postgres-credentials-secret --from-literal='POSTGRES_USER=user' --from-literal='POSTGRES_PASSWORD=password'
+
+ kubectl create secret generic recipe-db-secret --from-literal='PG_CONN_STRING=postgres://user:password@postgres:5432/db'
+
+ kubectl create secret generic auth-db-secret --from-literal='PG_CONN_STRING=postgres://user:password@postgres:5432/db'
 ```
+
 
 ## Creating
 
