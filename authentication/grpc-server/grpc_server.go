@@ -63,5 +63,9 @@ func (s *GrpcServer) GetAccount(ctx context.Context, request *auth_proto.GetAcco
 		return auth_proto.AccountResponseFromModel(acc), nil
 	})
 
-	return response.(*auth_proto.GetAccountResponse), err
+	if response != nil {
+		return response.(*auth_proto.GetAccountResponse), err
+	} else {
+		return nil, err
+	}
 }
