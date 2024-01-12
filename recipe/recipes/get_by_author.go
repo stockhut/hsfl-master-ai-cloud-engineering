@@ -45,6 +45,6 @@ func (ctrl *Controller) GetByAuthor(w http.ResponseWriter, r *http.Request) {
 	if htmx.IsHtmxRequest(r) {
 		html_presenter.Present(w, http.StatusOK, ctrl.htmlTemplates, "displayRecipesShort.html", response)
 	} else {
-		json_presenter.JsonPresenter(w, http.StatusOK, response)
+		json_presenter.Present(w, http.StatusOK, response)
 	}
 }

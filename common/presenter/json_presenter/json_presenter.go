@@ -6,7 +6,7 @@ import (
 	"net/http"
 )
 
-func JsonPresenter[T any](w http.ResponseWriter, status int, content T) {
+func Present[T any](w http.ResponseWriter, status int, content T) {
 
 	body, err := json.Marshal(content)
 	if err != nil {

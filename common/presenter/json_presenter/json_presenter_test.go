@@ -16,7 +16,7 @@ func TestJsonPresenter(t *testing.T) {
 
 	recorder := httptest.NewRecorder()
 
-	JsonPresenter(recorder, http.StatusTeapot, testStruct{Foo: "bar"})
+	Present(recorder, http.StatusTeapot, testStruct{Foo: "bar"})
 
 	assert.Equal(t, http.StatusTeapot, recorder.Code)
 
