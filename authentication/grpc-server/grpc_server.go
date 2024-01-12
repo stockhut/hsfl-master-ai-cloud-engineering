@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"github.com/stockhut/hsfl-master-ai-cloud-engineering/authentication/accounts"
 	"github.com/stockhut/hsfl-master-ai-cloud-engineering/authentication/auth-proto"
+	"github.com/stockhut/hsfl-master-ai-cloud-engineering/common/coalescing"
+	"golang.org/x/sync/singleflight"
 	"google.golang.org/grpc"
 	"log"
 	"net"
@@ -16,12 +18,14 @@ var logger = log.New(os.Stdout, "GRPC ", log.LstdFlags|log.Lmsgprefix)
 
 type GrpcServer struct {
 	auth_proto.UnimplementedAuthenticationServer
-	repo accounts.Repository
+	repo              accounts.Repository
+	singleflightGroup coalescing.Coalescer
 }
 
 func New(repo accounts.Repository) *GrpcServer {
 	return &GrpcServer{
-		repo: repo,
+		repo:              repo,
+		singleflightGroup: &singleflight.Group{},
 	}
 }
 
@@ -47,14 +51,17 @@ func (s *GrpcServer) GetAccount(ctx context.Context, request *auth_proto.GetAcco
 	logger.Printf("GetAccount: %s\n", request.Name)
 	name := request.GetName()
 
-	acc, err := s.repo.FindAccount(ctx, name)
-	if err != nil {
-		if errors.Is(err, accounts.ErrAccountNotFound) {
-			return nil, auth_proto.ErrAccountNotFound
+	response, err, _ := s.singleflightGroup.Do("get-account "+name, func() (interface{}, error) {
+		acc, err := s.repo.FindAccount(ctx, name)
+		if err != nil {
+			if errors.Is(err, accounts.ErrAccountNotFound) {
+				return nil, auth_proto.ErrAccountNotFound
+			}
+			return nil, auth_proto.ErrInternal
 		}
-		return nil, auth_proto.ErrInternal
-	}
 
-	response := auth_proto.AccountResponseFromModel(acc)
-	return response, nil
+		return auth_proto.AccountResponseFromModel(acc), nil
+	})
+
+	return response.(*auth_proto.GetAccountResponse), err
 }
