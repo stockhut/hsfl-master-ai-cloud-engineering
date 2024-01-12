@@ -62,3 +62,7 @@ func RandomItemFromSlice[T any](ts []T) T {
 	i := rand.Intn(len(ts))
 	return ts[i]
 }
+
+func HttpStatusIsError(code int) bool {
+	return code/100 != 2 && code/100 != 3
+}
