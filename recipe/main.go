@@ -2,9 +2,8 @@ package main
 
 import (
 	"context"
-	"database/sql"
 	"fmt"
-
+	"github.com/jackc/pgx/v5/pgxpool"
 	auth_proto "github.com/stockhut/hsfl-master-ai-cloud-engineering/authentication/auth-proto"
 	"github.com/stockhut/hsfl-master-ai-cloud-engineering/common/environment"
 	"github.com/stockhut/hsfl-master-ai-cloud-engineering/common/jwt_public_key"
@@ -18,7 +17,7 @@ import (
 	"net/http"
 	"os"
 
-	_ "github.com/jackc/pgx/v5/stdlib"
+	_ "github.com/jackc/pgx/v5/pgxpool"
 	dll "github.com/stockhut/hsfl-master-ai-cloud-engineering/common/db"
 	database "github.com/stockhut/hsfl-master-ai-cloud-engineering/common/db/generated"
 
@@ -46,20 +45,20 @@ func main() {
 
 	ctx := context.Background()
 
-	// TODO: sslmode=disable should not be default, but it's too convenient atm
-	db, err := sql.Open("pgx", pgConnString+"?sslmode=disable")
+	dbPool, err := pgxpool.New(context.Background(), pgConnString)
 	if err != nil {
-		fmt.Printf("Failed to open database: %s\n", err)
-		return
+		fmt.Fprintf(os.Stderr, "Unable to connect to database: %v\n", err)
+		os.Exit(1)
 	}
+	defer dbPool.Close()
 
-	// create tables
-	if _, err := db.ExecContext(ctx, dll.Ddl); err != nil {
+	_, err = dbPool.Exec(ctx, dll.Ddl)
+	if err != nil {
 		fmt.Printf("Failed to create tables: %s\n", err)
 		return
 	}
 
-	queries := database.New(db)
+	queries := database.New(dbPool)
 
 	publicKey, err := jwt_public_key.FromFile(jwtPublicKeyFile)
 	if err != nil {

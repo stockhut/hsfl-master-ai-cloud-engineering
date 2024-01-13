@@ -3,6 +3,7 @@ package recipes
 import (
 	"context"
 	"database/sql"
+	"github.com/jackc/pgx/v5/pgtype"
 
 	db "github.com/stockhut/hsfl-master-ai-cloud-engineering/common/db/generated"
 	"github.com/stockhut/hsfl-master-ai-cloud-engineering/common/fun"
@@ -28,8 +29,8 @@ func (repo *SqlcRepository) CreateRecipe(recipe model.Recipe) (model.Recipe, err
 
 	params := db.CreateRecipeParams{
 		RecipeName:   recipe.Name,
-		TimeEstimate: sql.NullInt32{Int32: int32(recipe.TimeEstimate), Valid: true},
-		Difficulty:   sql.NullString{String: recipe.Difficulty, Valid: true},
+		TimeEstimate: pgtype.Int4(sql.NullInt32{Int32: int32(recipe.TimeEstimate), Valid: true}),
+		Difficulty:   pgtype.Text(sql.NullString{String: recipe.Difficulty, Valid: true}),
 		Directions:   recipe.Directions,
 		Author:       recipe.Author,
 	}
