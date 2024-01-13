@@ -25,10 +25,6 @@ func httpStatus(re *regexp.Regexp, buff []byte) (int, error) {
 	return strconv.Atoi(matches[1])
 }
 
-func httpStatusIsError(code int) bool {
-	return code/100 != 2 && code/100 != 3
-}
-
 func main() {
 
 	configFilePath := "loadtest.yaml"
@@ -155,7 +151,7 @@ func main() {
 					r := requests.Load()
 					totalRequests.Add(r)
 
-					numErrorCodes := fun.Count(responseStatusCodes, httpStatusIsError)
+					numErrorCodes := fun.Count(responseStatusCodes, loadtest.HttpStatusIsError)
 
 					avgResponseTime := float64(responseTimes.Load()) / float64(r)
 					log.Printf("%s: %d RPS %d Errors %0.2fms avg", batchStartTime.Round(time.Second), rps, numErrorCodes, avgResponseTime)

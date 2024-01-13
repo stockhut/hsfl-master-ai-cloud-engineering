@@ -1,4 +1,4 @@
-package main
+package loadtest
 
 import (
 	"github.com/stretchr/testify/assert"
@@ -9,7 +9,7 @@ import (
 
 func Test_rpsAtTime(t *testing.T) {
 
-	phases := []loadPhase{
+	phases := []Phase{
 		{
 			Rps:      100,
 			Duration: 10 * time.Second,
@@ -52,7 +52,7 @@ func Test_rpsAtTime(t *testing.T) {
 	for _, tc := range testCases {
 
 		t.Run(tc.name, func(t *testing.T) {
-			rps := rpsAfterTime(phases, tc.t)
+			rps := RpsAfterTime(phases, tc.t)
 
 			assert.Equal(t, tc.rps, rps)
 		})
@@ -97,7 +97,7 @@ func Test_httpStatusIsError(t *testing.T) {
 	}
 
 	for _, tc := range testCases {
-		assert.Equal(t, httpStatusIsError(tc.code), tc.isError)
+		assert.Equal(t, HttpStatusIsError(tc.code), tc.isError)
 	}
 
 }
