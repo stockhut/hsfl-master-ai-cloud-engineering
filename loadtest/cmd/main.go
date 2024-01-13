@@ -167,11 +167,11 @@ func main() {
 
 				}
 
-				if gatherResponseStats {
-					wg.Wait()
-					r := requests.Load()
-					totalRequests.Add(r)
+				wg.Wait()
+				r := requests.Load()
+				totalRequests.Add(r)
 
+				if gatherResponseStats {
 					numErrorCodes := fun.Count(responseStatusCodes, loadtest.HttpStatusIsError)
 
 					avgResponseTime := float64(responseTimes.Load()) / float64(r)
