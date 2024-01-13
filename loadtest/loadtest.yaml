@@ -1,14 +1,19 @@
-host: 127.0.0.1:80
-responseStats: true
+host: 127.0.0.1:8081
+responseStats: false
 targets:
-  - /api/v1/recipe/by/test
-  - /api/v1/recipe/1
+  - method: POST
+    path: /api/v1/recipe
+    bodyFile: body.json
 headers:
-  Cookie: jwt=XXX
+  Cookie: jwt=<some-token>
+  HX-Request: true
 phases:
-  - rps: 20
+  - rps: 500
+    rampup: 60s
+    duration: 20s
+  - rps: 1000
     rampup: 10s
-    duration: 60s
-  - rps: 200
-    rampup: 20s
-    duration: 160s
+    duration: 30s
+  - rps: 2000
+    rampup: 10s
+    duration: 30s

@@ -8,6 +8,7 @@ import (
 	"github.com/stockhut/hsfl-master-ai-cloud-engineering/loadtest/config"
 	"log"
 	"net"
+	"os"
 	"regexp"
 	"strconv"
 	"sync"
@@ -32,6 +33,25 @@ func main() {
 	if err != nil {
 		log.Fatalf("Failed to load config file %s: %s\n", configFilePath, err)
 	}
+
+	targets := fun.Map(cfg.Targets, func(t config.Target) loadtest.Target {
+
+		var body []byte
+		if t.Body != "" {
+			body = []byte(t.Body)
+		} else if t.BodyFile != "" {
+			data, err := os.ReadFile(t.BodyFile)
+			if err != nil {
+				log.Fatalf("Failed to read file %s: %s", t.BodyFile, err)
+			}
+			body = data
+		}
+		return loadtest.Target{
+			Method: t.Method,
+			Path:   t.Path,
+			Body:   body,
+		}
+	})
 
 	gatherResponseStats := cfg.ResponseStats
 
@@ -100,9 +120,9 @@ func main() {
 					go func(idx int, stats []int) {
 						requests.Add(1)
 						wg.Add(1)
+						defer wg.Done()
 
-						path := loadtest.RandomItemFromSlice(cfg.Targets)
-						req := []byte(fmt.Sprintf("GET %s HTTP/1.1\n%s\n\n", path, headers))
+						target := loadtest.RandomItemFromSlice(targets)
 
 						var responseBuff []byte
 						var requestStartTime time.Time
@@ -116,9 +136,10 @@ func main() {
 							log.Println(err)
 							return
 						}
-						_, err = conn.Write(req)
+						err = loadtest.MakeHttpRequest(conn, headers, target)
 						if err != nil {
 							log.Println(err)
+							return
 						}
 
 						if gatherResponseStats {
@@ -139,9 +160,9 @@ func main() {
 							}
 
 							stats[idx] = status
+						} else {
+							conn.Close()
 						}
-
-						wg.Done()
 					}(n, responseStatusCodes)
 
 				}

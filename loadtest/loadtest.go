@@ -1,7 +1,9 @@
 package loadtest
 
 import (
+	"fmt"
 	"github.com/stockhut/hsfl-master-ai-cloud-engineering/common/fun"
+	"io"
 	"math/rand"
 	"strings"
 	"time"
@@ -11,6 +13,29 @@ type Phase struct {
 	Rps      float64
 	Duration time.Duration
 	Rampup   time.Duration
+}
+
+type Target struct {
+	Method string
+	Path   string
+	Body   []byte
+}
+
+// MakeHttpRequest builds an HTTP Request from a Target and pre-formatted common headers and writes it to the
+// given io.Writer, e.g. a net.Conn
+func MakeHttpRequest(writer io.Writer, headers string, target Target) error {
+	method := strings.ToUpper(target.Method)
+
+	contentHeader := fmt.Sprintf("Content-Length: %d", len(target.Body))
+	head := fmt.Sprintf("%s %s HTTP/1.1\n%s\n%s\n\n", method, target.Path, headers, contentHeader)
+
+	_, err := writer.Write([]byte(head))
+	if err != nil {
+		return err
+	}
+	_, err = writer.Write(target.Body)
+
+	return err
 }
 
 func RpsAfterTime(phases []Phase, t time.Duration) float64 {
