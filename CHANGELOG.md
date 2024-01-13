@@ -2,6 +2,28 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## 0.5.0 - 2024-01-13
+### Package updates
+- loadtest bumped to loadtest-0.2.0
+- common bumped to common-0.4.0
+### Global changes
+#### Continuous Integration
+- **(loadtest)** fix workflow name - (1c64243) - Fabi
+- **(loadtest)** Run tests - (865aa4b) - TuftedDeer
+- **(web-service)** fetch tags when building web-service image - (adc6350) - TuftedDeer
+- **(web-service)** don't ignore tags (trying to fix missing git tag when building image for new version) - (c95b91c) - TuftedDeer
+#### Documentation
+- **(deployment)** apply mainfests recusive (to include postgres) - (266c761) - TuftedDeer
+- mention vm ocnfig in deployment readme - (16ed4c1) - TuftedDeer
+- typo - (390000a) - Fabi
+#### Miscellaneous Chores
+- **(k8s-vm)** set cpu count to 2 - (d36690d) - TuftedDeer
+- **(k8s-vm)** don't copy config into vm - (1de47bb) - TuftedDeer
+- **(monitoring)** Add kubernetes dashboard (CPU/Mem per image, service network) - (4055124) - TuftedDeer
+- add k3s vm config - (287ecf3) - TuftedDeer
+
+- - -
+
 ## 0.4.0 - 2024-01-07
 ### Package updates
 - frontend bumped to frontend-0.3.0

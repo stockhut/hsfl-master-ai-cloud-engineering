@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## common-0.4.0 - 2024-01-13
+#### Features
+- **(loadtest)** add optional response statistics - (dfa2c60) - TuftedDeer
+
+- - -
+
 ## common-0.3.0 - 2024-01-07
 #### Features
 - **(authentication)** make ingredient amount float - (a8707f6) - TuftedDeer

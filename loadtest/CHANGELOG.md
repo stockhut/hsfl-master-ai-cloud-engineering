@@ -2,6 +2,22 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## loadtest-0.2.0 - 2024-01-13
+#### Documentation
+- **(loadtest)** update readme - (9eabb57) - TuftedDeer
+#### Features
+- **(loadtest)** use targets from config file, set host header automatically - (c96add6) - TuftedDeer
+- **(loadtest)** load config from yaml file - (babcff9) - TuftedDeer
+- **(loadtest)** add optional response statistics - (dfa2c60) - TuftedDeer
+- **(loadtest)** implement RPS curve - (1d8c23a) - TuftedDeer
+#### Miscellaneous Chores
+- **(loadtest)** Fix tests - (a7e004f) - TuftedDeer
+- **(loadtest)** go mod tidy - (ae0bb95) - TuftedDeer
+#### Refactoring
+- **(loadtest)** remove old implementation - (90ab0d3) - TuftedDeer
+
+- - -
+
 ## loadtest-0.1.0 - 2023-12-27
 #### Documentation
 - **(loadtest)** loadtest readme - (b9c3122) - TuftedDeer
