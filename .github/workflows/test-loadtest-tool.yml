@@ -1,4 +1,4 @@
-name: Test reverse-proxy
+name: Test loadtest tool
 
 on:
   push:
