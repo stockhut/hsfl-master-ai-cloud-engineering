@@ -59,7 +59,7 @@ func (ctrl *Controller) CreateRecipe(w http.ResponseWriter, r *http.Request) {
 	if htmx.IsHtmxRequest(r) {
 		html_presenter.Present(w, http.StatusCreated, ctrl.htmlTemplates, "recipeSuccessfulCreate.html", response)
 	} else {
-		json_presenter.JsonPresenter(w, http.StatusCreated, response)
+		json_presenter.Present(w, http.StatusCreated, response)
 	}
 
 }
