@@ -5,11 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>TasteBudTribes</title>
     <link rel="stylesheet" href="css/style.css" />
-    <script
-      src="https://unpkg.com/htmx.org@1.9.6"
-      integrity="sha384-FhXw7b6AlE/jyjlZH5iHa/tTe9EpJ1Y55RjcgPbjeWMskSxZt1v9qkxLJWNJaGni"
-      crossorigin="anonymous"
-    ></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/htmx.org@1.9.6" integrity="sha384-FhXw7b6AlE/jyjlZH5iHa/tTe9EpJ1Y55RjcgPbjeWMskSxZt1v9qkxLJWNJaGni" crossorigin="anonymous"></script>
 
     <script src="https://unpkg.com/htmx.org/dist/ext/json-enc.js"></script>
 
@@ -20,44 +17,41 @@
       <div class="content-wrapper">
         <div class="oben">
           <header>
-            <nav>
-              <ul>
-                <li>
-                  <a
-                    hx-get="login.html"
-                    hx-target="#content"
-                    hx-swap="innerHTML"
-                    >Login</a
-                  >
-                </li>
-                <li><a href="index.html">FYP</a></li>
-                <li>
-                  <a
-                    hx-get="/api/v1/recipe/by/self"
-                    hx-target="#content"
-                    hx-swap="innerHTML"
-                    >Profil
-                  </a>
-                </li>
-                <li>
-                  <a
-                    hx-get="createRecipe.html"
-                    hx-target="#content"
-                    hx-swap="innerHTML"
-                    >Rezept verfassen
-                  </a>
-                </li>
-              </ul>
-            </nav>
+            <div>
+              <h1 class="p-1 text-5xl font-semibold text-white">
+                TasteBudTribes
+              </h1>
+            </div>
           </header>
         </div>
 
-        <div id="content"></div>
-      </div>
+        <div class="leiste m-5">
+          <nav>
+            <ul class="">
+              <li><a href="index.html">FYP</a></li>
+              <li>
+                <a hx-get="/api/v1/recipe/by/self" hx-target="#content" hx-swap="innerHTML">Profil </a>
+              </li>
+              <li>
+                <a hx-get="createRecipe.html" hx-target="#content" hx-swap="innerHTML">Rezept verfassen </a>
+              </li>
+              <li class="loginbtn float-right">
+                <a hx-get="login.html" hx-target="#content" hx-swap="innerHTML">Login</a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+        <div id="content">
 
-      <div class="unten">
+        <h2>Teile deine Rezepte und lass dich von anderen inspirieren</h2>
+
+        <h3 class="m-12">TasteBudTribes ist eine Plattfrom zum Teilen von Rezepten und verbindet Leute mit einer Leidenschaft für Essen und Kochen</h3>
+      </div>
+      </div>
+      <div class="footer">
         <footer>
-          <ul></ul>
+          <ul>
+          </ul>
         </footer>
       </div>
     </div>
