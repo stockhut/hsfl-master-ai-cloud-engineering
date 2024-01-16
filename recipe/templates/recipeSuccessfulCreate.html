@@ -1,7 +1,8 @@
 <div>
-  <h3><em>{{.Name}}</em> wurde erfolgreich erstellt</h3>
+  <h3><em>{{.Name}}</em></h3> 
+  <p>wurde erfolgreich erstellt</p>
 
-  <button
+  <button class="addbtn"
     hx-get="api/v1/recipe/{{.Id}}"
     hx-target="#content"
     hx-swap="innerHTML"
@@ -9,7 +10,7 @@
     Rezept ansehen
   </button>
   
-  <button
+  <button class="postbtn"
     hx-get="createRecipe.html"
     hx-target="#content"
     hx-swap="innerHTML"
