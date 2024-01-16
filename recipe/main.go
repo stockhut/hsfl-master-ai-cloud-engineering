@@ -17,13 +17,15 @@ import (
 	"net/http"
 	"os"
 
-	_ "github.com/jackc/pgx/v5/pgxpool"
 	dll "github.com/stockhut/hsfl-master-ai-cloud-engineering/common/db"
 	database "github.com/stockhut/hsfl-master-ai-cloud-engineering/common/db/generated"
 
 	"github.com/stockhut/hsfl-master-ai-cloud-engineering/authentication/middleware"
 	"github.com/stockhut/hsfl-master-ai-cloud-engineering/recipe/api/router"
 	"github.com/stockhut/hsfl-master-ai-cloud-engineering/recipe/recipes"
+
+	// required for the pprof endpoints (https://pkg.go.dev/net/http/pprof#Profile)
+	_ "net/http/pprof"
 )
 
 const JwtPublicKeyEnvKey = "JWT_PUBLIC_KEY"
@@ -86,6 +88,10 @@ func main() {
 	logMw := requestlogger.New(logger)
 
 	r := router.New(authMiddleware, logMw, recipeController)
+
+	go func() {
+		log.Println(http.ListenAndServe(":6060", nil))
+	}()
 
 	port := ":8081"
 

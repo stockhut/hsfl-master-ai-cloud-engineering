@@ -37,6 +37,11 @@ The authentication service exposes a gRPC service.
 gRPC and Protobuf code can be imported by other programs from `auth-proto`.
 This includes generated code as well as error definitions and converters.
 
+
+## Profiling
+
+A [pprof](https://pkg.go.dev/net/http/pprof@go1.21.6) endpoint is available at port 6060
+
 ## Responsibilities
 
 - CRUD for recipes
