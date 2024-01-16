@@ -9,7 +9,7 @@ require (
 
 require (
 	github.com/golang-jwt/jwt v3.2.2+incompatible
-	github.com/jackc/pgx/v5 v5.5.1
+	github.com/jackc/pgx/v5 v5.5.2
 	github.com/stretchr/testify v1.8.4
 	go.uber.org/mock v0.4.0
 	google.golang.org/grpc v1.60.1
@@ -23,7 +23,7 @@ require (
 	golang.org/x/crypto v0.17.0 // indirect
 	golang.org/x/exp v0.0.0-20231206192017-f3f8817b8deb // indirect
 	golang.org/x/net v0.16.0 // indirect
-	golang.org/x/sync v0.4.0 // indirect
+	golang.org/x/sync v0.4.0
 	golang.org/x/sys v0.15.0 // indirect
 	golang.org/x/text v0.14.0 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20231002182017-d307bd883b97 // indirect
