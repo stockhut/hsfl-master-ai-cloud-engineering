@@ -2,6 +2,18 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## auth-0.4.0 - 2024-01-16
+#### Bug Fixes
+- **(authentication)** fix nil conversion error - (73834cd) - TuftedDeer
+#### Documentation
+- **(authentication)** fix proto generation instructions in readme - (2724ae5) - TuftedDeer
+#### Features
+- **(recipe)** Improve "get by author" performance under load through request coalescing - (5cd3112) - TuftedDeer
+#### Miscellaneous Chores
+- **(authentication)** use local common package version - (d9f21d2) - TuftedDeer
+
+- - -
+
 ## auth-0.3.0 - 2024-01-07
 #### Bug Fixes
 - **(authentication)** jwt Cookie Path - (9f0d3ce) - neki9072

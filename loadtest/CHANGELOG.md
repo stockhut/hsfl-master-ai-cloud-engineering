@@ -2,6 +2,14 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## loadtest-0.3.0 - 2024-01-16
+#### Bug Fixes
+- **(loadtest)** Fix request counting when stats are disabled - (f6b761f) - TuftedDeer
+#### Features
+- **(loadtest)** Implement optional http request body - (426f737) - TuftedDeer
+
+- - -
+
 ## loadtest-0.2.0 - 2024-01-13
 #### Documentation
 - **(loadtest)** update readme - (9eabb57) - TuftedDeer

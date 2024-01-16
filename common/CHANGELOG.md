@@ -2,6 +2,17 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## common-0.5.0 - 2024-01-16
+#### Bug Fixes
+- **(json-presenter)** return after error - (5a09dbd) - TuftedDeer
+#### Features
+- **(recipe)** Use pgx connection pool to improve database connections - (26f2a5c) - TuftedDeer
+- **(recipe)** Improve "get by author" performance under load through request coalescing - (5cd3112) - TuftedDeer
+#### Refactoring
+- **(json-presenter)** rename function - (31dcaaf) - TuftedDeer
+
+- - -
+
 ## common-0.4.0 - 2024-01-13
 #### Features
 - **(loadtest)** add optional response statistics - (dfa2c60) - TuftedDeer

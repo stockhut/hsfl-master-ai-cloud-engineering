@@ -2,6 +2,16 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## 0.6.0 - 2024-01-16
+### Package updates
+- recipe bumped to recipe-0.5.0
+- loadtest bumped to loadtest-0.3.0
+- common bumped to common-0.5.0
+- auth bumped to auth-0.4.0
+### Global changes
+
+- - -
+
 ## 0.5.0 - 2024-01-13
 ### Package updates
 - loadtest bumped to loadtest-0.2.0

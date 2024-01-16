@@ -2,6 +2,16 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## recipe-0.5.0 - 2024-01-16
+#### Features
+- **(recipe)** Use pgx connection pool to improve database connections - (26f2a5c) - TuftedDeer
+- **(recipe)** Add profiling endpoint - (d06d815) - TuftedDeer
+- **(recipe)** Improve "get by author" performance under load through request coalescing - (5cd3112) - TuftedDeer
+#### Refactoring
+- **(json-presenter)** rename function - (31dcaaf) - TuftedDeer
+
+- - -
+
 ## recipe-0.4.0 - 2024-01-07
 #### Features
 - **(authentication)** make ingredient amount float - (a8707f6) - TuftedDeer
