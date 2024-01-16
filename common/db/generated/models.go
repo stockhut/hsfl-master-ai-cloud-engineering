@@ -5,7 +5,7 @@
 package database
 
 import (
-	"database/sql"
+	"github.com/jackc/pgx/v5/pgtype"
 )
 
 type Ingredient struct {
@@ -20,18 +20,18 @@ type Profile struct {
 	Username       string
 	Password       string
 	ProfilePicture []byte
-	Bio            sql.NullString
-	Friends        sql.NullInt32
-	Weekplan       sql.NullInt32
+	Bio            pgtype.Text
+	Friends        pgtype.Int4
+	Weekplan       pgtype.Int4
 }
 
 type Recipe struct {
 	RecipeID      int32
 	RecipeName    string
 	RecipePicture []byte
-	TimeEstimate  sql.NullInt32
-	Difficulty    sql.NullString
-	FeedsPeople   sql.NullInt32
+	TimeEstimate  pgtype.Int4
+	Difficulty    pgtype.Text
+	FeedsPeople   pgtype.Int4
 	Directions    string
 	Author        string
 }
@@ -41,6 +41,6 @@ type RecipeCollection struct {
 	RecipeCollectionName string
 	RecipeID             int32
 	OwnerID              int32
-	Date                 sql.NullString
-	SubscriberID         sql.NullInt32
+	Date                 pgtype.Text
+	SubscriberID         pgtype.Int4
 }

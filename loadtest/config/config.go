@@ -9,9 +9,16 @@ import (
 type LoadTest struct {
 	ResponseStats bool     `yaml:"responseStats"`
 	Host          string   `yaml:"host"`
-	Targets       []string `yaml:"targets"`
+	Targets       []Target `yaml:"targets"`
 	Headers       Headers  `yaml:"headers"`
 	Phases        []Phase  `yaml:"phases"`
+}
+
+type Target struct {
+	Method   string `yaml:"method"`
+	Path     string `yaml:"path"`
+	Body     string `yaml:"body"`
+	BodyFile string `yaml:"bodyFile"`
 }
 
 type Phase struct {
