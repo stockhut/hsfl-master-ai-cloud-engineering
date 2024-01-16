@@ -54,3 +54,5 @@ http://127.0.0.1
 ## Persistence
 
 Postgres data is persisted to `/data` on the host using a volume
+
+[^1]: https://notes.salrahman.com/generate-es256-es384-es512-private-keys/

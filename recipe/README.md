@@ -1,5 +1,12 @@
 # Recipe Service
 
+To build this manually without docker, you also need to generate the protobuf code for the Authentication service.
+## Docker Image
+
+```shell
+docker build .. --file Dockerfile
+```
+
 ### Testing
 
 Install `mockgen`:

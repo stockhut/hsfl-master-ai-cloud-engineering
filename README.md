@@ -26,6 +26,22 @@
 
 A Food-focused social media platform for like-minded people, centered around tags and communities (tribes). Share your favorite recipies, follow your favorite Foodies on the platform and create meal plans to get you through the week.
 
+## Requirements
+
+To build all programs without docker, you will need the following tools installed:
+
+- Go 1.21
+- sqlc
+- protobuf
+- protoc-gen-go
+- protoc-gen-go-grpc
+
+To develop and test GitHub actions locally, we recommend [act](https://github.com/nektos/act).
+
+If you want to analyse the profiling data from the Recipe Service, you need
+- pprof
+- graphviz
+
 ## API Client
 
 There is a collection for the API client [Bruno](https://www.usebruno.com/) in the `bruno` directory.
@@ -33,7 +49,7 @@ There is a collection for the API client [Bruno](https://www.usebruno.com/) in t
 ## Versioning
 
 We use [cocogitto](https://docs.cocogitto.io/) and their [GitHub action](https://github.com/cocogitto/cocogitto-action) to automatically create new semantic version releases based on conventional commits.
-The `release.yml` workflow is executed manually and will create a new commit and new version number for each project prefixed with the name, e.g. `auth-1.2.3`.
+The [Create new Version](https://github.com/stockhut/hsfl-master-ai-cloud-engineering/actions/workflows/release.yml) workflow is executed manually and will create a new commit and new version number for each project prefixed with the name, e.g. `auth-1.2.3`.
 After the new commit is tagged and pushed, the action will check whether the `authentication` or `recipe` container images need a rebuild and trigger the respective workflow using the `gh` CLI client (workaround because workflows are not triggered by push events from other workflows [source](https://stackoverflow.com/questions/72110432/github-workflow-is-not-triggered-after-pushing-tags)).
 The container Image will be tagged using information from the git tags (see `auth-build-push-image.yml` for details)
 

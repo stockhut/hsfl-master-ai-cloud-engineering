@@ -1,11 +1,11 @@
-# Bruno collection 🐶
+# Bruno API Request collection 🐶
 
 This folder contains a collection of API requests that can be opened in [Bruno](https://www.usebruno.com/)
 
 ## Authentication
 
-The JWT received from the login endpoint will automatically be stored in the environment using a [post response script](https://docs.usebruno.com/scripting/javascript-reference.html#javascript-api-reference) and included in other requests.
-The token is stored as a secret outside the collection directory, so it is safe to share via git.
+The JWT received from the login endpoint will automatically be stored in the selected environment using a [post response script](https://docs.usebruno.com/scripting/javascript-reference.html#javascript-api-reference) and included in other requests.
+The token is stored as a secret outside the collection directory, so it is safe to share the collection via git.
 
 ## Environments:
 

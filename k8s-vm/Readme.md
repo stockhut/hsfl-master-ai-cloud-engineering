@@ -1,6 +1,6 @@
 # K8s test VM
 
-We use [NixOS](nixos.org) as basis for our virtual machines, which allows us to build reproducible VirtualBox appliances (or other types of images) from declarative configurations.
+We use [NixOS](https://nixos.org) as basis for our virtual machines, which allows us to build reproducible VirtualBox appliances (or other types of images) from declarative configurations.
 
 These images are configured to be as easy to use a possible, consequently they are totally unsafe and should not be exposed to unsafe networks.
 
@@ -47,7 +47,9 @@ ip a s
 ```
 to find the IP address
 
-### Node
+### Node (optional)
+
+This vm will not initialize a cluster but join an existing one.
 
 Insert the control plane vm ip address in the `serverAdr` in `node.nix`
 

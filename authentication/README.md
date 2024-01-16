@@ -3,10 +3,23 @@
 ## Building
 
 ### Protobuf code generation
-
+(not needed when using Docker)
 ```shell
 go generate auth-proto/gen.go
 ```
+
+### SQLC code generation
+(not needed when using Docker)
+```shell
+go generate accounts/_sqlc/gen.go 
+```
+
+## Docker Image
+
+```shell
+docker build .. --file Dockerfile
+```
+
 ## Configuration
 
 ### Environment variables
@@ -19,4 +32,3 @@ go generate auth-proto/gen.go
 
 - creation and management of user accounts
 - login functionality
-- authentification/authorization of incoming requests
