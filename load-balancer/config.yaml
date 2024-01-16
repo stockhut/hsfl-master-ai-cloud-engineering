@@ -1,0 +1,6 @@
+listen: 0.0.0.0:6000
+#hosts:
+#  - localhost:8080
+containerPort: 8081
+images:
+  - ghcr.io/stockhut/hsfl-master-ai-cloud-engineering/authentication:test
