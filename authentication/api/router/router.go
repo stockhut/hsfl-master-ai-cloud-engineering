@@ -19,7 +19,9 @@ func New(
 
 	r.POST("/api/v1/authentication/account", accountController.HandleCreateAccount)
 	r.POST("/api/v1/authentication/login", accountController.HandleLogin)
-
+	r.GET("/health", func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
+	})
 	return &Router{r}
 }
 

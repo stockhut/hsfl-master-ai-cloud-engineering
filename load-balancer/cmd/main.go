@@ -7,7 +7,9 @@ import (
 	"github.com/docker/docker/client"
 	"github.com/stockhut/hsfl-master-ai-cloud-engineering/common/fun"
 	"github.com/stockhut/hsfl-master-ai-cloud-engineering/load-balancer"
+	"github.com/stockhut/hsfl-master-ai-cloud-engineering/load-balancer/config"
 	"github.com/stockhut/hsfl-master-ai-cloud-engineering/load-balancer/strategies/round_robin"
+	"log"
 	"net/http"
 	"time"
 )
@@ -16,29 +18,41 @@ func main() {
 
 	fmt.Println("Starting load balancer")
 
-	const ServiceImage = "recipe:latest"
-	const ServicePort = "8081"
+	configFile := "config.yaml"
+	cfg, err := config.FromFile(configFile)
+	if err != nil {
+		log.Fatalf("Failed to read config file %s: %s", configFile, err)
+	}
 
 	ctx := context.Background()
 
-	running, err := getRunningReplicas(ctx, "recipe:latest")
-	if err != nil {
-		fmt.Printf("Failed to get running replicas for image %s: %s\n", ServiceImage, err)
+	var replicas []string
+
+	replicas = append(replicas, cfg.Hosts...)
+
+	for _, image := range cfg.ContainerImages {
+		running, err := getRunningReplicas(ctx, image)
+		if err != nil {
+			fmt.Printf("Failed to get running replicas for image %s: %s\n", image, err)
+		}
+		fmt.Printf("Found %d running instances for %s\n", len(running), image)
+
+		containerHosts := fun.Map(running, func(ip string) string {
+			return ip + ":" + cfg.ContainerPort
+		})
+		replicas = append(replicas, containerHosts...)
 	}
 
-	replicas := fun.Map(running, func(ip string) string {
-		return ip + ":" + ServicePort
-	})
-
-	fmt.Printf("Found %d running instances\n", len(replicas))
+	fmt.Println("Replicas:")
 	for _, r := range replicas {
 		fmt.Println(r)
 	}
+	fmt.Println("---")
 
 	lb := load_balancer.New(replicas, round_robin.New(), 10*time.Second)
 	lb.StartHealthchecks()
 
-	panic(http.ListenAndServe(":5001", lb))
+	panic(http.ListenAndServe(cfg.Listen, lb))
 
 }
 

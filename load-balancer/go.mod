@@ -8,6 +8,7 @@ require (
 	github.com/stockhut/hsfl-master-ai-cloud-engineering/reverse-proxy v0.0.0-20231112111810-e3eee8482615
 	github.com/stretchr/testify v1.8.4
 	go.uber.org/mock v0.3.0
+	gopkg.in/yaml.v3 v3.0.1
 )
 
 require (
@@ -30,6 +31,5 @@ require (
 	golang.org/x/sys v0.13.0 // indirect
 	golang.org/x/time v0.5.0 // indirect
 	golang.org/x/tools v0.14.0 // indirect
-	gopkg.in/yaml.v3 v3.0.1 // indirect
 	gotest.tools/v3 v3.5.1 // indirect
 )
