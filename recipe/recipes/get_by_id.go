@@ -1,6 +1,7 @@
 package recipes
 
 import (
+	"errors"
 	"github.com/stockhut/hsfl-master-ai-cloud-engineering/common/presenter/html_presenter"
 	"net/http"
 	"strconv"
@@ -17,12 +18,18 @@ func (ctrl *Controller) GetById(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(recipeId)
 
 	if err != nil {
-		panic(err)
+		w.WriteHeader(http.StatusBadRequest)
+		return
 	}
 
 	recipe, err := ctrl.repo.GetById(model.RecipeId(id))
+
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
+		if errors.Is(err, ErrNoSuchID) {
+			w.WriteHeader(http.StatusNotFound)
+		} else {
+			w.WriteHeader(http.StatusInternalServerError)
+		}
 		return
 	}
 
