@@ -1,7 +1,8 @@
 
 
 # Taste Bud Tribe
-[![](https://codecov.io/gh/stockhut/hsfl-master-ai-cloud-engineering/graph/badge.svg?token=JD50FBWWAJ)](https://codecov.io/gh/stockhut/hsfl-master-ai-cloud-engineering)
+[![](https://codecov.io/gh/stockhut/hsfl-master-ai-cloud-engineering/graph/badge.svg?token=JD50FBWWAJ)](https://codecov.io/gh/stockhut/hsfl-master-ai-cloud-engineering) 
+Note: Depending on how recently a workflow has run, codecov might only display the coverage of that workflow/service (e.g. only coverage for recipe). Click on the bagde to see what coverage is currently shown.
 
 ![GitHub tag (with filter)](https://img.shields.io/github/v/tag/stockhut/hsfl-master-ai-cloud-engineering?label=Version)
 
