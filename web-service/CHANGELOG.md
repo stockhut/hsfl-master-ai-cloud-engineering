@@ -2,6 +2,13 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## frontend-0.4.1 - 2024-01-17
+#### Bug Fixes
+- **(frontend)** Home page label - (d7fa444) - TuftedDeer
+- **(web-service)** fix input fields, required and remove Pfannkuchen - (d9d8516) - neki9072
+
+- - -
+
 ## frontend-0.4.0 - 2024-01-17
 #### Documentation
 - update readmes - (797f1ee) - TuftedDeer

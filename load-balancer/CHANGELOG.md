@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## loadbalancer-0.2.0 - 2024-01-17
+#### Features
+- **(load-balancer)** Load config from yaml file - (56a5077) - TuftedDeer
+
+- - -
+
 ## loadbalancer-0.1.0 - 2023-12-27
 #### Bug Fixes
 - **(load-balancer)** fix race condition when passing healthyReplicas to balancing strategy - (fcd94ca) - TuftedDeer

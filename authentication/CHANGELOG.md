@@ -2,6 +2,19 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## auth-0.5.0 - 2024-01-17
+#### Bug Fixes
+- **(authentication)** Stop logging jwts - (6c804a4) - TuftedDeer
+#### Documentation
+- update readmes - (797f1ee) - TuftedDeer
+#### Features
+- **(authentication)** Implement health check endpoint - (2a8a435) - TuftedDeer
+#### Miscellaneous Chores
+- **(docs)** fix table layout - (fcf0272) - Alexander Brandt
+- **(docs)** add endpoints to readme - (8467ffc) - Alexander Brandt
+
+- - -
+
 ## auth-0.4.0 - 2024-01-16
 #### Bug Fixes
 - **(authentication)** fix nil conversion error - (73834cd) - TuftedDeer

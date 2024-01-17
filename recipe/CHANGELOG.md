@@ -2,6 +2,19 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## recipe-0.6.1 - 2024-01-17
+#### Bug Fixes
+- **(recipe)** return correct status code when recipe id is not found - (5fbc054) - TuftedDeer
+- **(recipe)** fix time estimate and feeds people, remove unused sql code (without breaking things this time) - (e1c13b1) - TuftedDeer
+- **(web-service)** fix input fields, required and remove Pfannkuchen - (d9d8516) - neki9072
+#### Miscellaneous Chores
+- **(docs)** add backticks to health endpoint - (8e048cf) - Alexander Brandt
+- **(docs)** fix table layout - (fcf0272) - Alexander Brandt
+- **(docs)** add endpoints to readme - (8467ffc) - Alexander Brandt
+- go mod tidy - (ed62c63) - TuftedDeer
+
+- - -
+
 ## recipe-0.6.0 - 2024-01-17
 #### Bug Fixes
 - **(recipe)** Display cooking instructions correctly/remove placeholder - (108d273) - TuftedDeer

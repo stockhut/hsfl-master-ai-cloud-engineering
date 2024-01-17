@@ -2,6 +2,17 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## common-0.5.1 - 2024-01-17
+#### Bug Fixes
+- **(recipe)** fix time estimate and feeds people, remove unused sql code (without breaking things this time) - (e1c13b1) - TuftedDeer
+#### Documentation
+- update readmes - (797f1ee) - TuftedDeer
+#### Miscellaneous Chores
+- Remove unused sql code - (28174d5) - TuftedDeer
+- go mod tidy - (ed62c63) - TuftedDeer
+
+- - -
+
 ## common-0.5.0 - 2024-01-16
 #### Bug Fixes
 - **(json-presenter)** return after error - (5a09dbd) - TuftedDeer

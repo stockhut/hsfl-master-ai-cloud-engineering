@@ -2,6 +2,22 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## 0.8.0 - 2024-01-17
+### Package updates
+- recipe bumped to recipe-0.6.1
+- auth bumped to auth-0.5.0
+- common bumped to common-0.5.1
+- frontend bumped to frontend-0.4.1
+- loadbalancer bumped to loadbalancer-0.2.0
+### Global changes
+#### Miscellaneous Chores
+- **(docs)** reference deployment readme in root readme - (ef529c1) - Alexander Brandt
+- **(monitoring)** add readme - (7479165) - Alexander Brandt
+- **(monitoring)** Display total pod RAM usage, display number of pods per image - (2d387ae) - TuftedDeer
+- Add image build information to compose.yml - (747a545) - TuftedDeer
+
+- - -
+
 ## 0.7.0 - 2024-01-17
 ### Package updates
 - recipe bumped to recipe-0.6.0
