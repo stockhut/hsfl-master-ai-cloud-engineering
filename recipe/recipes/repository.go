@@ -3,6 +3,8 @@ package recipes
 import (
 	"context"
 	"database/sql"
+	"errors"
+	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgtype"
 
 	db "github.com/stockhut/hsfl-master-ai-cloud-engineering/common/db/generated"
@@ -16,6 +18,8 @@ type RecipeRepository interface {
 	CreateRecipe(model.Recipe) (model.Recipe, error)
 	DeleteRecipe(id model.RecipeId) error
 }
+
+var ErrNoSuchID = errors.New("no recipe with his id")
 
 type SqlcRepository struct {
 	queries *db.Queries
@@ -80,6 +84,9 @@ func (repo *SqlcRepository) GetById(id model.RecipeId) (*model.Recipe, error) {
 	recipe, err := repo.queries.GetRecipe(context.TODO(), int32(id))
 
 	if err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			return nil, ErrNoSuchID
+		}
 		return nil, err
 	}
 
