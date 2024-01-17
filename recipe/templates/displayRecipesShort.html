@@ -1,20 +1,18 @@
 {{range .}}
-<div>
-  <h2 hx-get="api/v1/recipe/{{.Id}}" hx-target="#content" hx-swap="innerHTML">
-    {{.Name}}
-  </h2>
+<div class="recipeDisplay">
+  <h2 id="recipeName2" hx-get="api/v1/recipe/{{.Id}}" hx-target="#content" hx-swap="innerHTML">{{.Name}}</h2>
 
-  <ul>
-    <li>
+  <ul class="recipeDesp">
+    <li class="recipeDes">
       <p>Schwierigkeit</p>
       <span>{{.Difficulty}}</span>
     </li>
-    <li>
+    <li class="recipeDes">
       <p>Zeitaufwand</p>
       <span>{{.TimeEstimate}}</span>
     </li>
-    <li>
-      <p>Personen</p>
+    <li class="recipeDes">
+      <p>Portionen</p>
       <span>{{.FeedsPeople}}</span>
     </li>
   </ul>

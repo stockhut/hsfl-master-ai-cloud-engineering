@@ -1,26 +1,35 @@
-<div>
-    <h2>{{.Name}}</h2>
-
-<ul>
-    <li><p>Schwierigkeit</p> <span>{{.Difficulty}}</span></li>
-    <li><p>Zeitaufwand</p><span>{{.TimeEstimate}}</span></li>
-    <li><p>Personen</p><span>{{.FeedsPeople}}</span></li>
-</ul>
-
-    <h3>Zutaten</h3>
-<ul>
-    {{range .Ingredients}}
-
-    <li>{{.Name}} {{.Amount}} {{.Unit}}</li>
- 
-
-    {{end}}
-</ul>
-
-    <h3>Arbeitsschritte</h3>
-    <p>
-        {{.Directions}}
-    </p>
-
-</div>
-
+<div class="recipeDisplay">
+    <div class="aRecipe">
+      <h2 id="recipeName2">Pfannkuchen</h2>
+  
+      <ul class="recipeDesp">
+        <li class="recipeDes">
+          <p>Schwierigkeit</p>
+          <span>{{.Difficulty}}</span>
+        </li>
+        <li class="recipeDes">
+          <p>Zeitaufwand</p>
+          <span>{{.TimeEstimate}}</span>
+        </li>
+        <li class="recipeDes">
+          <p>Portionen</p>
+          <span>{{.FeedsPeople}}</span>
+        </li>
+      </ul>
+  
+      <h3 class="font-semibold underline">Zutaten</h3>
+      <div>
+        <ul class="recipeDesp">
+          {{range .Ingredients}}
+  
+          <li class="recipeDesi">{{.Name}} {{.Amount}} {{.Unit}}</li>
+  
+          {{end}}
+        </ul>
+      </div>
+  
+      <h3 class="font-semibold underline">Arbeitsschritte</h3>
+      <p> {{ .Directions }} </p>
+    </div>
+  </div>
+  

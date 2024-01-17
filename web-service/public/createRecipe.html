@@ -1,65 +1,48 @@
-<h1>Rezept verfassen</h1>
+<div class="center">
+<h1 class="text-4xl">Rezept verfassen</h1>
 <div class="inputform">
   <form hx-post="/api/v1/recipe" hx-ext="json-enc">
-    <div>
-      <label for="recipeName"><p>Rezeptname:</p></label>
-      <input id="recipeName" type="text" name="name" value="" />
-    </div>
-    <div>
-      <p>Zutaten:</p>
-      <div id="ingredient-list">
-        <div id="ingredient">
-          <input
-                  id="ingredientName"
-                  type="text"
-                  name="ingredient-name"
-                  placeholder="Zutat"
-                  value=""
-          />
-          <input
-                  id="ingredientUnit"
-                  type="text"
-                  name="ingredient-unit"
-                  placeholder="Einheit"
-                  value=""
-          />
-          <input
-                  id="ingredientAmount"
-                  type="number"
-                  name="ingredient-amount"
-                  placeholder="Menge"
-                  step="any"
-                  value=""
-          />
-        </div>
+    <fieldset>
+      <div>
+        <label for="recipeName"><h3>Rezeptname:</h3></label>
+        <input id="recipeName" type="text" name="name" value="" required />
+      </div>
+      <div>
+        <div id="ingredient-list">
+          <div id="ingredient">
+            <label for="ingredientName"><p>Zutat</p></label>
+            <input id="ingredientName" type="text" name="ingredient-name" value="" required />
+            <label for="ingredientUnit"><p>Einheit</p></label>
+            <input id="ingredientUnit" type="text" name="ingredient-unit" value="" required />
+            <label for="ingredientAmount"><p>Menge</p></label>
+            <input id="ingredientAmount" type="number" name="ingredient-amount" step="any" value="" required />
+          </div>
 
-        <!-- clone the ingredient inputs to allow more than one ingredient - this is https://hyperscript.org/ -->
-        <button type="button" _="on click put #ingredient.outerHTML before me">
-          Add more
-        </button>
+          <!-- clone the ingredient inputs to allow more than one ingredient - this is https://hyperscript.org/ -->
+          <button class="addbtn" type="button" _="on click put #ingredient.outerHTML before me">Weitere Zutat hinzufügen</button>
+        </div>
       </div>
 
-    </div>
+      <div>
+        <label for="directions"><p>Arbeitsschritte:</p></label>
+        <textarea id="directions" type="text" name="directions" value=""> </textarea>
+      </div>
 
-    <div>
-      <label for="directions"><p>Arbeitsschritte:</p></label>
-      <input id="directions" type="text" name="directions" value="" />
-    </div>
-    
+      <div>
+        <label for="timeEstimate"><p>Arbeitszeit:</p></label>
+        <input id="timeEstimate" type="number" name="timeEstimate" value="" />
+      </div>
+      <div>
+        <label for="difficulty"><p>Schwierigkeit:</p></label>
+        <input id="difficulty" type="text" name="difficulty" value="" />
+      </div>
+      <div>
+        <label for="feedsPeople"><p>Portionen:</p></label>
+        <input id="feedsPeople" type="number" name="feedsPeople" value="" />
+      </div>
 
-    <div>
-      <label for="timeEstimate"><p>Arbeitszeit:</p></label>
-      <input id="timeEstimate" type="number" name="timeEstimate" value="" />
-    </div>
-    <div>
-      <label for="difficulty"><p>Schwierigkeit:</p></label>
-      <input id="difficulty" type="text" name="difficulty" value="" />
-    </div>
-    <div>
-      <label for="feedsPeople"><p>Portionsgröße:</p></label>
-      <input id="feedsPeople" type="number" name="feedsPeople" value="" />
-    </div>
-
-    <button type="submit">Posten</button>
+      <button class="postbtn" type="submit">Posten</button>
+    </fieldset>
   </form>
+</div>
 </div>
