@@ -9,6 +9,8 @@ services:
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -U postgres"]
       interval: "1s"
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
   auth:
     image: ghcr.io/stockhut/hsfl-master-ai-cloud-engineering/authentication:dev
     build:
