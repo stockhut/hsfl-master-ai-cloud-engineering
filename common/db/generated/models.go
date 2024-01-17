@@ -15,32 +15,12 @@ type Ingredient struct {
 	RecipeID         int32
 }
 
-type Profile struct {
-	ProfileID      int32
-	Username       string
-	Password       string
-	ProfilePicture []byte
-	Bio            pgtype.Text
-	Friends        pgtype.Int4
-	Weekplan       pgtype.Int4
-}
-
 type Recipe struct {
-	RecipeID      int32
-	RecipeName    string
-	RecipePicture []byte
-	TimeEstimate  pgtype.Int4
-	Difficulty    pgtype.Text
-	FeedsPeople   pgtype.Int4
-	Directions    string
-	Author        string
-}
-
-type RecipeCollection struct {
-	RecipeCollectionID   int32
-	RecipeCollectionName string
-	RecipeID             int32
-	OwnerID              int32
-	Date                 pgtype.Text
-	SubscriberID         pgtype.Int4
+	RecipeID     int32
+	RecipeName   string
+	TimeEstimate pgtype.Int4
+	Difficulty   pgtype.Text
+	FeedsPeople  pgtype.Int4
+	Directions   string
+	Author       string
 }
