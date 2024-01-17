@@ -48,10 +48,11 @@ If you want to analyse the profiling data from the Recipe Service, you need
 There is a test dataset in `/dev-compose` that is automatically imported when the compose setup is started.
 It can be imported into the PostgreSQL intance in the k8s cluster or any other database using
 
-There are two accounts in this dataset: _test_ (password: _test_) and _nele_ (password _passwort_)
 ```shell
 psql -U postgres -h <database-host> -f init.sql
 ```
+
+There are two accounts in this dataset: _test_ (password: _test_) and _nele_ (password _passwort_)
 
 ## API Client
 
