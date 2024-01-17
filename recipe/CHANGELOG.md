@@ -2,6 +2,16 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## recipe-0.6.0 - 2024-01-17
+#### Bug Fixes
+- **(recipe)** Display cooking instructions correctly/remove placeholder - (108d273) - TuftedDeer
+#### Documentation
+- update readmes - (797f1ee) - TuftedDeer
+#### Features
+- **(recipe)** tailwind css and html changes for recipe display - (840a2e4) - neki9072
+
+- - -
+
 ## recipe-0.5.0 - 2024-01-16
 #### Features
 - **(recipe)** Use pgx connection pool to improve database connections - (26f2a5c) - TuftedDeer

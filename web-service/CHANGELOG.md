@@ -2,6 +2,14 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## frontend-0.4.0 - 2024-01-17
+#### Documentation
+- update readmes - (797f1ee) - TuftedDeer
+#### Features
+- **(web-service)** tailwind css and css for login,create-recipe - (f4f2e09) - neki9072
+
+- - -
+
 ## frontend-0.3.0 - 2024-01-07
 #### Features
 - **(authentication)** make ingredient amount float - (a8707f6) - TuftedDeer

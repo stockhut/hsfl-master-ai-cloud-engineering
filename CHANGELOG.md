@@ -2,6 +2,16 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## 0.7.0 - 2024-01-17
+### Package updates
+- recipe bumped to recipe-0.6.0
+- frontend bumped to frontend-0.4.0
+### Global changes
+#### Documentation
+- update readmes - (797f1ee) - TuftedDeer
+
+- - -
+
 ## 0.6.0 - 2024-01-16
 ### Package updates
 - recipe bumped to recipe-0.5.0
