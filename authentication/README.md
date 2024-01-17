@@ -32,3 +32,9 @@ docker build .. --file Dockerfile
 
 - creation and management of user accounts
 - login functionality
+
+## Endpoints
+| Action         | Endpoint                         |
+|----------------|----------------------------------|
+| Login          | `/api/v1/authentication/login`   |
+| Create account | `/api/v1/authentication/account` |
