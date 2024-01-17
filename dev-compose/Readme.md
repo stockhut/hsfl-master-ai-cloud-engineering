@@ -8,6 +8,9 @@ http://localhost:5000
 
 This docker compose setup contains all services, the reverse proxy and a postgres instance.
 
+⚠️ There is an unsolved problem where the reverse proxy might load the services in the wrong order, causing routing failures and unexpected `404`s (see #113).
+Restart the reverse proxy when this happens.
+
 ## Configuration
 
 ### JWT keys
