@@ -31,7 +31,7 @@ spec:
           - secretRef:
               name: recipe-db-secret
           imagePullPolicy: Always
-          image: ghcr.io/stockhut/hsfl-master-ai-cloud-engineering/recipe:0.4.0
+          image: ghcr.io/stockhut/hsfl-master-ai-cloud-engineering/recipe:0.6.1
           volumeMounts:
             # name must match the volume name below
             - name: jwt-pub-key-volume
