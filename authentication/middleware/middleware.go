@@ -25,7 +25,6 @@ func ValidateJwtMiddleware(publicKey any) func(http.HandlerFunc) http.HandlerFun
 			}
 
 			token, err := jwt.Parse(cookie.Value, func(t *jwt.Token) (interface{}, error) {
-				fmt.Println(t)
 				return publicKey, nil
 			})
 
