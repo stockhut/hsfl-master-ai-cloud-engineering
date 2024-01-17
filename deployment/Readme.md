@@ -38,6 +38,8 @@ Create kubernetes secrets consumed by the services:
 
 ## Creating
 
+⚠️ If you want to import the test datast from `/dev-compose`, be sure to do this _before_ starting recipe and authentication or they will initialize their own schemas
+
 ```shell
 kubectl create -f . --recursive
 ```
