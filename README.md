@@ -53,6 +53,9 @@ The [Create new Version](https://github.com/stockhut/hsfl-master-ai-cloud-engine
 After the new commit is tagged and pushed, the action will check whether the `authentication` or `recipe` container images need a rebuild and trigger the respective workflow using the `gh` CLI client (workaround because workflows are not triggered by push events from other workflows [source](https://stackoverflow.com/questions/72110432/github-workflow-is-not-triggered-after-pushing-tags)).
 The container Image will be tagged using information from the git tags (see `auth-build-push-image.yml` for details)
 
+## Quickstart
+
+The easiest way to start the app is via Kubernetes/minikube. Please see `deployment` for how to do that!
 
 ## Authors
 Fabian Wesemann\
