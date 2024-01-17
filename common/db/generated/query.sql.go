@@ -63,9 +63,9 @@ VALUES
 
 type CreateRecipeParams struct {
 	RecipeName   string
-	TimeEstimate pgtype.Int4
+	TimeEstimate int32
 	Difficulty   pgtype.Text
-	FeedsPeople  pgtype.Int4
+	FeedsPeople  int32
 	Directions   string
 	Author       string
 }

@@ -1,9 +1,9 @@
 CREATE TABLE IF NOT EXISTS "Recipe" (
 	"recipeID"	SERIAL PRIMARY KEY,
 	"recipeName"	TEXT NOT NULL,
-	"timeEstimate"	INTEGER,
+	"timeEstimate"	INTEGER NOT NULL,
 	"difficulty"	TEXT,
-	"feedsPeople"	INTEGER,
+	"feedsPeople"	INTEGER NOT NULL,
 	"directions"	TEXT NOT NULL,
 	"author"	TEXT NOT NULL
 );
