@@ -31,9 +31,9 @@ type Recipe struct {
 	Name         string
 	Ingredients  []Ingredient
 	Directions   string
-	TimeEstimate int
+	TimeEstimate int32
 	Difficulty   string
-	FeedsPeople  int
+	FeedsPeople  int32
 }
 
 func IngredientFromDatabaseModel(ingredient db.Ingredient) Ingredient {
@@ -51,8 +51,8 @@ func RecipeFromDatabaseModel(recipe db.Recipe, ingredients []db.Ingredient) Reci
 		Name:         recipe.RecipeName,
 		Ingredients:  fun.Map(ingredients, IngredientFromDatabaseModel),
 		Directions:   recipe.Directions,
-		TimeEstimate: int(recipe.TimeEstimate.Int32),
+		TimeEstimate: recipe.TimeEstimate,
 		Difficulty:   recipe.Difficulty.String,
-		FeedsPeople:  int(recipe.FeedsPeople.Int32),
+		FeedsPeople:  recipe.FeedsPeople,
 	}
 }

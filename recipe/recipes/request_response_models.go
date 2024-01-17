@@ -26,9 +26,9 @@ type createRecipeRequestBody struct {
 	IngredientUnits   any                     `json:"ingredient-unit"`
 	IngredientAmounts any                     `json:"ingredient-amount"`
 	Directions        string                  `json:"directions"`
-	TimeEstimate      int                     `json:"time_estimate"`
+	TimeEstimate      int32                   `json:"time_estimate"`
 	Difficulty        string                  `json:"difficulty"`
-	FeedsPeople       int                     `json:"feeds_people"`
+	FeedsPeople       int32                   `json:"feeds_people"`
 }
 
 func (body *createRecipeRequestBody) UnmarshalJSON(data []byte) error {
@@ -81,9 +81,9 @@ type recipeResponseModel struct {
 	Name         string                   `json:"name"`
 	Ingredients  []ingredientResponseBody `json:"ingredients"`
 	Directions   string                   `json:"directions"`
-	TimeEstimate int                      `json:"time_estimate"`
+	TimeEstimate int32                    `json:"time_estimate"`
 	Difficulty   string                   `json:"difficulty"`
-	FeedsPeople  int                      `json:"feeds_people"`
+	FeedsPeople  int32                    `json:"feeds_people"`
 }
 
 type ingredientRequestBody struct {

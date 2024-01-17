@@ -29,10 +29,11 @@ func (repo *SqlcRepository) CreateRecipe(recipe model.Recipe) (model.Recipe, err
 
 	params := db.CreateRecipeParams{
 		RecipeName:   recipe.Name,
-		TimeEstimate: pgtype.Int4(sql.NullInt32{Int32: int32(recipe.TimeEstimate), Valid: true}),
+		TimeEstimate: recipe.TimeEstimate,
 		Difficulty:   pgtype.Text(sql.NullString{String: recipe.Difficulty, Valid: true}),
 		Directions:   recipe.Directions,
 		Author:       recipe.Author,
+		FeedsPeople:  recipe.FeedsPeople,
 	}
 
 	r, err := repo.queries.CreateRecipe(context.TODO(), params)
