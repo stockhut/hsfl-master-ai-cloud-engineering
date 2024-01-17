@@ -37,4 +37,4 @@ docker build .. --file Dockerfile
 | Action         | Endpoint                         |
 |----------------|----------------------------------|
 | Login          | `/api/v1/authentication/login`   |
-| Create account | `/api/v1/authentication/account` |
+| Create Account | `/api/v1/authentication/account` |

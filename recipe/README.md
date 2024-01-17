@@ -58,10 +58,10 @@ A [pprof](https://pkg.go.dev/net/http/pprof@go1.21.6) endpoint is available at p
 
 ## Endpoints
 
-| Action                 | Endpoint                    | Note                 |
-|------------------------|----------------------------------------------------|
-| Create Recipe          | `/api/v1/recipe`            | Needs valid JWT token|
-| Get recipe(s) by author| `/api/v1/recipe/by/<author>`| Needs valid JWT token|
-| Get recipe by ID       | `/api/v1/recipe/<id>`       | Needs valid JWT token|
-| Get own recipe(s)      | `/api/v1/recipe/by/<author>`| Needs valid JWT token|
-| Check health           | `/health`                   |                      |
+| Action                  | Endpoint                     | Note                  |
+|-------------------------|------------------------------|-----------------------|
+| Create Recipe           | `/api/v1/recipe`             | Needs valid JWT token |
+| Get recipe(s) by author | `/api/v1/recipe/by/<author>` | Needs valid JWT token |
+| Get recipe by ID        | `/api/v1/recipe/<id>`        | Needs valid JWT token |
+| Get own recipe(s)       | `/api/v1/recipe/by/self`     | Needs valid JWT token |
+| Check health            | /health                      |                       |
